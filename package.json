@@ -1,0 +1,26 @@
+{
+  "name": "forms-runner-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for DEFRA Forms Runner",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:parser": "npx playwright test form-parser",
+    "report": "npx playwright show-report",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "inspect": "node src/helpers/inspect-form.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.1"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "zod": "^4.1.13"
+  }
+}
