@@ -1,17 +1,30 @@
+/**
+ * @typedef {object} DatePartsFieldControllerParams
+ * 
+ * @property {string} title
+ * @property {import("@playwright/test").Page} page
+ * @property {string} name
+ * @property {string} hint
+ * @property {string} id
+ * @property {string} shortDescription
+ * @property {object} options
+ * @property {boolean} options.required
+ */
 export class DatePartsFieldController {
   /**
-   * @typedef {object} DatePartsFieldControllerOptions
-   * @property {boolean} required
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} hint
-   * @param {DatePartsFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
+   * 
+   * @param {DatePartsFieldControllerParams} params
    */
-  constructor({ title, page, name, type, hint, options, id, shortDescription }) {
+  constructor({
+    title,
+    page,
+    name,
+    type,
+    hint,
+    options,
+    id,
+    shortDescription,
+  }) {
     this.title = title;
     this.page = page;
     this.name = name;
@@ -30,24 +43,24 @@ export class DatePartsFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findDayInput() {
-    const parent = this.page.getByText(this.title).locator('..');
-    return parent.getByRole("textbox", { name: "Day" });
+    const dayInput = this.page.locator(`#${this.name}__day`);
+    return dayInput;
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findMonthInput() {
-    const parent = this.page.getByText(this.title).locator('..');
-    return parent.getByRole("textbox", { name: "Month" });
+    const monthInput = this.page.locator(`#${this.name}__month`);
+    return monthInput;
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findYearInput() {
-    const parent = this.page.getByText(this.title).locator('..');
-    return parent.getByRole("textbox", { name: "Year" });
+    const yearInput = this.page.locator(`#${this.name}__year`);
+    return yearInput;
   }
 
   // /**
@@ -89,7 +102,6 @@ export class DatePartsFieldController {
     await this.findYearInput().fill(year);
     return this;
   }
-  
 
   /**
    * @param {Date} date

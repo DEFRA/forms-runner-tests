@@ -1,0 +1,168 @@
+export class CheckboxesFieldController {
+  /**
+   * @typedef {object} CheckboxesFieldControllerOptions
+   * @property {boolean} required
+   *
+   * @param {string} title
+   * @param {import("@playwright/test").Page} page
+   * @param {string} name
+   * @param {string} hint
+   * @param {CheckboxesFieldControllerOptions} options
+   * @param {string} id
+   * @param {string} shortDescription
+   * @param {string} list - The list ID associated with the checkboxes field
+   */
+  constructor({
+    title,
+    page,
+    name,
+    type,
+    hint,
+    options,
+    id,
+    shortDescription,
+    list,
+  }) {
+    this.title = title;
+    this.page = page;
+    this.name = name;
+    this.hint = hint;
+    this.id = id;
+    this.type = type;
+    this.options = options;
+    this.shortDescription = shortDescription;
+    this.list = list;
+  }
+
+  isRequired() {
+    return this.options?.required === true;
+  }
+
+  /**
+   * Find the checkbox group fieldset
+   * @returns {import("@playwright/test").Locator}
+   */
+  findFieldset() {
+    return this.page.getByRole("group", { name: this.title });
+  }
+
+  /**
+   * Find a specific checkbox option by its label text
+   * @param {string} optionText - The text label of the checkbox option
+   * @returns {import("@playwright/test").Locator}
+   */
+  findOption(optionText) {
+    return this.page.getByRole("checkbox", { name: optionText });
+  }
+
+  /**
+   * Find all checkbox options within the fieldset
+   * @returns {import("@playwright/test").Locator}
+   */
+  findAllOptions() {
+    return this.findFieldset().getByRole("checkbox");
+  }
+
+  /**
+   * @param {import("@playwright/test").Expect} expect
+   */
+  async assertions(expect) {
+    const fieldset = this.findFieldset();
+    await expect(fieldset).toBeVisible();
+    return this;
+  }
+
+  /**
+   * Check a checkbox option by its label text
+   * @param {string} optionText - The text label of the checkbox option to check
+   */
+  async checkOption(optionText) {
+    const option = this.findOption(optionText);
+    await option.check();
+    return this;
+  }
+
+  /**
+   * Uncheck a checkbox option by its label text
+   * @param {string} optionText - The text label of the checkbox option to uncheck
+   */
+  async uncheckOption(optionText) {
+    const option = this.findOption(optionText);
+    await option.uncheck();
+    return this;
+  }
+
+  /**
+   * Check the first available checkbox option
+   */
+  async checkFirstOption() {
+    const firstOption = this.findAllOptions().first();
+    await firstOption.check();
+    return this;
+  }
+
+  /**
+   * Check multiple checkbox options by their label texts
+   * @param {string[]} optionTexts - Array of text labels of the checkbox options to check
+   */
+  async checkOptions(optionTexts) {
+    for (const optionText of optionTexts) {
+      await this.checkOption(optionText);
+    }
+    return this;
+  }
+
+  /**
+   * Fill method for compatibility with component filling logic
+   * @param {string | string[]} value - Single option text or array of option texts to check
+   */
+  async fill(value) {
+    if (Array.isArray(value)) {
+      await this.checkOptions(value);
+    } else {
+      await this.checkOption(value);
+    }
+    return this;
+  }
+
+  /**
+   * Check a checkbox option by its value attribute
+   * @param {string} value - The value of the checkbox option to check
+   */
+  async checkByValue(value) {
+    const checkbox = this.page.locator(
+      `input[type="checkbox"][value="${value}"]`
+    );
+    await checkbox.check();
+    return this;
+  }
+
+  /**
+   * Get the values of all checked checkboxes
+   * @returns {Promise<string[]>}
+   */
+  async getCheckedValues() {
+    const checkedBoxes = this.findFieldset().locator(
+      'input[type="checkbox"]:checked'
+    );
+    const count = await checkedBoxes.count();
+    const values = [];
+    for (let i = 0; i < count; i++) {
+      const value = await checkedBoxes.nth(i).getAttribute("value");
+      if (value) {
+        values.push(value);
+      }
+    }
+    return values;
+  }
+
+  /**
+   * Check if a specific option is checked
+   * @param {string} optionText - The text label of the checkbox option
+   * @returns {Promise<boolean>}
+   */
+  async isOptionChecked(optionText) {
+    const option = this.findOption(optionText);
+    return await option.isChecked();
+  }
+}
