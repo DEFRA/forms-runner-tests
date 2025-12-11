@@ -1,3 +1,4 @@
+import RandExp from "randexp";
 export class TextFieldController {
   /**
    * @typedef {object} TextFieldControllerOptions
@@ -11,8 +12,19 @@ export class TextFieldController {
    * @param {TextFieldControllerOptions} options
    * @param {string} id
    * @param {string} shortDescription
+   * @param {object} schema
    */
-  constructor({ title, page, name, type, hint, options, id , shortDescription}) {
+  constructor({
+    title,
+    page,
+    name,
+    type,
+    hint,
+    options,
+    id,
+    shortDescription,
+    schema,
+  }) {
     this.title = title;
     this.page = page;
     this.name = name;
@@ -20,6 +32,7 @@ export class TextFieldController {
     this.id = id;
     this.type = type;
     this.options = options;
+    this.schema = schema;
     this.shortDescription = shortDescription;
   }
 
@@ -50,6 +63,11 @@ export class TextFieldController {
    * @param {string} value
    */
   async fill(value) {
+    if (this.schema?.regex) {
+      const randExp = new RandExp(this.schema.regex);
+      await this.find().fill(randExp.gen());
+      return this;
+    }
     await this.find().fill(value);
     return this;
   }

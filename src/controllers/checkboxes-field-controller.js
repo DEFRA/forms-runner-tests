@@ -119,8 +119,11 @@ export class CheckboxesFieldController {
   async fill(value) {
     if (Array.isArray(value)) {
       await this.checkOptions(value);
-    } else {
+    } else if (typeof value === 'string') {
       await this.checkOption(value);
+    } else if (!value) {
+      // select first option if no value provided
+      await this.checkFirstOption();
     }
     return this;
   }

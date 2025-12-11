@@ -14,6 +14,12 @@ export const componentsMapper = {
   Markdown: Controllers.MarkdownController,
   RadiosField: Controllers.RadioFieldController,
   NumberField: Controllers.NumberFieldController,
+  YesNoField: Controllers.YesNoFieldController,
+  AutocompleteField: Controllers.AutocompleteFieldController,
+  SelectField: Controllers.SelectFieldController,
+  CheckboxesField: Controllers.CheckboxesFieldController,
+  MultilineTextField: Controllers.MultilineTextFieldController,
+  FileUploadField: Controllers.FileUploadFieldController,
   // Add other component mappings here
 };
 
