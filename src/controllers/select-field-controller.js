@@ -1,45 +1,10 @@
+import { BaseFieldController } from "./base-field-controller.js";
+
 /**
- * @typedef {object} SelectFieldControllerParams
- * @property {boolean} required *
- * @property{string} title
- * @property{import("@playwright/test").Page} page
- * @property{string} name
- * @property{string} hint
- * @property{string} id
- * @property{string} shortDescription
- * @property{object} options
- * @property{boolean} [options.required]
+ * Controller for SelectField (dropdown) components.
+ * Overrides find() to use combobox role.
  */
-export class SelectFieldController {
-  /** @param {SelectFieldControllerParams} params */
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-  }
-  isRequired() {
-    return this.options?.required === true;
-  }
-
-  async fill(value) {
-    await this.find().selectOption({ label: value });
-    return this;
-  }
-
+export class SelectFieldController extends BaseFieldController {
   /**
    * @returns {import("@playwright/test").Locator}
    */
@@ -48,12 +13,11 @@ export class SelectFieldController {
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * Select an option by label text
+   * @param {string} value - The label text of the option to select
    */
-  async assertions(expect) {
-    const element = this.find();
-    await expect(element).toBeVisible();
-    await expect(element).toBeEnabled();
+  async fill(value) {
+    await this.find().selectOption({ label: value });
     return this;
   }
 }

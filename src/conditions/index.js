@@ -69,10 +69,14 @@ const CONDITION_MAP = {
  */
 function findListForComponent(formDefinition, componentId) {
   for (const page of formDefinition.pages) {
-    if (!page.components) continue;
+    if (!page.components || page.components.length === 0) continue;
     const component = page.components.find((c) => c.id === componentId);
     if (component && component.list) {
-      return formDefinition.lists.find((l) => l.id === component.list);
+      const list = formDefinition.lists.find((l) => l.id === component.list);
+      if (list) {
+        return list;
+      }
+      throw new Error(`List with ID ${component.list} not found for component ${componentId}`);
     }
   }
   return undefined;

@@ -1,36 +1,15 @@
-export class DeclarationFieldController {
-  /**
-   * @typedef {object} DeclarationFieldControllerOptions
-   * @property {boolean} required
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} content - Markdown content of the declaration
-   * @param {DeclarationFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
-   */
-  constructor({ title, page, name, type, content, options, id , shortDescription}) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.type = type;
-    this.content = content;
-    this.id = id;
-    this.options = options;
-    this.shortDescription = shortDescription;
-  }
+import { BaseFieldController } from "./base-field-controller.js";
 
-  isRequired() {
-    return this.options?.required === true;
-  }
-
+/**
+ * Controller for DeclarationField components (checkbox with declaration text).
+ * Uses BaseFieldController but overrides methods for checkbox-specific behavior.
+ */
+export class DeclarationFieldController extends BaseFieldController {
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findCheckbox() {
-    return this.page.getByLabel('I understand and agree');
+    return this.page.getByLabel("I understand and agree");
   }
 
   /**
@@ -52,10 +31,9 @@ export class DeclarationFieldController {
 
   async fill() {
     const checkbox = this.findCheckbox();
-    await checkbox.check({ force: true , timeout: 5000});
+    await checkbox.check({ force: true, timeout: 5000 });
     return this;
   }
-
 
   async decline() {
     const checkbox = this.findCheckbox();

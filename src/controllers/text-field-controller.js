@@ -1,71 +1,24 @@
 import RandExp from "randexp";
-export class TextFieldController {
-  /**
-   * @typedef {object} TextFieldControllerOptions
-   * @property {boolean} required
-   *
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} hint
-   * @param {TextFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
-   * @param {object} schema
-   */
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-    schema,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.schema = schema;
-    this.shortDescription = shortDescription;
-  }
+import { BaseFieldController } from "./base-field-controller.js";
 
-  isRequired() {
-    return this.options?.required === true;
-  }
+/**
+ * Controller for TextField components.
+ * Overrides fill() to handle regex-based value generation.
+ */
+export class TextFieldController extends BaseFieldController {
   /**
-   *
-   * @param {import("@playwright/test").Page} page
-   * @returns {import("@playwright/test").Locator}
-   */
-  find() {
-    return this.page.getByRole("textbox", { name: this.title });
-  }
-
-  /**
-   * @param {import("@playwright/test").Expect} expect
-   * @returns
-   */
-  async assertions(expect) {
-    const element = this.find();
-    await expect(element).toBeVisible();
-    await expect(element).toBeEnabled();
-    return this;
-  }
-
-  /**
-   * @param {string} value
+   * Fill the text field with a value.
+   * If a regex schema is defined, generates a matching value.
+   * @param {string} value - The text to enter (may be overridden by regex)
    */
   async fill(value) {
     if (this.schema?.regex) {
-      const randExp = new RandExp(this.schema.regex);
-      await this.find().fill(randExp.gen());
+      const regex = new RegExp(this.schema.regex);
+      console.log(`Generating value matching regex: ${regex} and ${regex.source}`);
+      const randExp = new RandExp(regex.source);
+      const generatedValue = randExp.gen();
+      console.log(`Generated value: ${generatedValue}`);
+      await this.find().fill(generatedValue);
       return this;
     }
     await this.find().fill(value);

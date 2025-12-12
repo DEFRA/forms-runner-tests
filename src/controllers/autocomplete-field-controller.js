@@ -1,58 +1,16 @@
-export class AutocompleteFieldController {
-  /**
-   * @typedef {object} AutocompleteFieldControllerOptions
-   * @property {boolean} required
-   *
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} hint
-   * @param {AutocompleteFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
-   */
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-  }
+import { BaseFieldController } from "./base-field-controller.js";
 
-  isRequired() {
-    return this.options?.required === true;
-  }
+/**
+ * Controller for AutocompleteField components.
+ * Overrides find() and fill() for autocomplete-specific behavior.
+ */
+export class AutocompleteFieldController extends BaseFieldController {
   /**
-   *
-   * @param {import("@playwright/test").Page} page
+   * Find the autocomplete input element
    * @returns {import("@playwright/test").Locator}
    */
   find() {
     return this.page.locator(`input#${this.name}[role="combobox"]`);
-  }
-
-  /**
-   * @param {import("@playwright/test").Expect} expect
-   * @returns
-   */
-  async assertions(expect) {
-    const element = this.find();
-    await expect(element).toBeVisible();
-    await expect(element).toBeEnabled();
-    return this;
   }
 
   /**
@@ -107,13 +65,5 @@ export class AutocompleteFieldController {
     await firstOption.click();
 
     return this;
-  }
-
-  /**
-   * Get the current value of the autocomplete input
-   * @returns {Promise<string>}
-   */
-  async getValue() {
-    return await this.find().inputValue();
   }
 }

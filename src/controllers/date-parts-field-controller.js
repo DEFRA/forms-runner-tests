@@ -1,74 +1,38 @@
+import { BaseCompositeFieldController } from "./base-field-controller.js";
+
 /**
- * @typedef {object} DatePartsFieldControllerParams
- * 
- * @property {string} title
- * @property {import("@playwright/test").Page} page
- * @property {string} name
- * @property {string} hint
- * @property {string} id
- * @property {string} shortDescription
- * @property {object} options
- * @property {boolean} options.required
+ * Controller for DatePartsField components (day/month/year inputs).
+ * Extends BaseCompositeFieldController which provides constructor and isRequired().
  */
-export class DatePartsFieldController {
-  /**
-   * 
-   * @param {DatePartsFieldControllerParams} params
-   */
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-  }
-
-  isRequired() {
-    return this.options?.required === true;
-  }
-
+export class DatePartsFieldController extends BaseCompositeFieldController {
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findDayInput() {
-    const dayInput = this.page.locator(`#${this.name}__day`);
-    return dayInput;
+    return this.page.locator(`#${this.name}__day`);
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findMonthInput() {
-    const monthInput = this.page.locator(`#${this.name}__month`);
-    return monthInput;
+    return this.page.locator(`#${this.name}__month`);
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findYearInput() {
-    const yearInput = this.page.locator(`#${this.name}__year`);
-    return yearInput;
+    return this.page.locator(`#${this.name}__year`);
   }
 
-  // /**
-  //  * @returns {import("@playwright/test").Locator}
-  //  */
-  // findFieldset() {
-  //   return this.page.getByRole("group", { name: this.title });
-  // }
+  /**
+   * Find the fieldset containing the date parts
+   * @returns {import("@playwright/test").Locator}
+   */
+  findFieldset() {
+    return this.page.getByRole("group", { name: this.title });
+  }
 
   /**
    * @param {import("@playwright/test").Expect} expect

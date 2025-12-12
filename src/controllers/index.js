@@ -1,3 +1,10 @@
+// Base controller exports
+export {
+  BaseFieldController,
+  BaseGroupFieldController,
+  BaseCompositeFieldController,
+} from "./base-field-controller.js";
+
 // Controller exports
 export { TextFieldController } from "./text-field-controller.js";
 export { DatePartsFieldController } from "./date-parts-field-controller.js";

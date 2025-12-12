@@ -1,51 +1,10 @@
-export class RadioFieldController {
-  /**
-   * @typedef {object} RadioFieldControllerOptions
-   * @property {boolean} required
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} hint
-   * @param {RadioFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
-   * @param {string} list - The list ID associated with the radio field
-   */
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-    list,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-    this.list = list;
-  }
+import { BaseGroupFieldController } from "./base-field-controller.js";
 
-  isRequired() {
-    return this.options?.required === true;
-  }
-
-  /**
-   * Find the radio group fieldset
-   * @returns {import("@playwright/test").Locator}
-   */
-  findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
-  }
-
+/**
+ * Controller for RadioField components.
+ * Extends BaseGroupFieldController which provides findFieldset() and assertions().
+ */
+export class RadioFieldController extends BaseGroupFieldController {
   /**
    * Find a specific radio option by its label text
    * @param {string} optionText - The text label of the radio option
@@ -61,15 +20,6 @@ export class RadioFieldController {
    */
   findAllOptions() {
     return this.page.getByRole("radio");
-  }
-
-  /**
-   * @param {import("@playwright/test").Expect} expect
-   */
-  async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
-    return this;
   }
 
   /**
@@ -130,12 +80,4 @@ export class RadioFieldController {
   async getOptionsCount() {
     return await this.findAllOptions().count();
   }
-
-  //   /**
-  //    * Fill the radio field by selecting an option (alias for selectOption)
-  //    * @param {string} optionText - The text label of the radio option to select
-  //    */
-  //   async fill(optionText) {
-  //     return await this.selectOption(optionText);
-  //   }
 }

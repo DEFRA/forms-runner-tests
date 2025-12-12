@@ -1,44 +1,11 @@
 import { expect } from "@playwright/test";
-import path from "path";
+import { BaseFieldController } from "./base-field-controller.js";
 
 /**
- * @typedef {object} FileUploadFieldControllerParams
- *
- * @property {string} title
- * @property {import("@playwright/test").Page} page
- * @property {string} name
- * @property {string} hint
- * @property {string} id
- * @property {string} shortDescription
- * @property {object} options
- * @property {boolean} options.required
+ * Controller for FileUploadField components.
+ * Overrides find(), fill(), assertions(), clear() for file-specific behavior.
  */
-export class FileUploadFieldController {
-  /** @param {FileUploadFieldControllerParams} params **/
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-  }
-
-  isRequired() {
-    return this.options?.required === true;
-  }
-
+export class FileUploadFieldController extends BaseFieldController {
   /**
    * Find the file input element by name attribute
    * @returns {import("@playwright/test").Locator}
@@ -81,10 +48,12 @@ export class FileUploadFieldController {
     });
     await uploadButton.click();
     // wait for upload to complete if necessary
-   await expect
+    await expect
       .poll(
         async () => {
-          const count = await this.page.getByText("1 file uploaded", {exact: true}).count();
+          const count = await this.page
+            .getByText("1 file uploaded", { exact: true })
+            .count();
           return count > 0;
         },
         {

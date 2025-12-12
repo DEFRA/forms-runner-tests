@@ -1,51 +1,10 @@
-export class CheckboxesFieldController {
-  /**
-   * @typedef {object} CheckboxesFieldControllerOptions
-   * @property {boolean} required
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} hint
-   * @param {CheckboxesFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
-   * @param {string} list - The list ID associated with the checkboxes field
-   */
-  constructor({
-    title,
-    page,
-    name,
-    type,
-    hint,
-    options,
-    id,
-    shortDescription,
-    list,
-  }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-    this.list = list;
-  }
+import { BaseGroupFieldController } from "./base-field-controller.js";
 
-  isRequired() {
-    return this.options?.required === true;
-  }
-
-  /**
-   * Find the checkbox group fieldset
-   * @returns {import("@playwright/test").Locator}
-   */
-  findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
-  }
-
+/**
+ * Controller for CheckboxesField components.
+ * Extends BaseGroupFieldController which provides findFieldset() and assertions().
+ */
+export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Find a specific checkbox option by its label text
    * @param {string} optionText - The text label of the checkbox option
@@ -61,15 +20,6 @@ export class CheckboxesFieldController {
    */
   findAllOptions() {
     return this.findFieldset().getByRole("checkbox");
-  }
-
-  /**
-   * @param {import("@playwright/test").Expect} expect
-   */
-  async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
-    return this;
   }
 
   /**
@@ -119,7 +69,7 @@ export class CheckboxesFieldController {
   async fill(value) {
     if (Array.isArray(value)) {
       await this.checkOptions(value);
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       await this.checkOption(value);
     } else if (!value) {
       // select first option if no value provided

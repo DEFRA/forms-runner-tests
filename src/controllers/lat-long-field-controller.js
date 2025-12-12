@@ -1,36 +1,15 @@
-export class LatLongFieldController {
-  /**
-   * @typedef {object} LatLongFieldControllerOptions
-   * @property {boolean} required
-   *
-   * @param {string} title
-   * @param {import("@playwright/test").Page} page
-   * @param {string} name
-   * @param {string} hint
-   * @param {LatLongFieldControllerOptions} options
-   * @param {string} id
-   * @param {string} shortDescription
-   */
-  constructor({ title, page, name, type, hint, options, id, shortDescription }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.hint = hint;
-    this.id = id;
-    this.type = type;
-    this.options = options;
-    this.shortDescription = shortDescription;
-  }
+import { BaseCompositeFieldController } from "./base-field-controller.js";
 
-  isRequired() {
-    return this.options?.required === true;
-  }
-
+/**
+ * Controller for LatLongField components (dual input for latitude/longitude).
+ * Extends BaseCompositeFieldController which provides constructor and isRequired().
+ */
+export class LatLongFieldController extends BaseCompositeFieldController {
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findLatitudeInput() {
-    return this.page.getByRole("textbox", { name: "Latitude" });
+    return this.page.locator(`#${this.name}__latitude`);
   }
 
   /**
