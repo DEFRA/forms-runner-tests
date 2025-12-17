@@ -10,14 +10,22 @@
     "report": "npx playwright show-report",
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",
-    "inspect": "node src/helpers/inspect-form.js"
+    "inspect": "node src/helpers/inspect-form.js",
+    "lint": "eslint . "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
-    "@types/node": "^24.10.1"
+    "@types/node": "^24.10.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsdoc": "^61.5.0",
+    "eslint-plugin-promise": "^7.2.1"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
