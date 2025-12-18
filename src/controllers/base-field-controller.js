@@ -10,7 +10,7 @@
  * @property {string} [id] - The component ID
  * @property {string} [shortDescription] - Short description of the field
  * @property {object} [schema] - Schema configuration
- * @property {string} [list] - Associated list ID for select-type fields
+ * @property {import("../controllers/list-controller").ListController} [list] - Associated list ID for select-type fields
  */
 
 /**
@@ -43,6 +43,10 @@ export class BaseFieldController {
     this.shortDescription = shortDescription;
     this.schema = schema;
     this.list = list;
+    /**
+     * @type{ import("../conditions/conditions.js" ).IsCondition[] }
+     */
+    this.conditions = [];
   }
 
   /**

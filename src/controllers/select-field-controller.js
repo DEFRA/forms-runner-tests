@@ -17,7 +17,13 @@ export class SelectFieldController extends BaseFieldController {
    * @param {string} value - The label text of the option to select
    */
   async fill(value) {
-    await this.find().selectOption({ label: value });
+    const label = value ?? this.list?.getFirstItem()?.text;
+    if (!label) {
+      throw new Error(
+        "No select option label provided and no list items available"
+      );
+    }
+    await this.find().selectOption({ label });
     return this;
   }
 }

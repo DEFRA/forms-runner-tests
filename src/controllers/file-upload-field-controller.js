@@ -1,5 +1,30 @@
 import { expect } from "@playwright/test";
+
 import { BaseFieldController } from "./base-field-controller.js";
+const MimeTypeMap = {
+  pdf: "application/pdf",
+  doc: "application/msword",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  odt: "application/vnd.oasis.opendocument.text",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  txt: "text/plain",
+};
+
+const createFileBuffer = () => {
+  return Buffer.from("Sample file content", "utf-8");
+};
+
+const createFile = (fileName) => {
+  const extension = fileName.split(".").pop().toLowerCase();
+  const mimeType = MimeTypeMap[extension] || "application/octet-stream";
+  return {
+    name: fileName,
+    mimeType: mimeType,
+    buffer: createFileBuffer(),
+  };
+};
 
 /**
  * Controller for FileUploadField components.
@@ -35,14 +60,21 @@ export class FileUploadFieldController extends BaseFieldController {
   /**
    * Upload a file to the file input
    * @param {string} filePath - The path to the file to upload
+   * @param _filePath
    */
-  async uploadFile(filePath) {
-    await this.find().setInputFiles(filePath);
+  async uploadFile(_filePath) {
+    const mimeType =
+      this.getAcceptedTypes()?.split(",")[0].trim() || "text/plain";
+    const fileExtensionMap = Object.entries(MimeTypeMap);
+    const extension =
+      fileExtensionMap.find(([_ext, type]) => type === mimeType)?.[0] || "txt";
+    const fileName = `test-file.${extension}`;
+    const file = createFile(fileName);
+    await this.find().setInputFiles(file);
     return this;
   }
 
   async clickUploadButton() {
-    console.log("Clicking upload button");
     const uploadButton = this.page.getByRole("button", {
       name: /upload file/i,
     });
@@ -67,12 +99,17 @@ export class FileUploadFieldController extends BaseFieldController {
     return this;
   }
 
-  /**
-   * Upload multiple files to the file input
-   * @param {string[]} filePaths - Array of file paths to upload
-   */
-  async uploadFiles(filePaths) {
-    await this.find().setInputFiles(filePaths);
+  async uploadFiles() {
+    const mimeType =
+      this.getAcceptedTypes()?.split(",")[0]?.trim() || "text/plain";
+    const fileExtensionMap = Object.entries(MimeTypeMap);
+    const extension =
+      fileExtensionMap.find(([_ext, type]) => type === mimeType)?.[0] || "txt";
+    const fileName = `test-file.${extension}`;
+    const file1 = createFile(fileName);
+    const file2 = createFile(`second-${fileName}`);
+    const files = [file1, file2];
+    await this.find().setInputFiles(files);
     return this;
   }
 
@@ -82,7 +119,7 @@ export class FileUploadFieldController extends BaseFieldController {
    */
   async fill(value) {
     if (Array.isArray(value)) {
-      await this.uploadFiles(value);
+      await this.uploadFiles();
     } else {
       await this.uploadFile(value);
     }

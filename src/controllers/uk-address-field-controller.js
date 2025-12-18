@@ -104,7 +104,6 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * @property {string} townOrCity
    * @property {string} [county]
    * @property {string} postcode
-   *
    * @param {AddressDetails} address
    */
   async fill(address) {

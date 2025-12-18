@@ -78,6 +78,10 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
     return this;
   }
 
+   get items() {
+    return this.list ? this.list.getAllItems() : [];
+   }
+
   /**
    * Check a checkbox option by its value attribute
    * @param {string} value - The value of the checkbox option to check

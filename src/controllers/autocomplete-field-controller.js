@@ -31,12 +31,19 @@ export class AutocompleteFieldController extends BaseFieldController {
   async fill(value) {
     const input = this.find();
 
+    const label = value ?? this.list?.getFirstItem()?.text;
+    if (!label) {
+      throw new Error(
+        "No autocomplete value provided and no list items available"
+      );
+    }
+
     // Clear any existing value and type the new one
     await input.clear();
-    await input.fill(value);
+    await input.fill(label);
 
     // Wait for the dropdown to appear and click the matching option
-    const option = this.findOption(value);
+    const option = this.findOption(label);
     await option.waitFor({ state: "visible" });
     await option.click();
 

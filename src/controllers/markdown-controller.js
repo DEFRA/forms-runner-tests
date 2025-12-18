@@ -1,7 +1,6 @@
 export class MarkdownController {
   /**
    * Controller for Markdown display components (read-only content)
-   *
    * @param {string} content - The markdown content
    * @param {import("@playwright/test").Page} page
    * @param {string} type
