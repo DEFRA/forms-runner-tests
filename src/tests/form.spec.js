@@ -34,7 +34,9 @@ const componentData = {
   SelectField: [],
   CheckboxesField: [],
   MultilineTextField: ["This is sample multiline text for testing purpose."],
-  FileUploadField: [path.resolve("./src/data/sample-file.pdf")],
+  FileUploadField: [
+    path.resolve(new URL("../data/sample-file.pdf", import.meta.url).pathname),
+  ],
 };
 
 // UUID regex pattern

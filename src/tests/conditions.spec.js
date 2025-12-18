@@ -1,15 +1,12 @@
 import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 
 import { test, expect } from "@playwright/test";
 
 import { createConditionsForForm } from "../conditions";
 import { ComponentsInitializer } from "../helpers/components-mapper";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const form = JSON.parse(
-  await readFile(join(__dirname, "data/report-death.json"), "utf8")
+  await readFile(new URL("../data/report-death.json", import.meta.url), "utf8")
 );
 
 const conditions = createConditionsForForm(form);
