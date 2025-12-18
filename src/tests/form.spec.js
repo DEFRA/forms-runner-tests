@@ -152,22 +152,16 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
 
     // Prevent infinite loops
     if (visitedPaths.has(basePathForTracking)) {
-      console.log(`Already visited ${basePathForTracking}, skipping`);
       continue;
     }
     visitedPaths.add(basePathForTracking);
 
     // Find the page definition for the current path
     const pageDef = findPageByPath(currentPath);
-    console.log(
-      `Processing page path: ${currentPath} Page definition found: ${!!pageDef}`
-    );
     if (!pageDef) {
-      console.warn(`No page definition found for path: ${currentPath}`);
       break;
     }
 
-    console.log(`Processing page: ${pageDef.title || pageDef.path}`);
 
     // Handle terminal page - test ends here
     if (pageDef.controller === "TerminalPageController") {
@@ -175,7 +169,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
         type: "info",
         description: `Reached terminal page: ${pageDef.title || pageDef.path}`,
       });
-      console.log("Reached terminal page, ending test.");
       break;
     }
 
@@ -195,9 +188,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
 
     //provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
     if (isRepeatSummaryPath(currentPath)) {
-      console.log(
-        "On repeat controller summary page, clicking Continue to proceed"
-      );
       const addAnotherButton = page.getByRole("button", {
         name: /add another/i,
       });
@@ -210,9 +200,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
         const newPath = extractPathFromUrl(newUrl, normalized);
         if (newPath !== currentPath) {
           navigationStack.push(newUrl);
-          console.log(
-            `Navigated from repeat controller summary to: ${newPath}`
-          );
         }
         continue; // no need to go ahead
       }
@@ -221,7 +208,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
     const isRepeatSummaryPage =
       (await page.getByRole("button", { name: /add another/i }).count()) > 0;
     if (isRepeatSummaryPage && !isRepeatPageInstance(currentPath)) {
-      console.log("On repeat summary page, clicking Continue to proceed");
       await page.getByRole("button", { name: "Continue" }).click();
       await page.waitForLoadState("networkidle");
 
@@ -229,7 +215,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
       const newPath = extractPathFromUrl(newUrl, normalized);
       if (newPath !== currentPath) {
         navigationStack.push(newUrl);
-        console.log(`Navigated from repeat summary to: ${newPath}`);
       }
       continue;
     }
@@ -249,9 +234,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
       )
     );
 
-    console.log(
-      `Initialized ${initializeComponents.length} components on page: ${pageDef.path}`
-    );
     // Fill each component
     for (const component of initializeComponents) {
       if (component.type === "FileUploadField") {
@@ -286,11 +268,9 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
     // Get the new URL after navigation and push to stack
     const newUrl = page.url();
     const newPath = extractPathFromUrl(newUrl, normalized);
-    console.log(`Navigate to: ${newPath} from ${currentPath} `);
 
     if (newPath !== currentPath) {
       navigationStack.push(newUrl);
-      console.log(`Navigated to: ${newPath}`);
     }
   }
 });

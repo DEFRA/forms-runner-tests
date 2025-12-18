@@ -11,9 +11,6 @@ const form = JSON.parse(
 
 const conditions = createConditionsForForm(form);
 const conditionIds = [...conditions.keys()];
-console.log(`Total conditions loaded: ${conditionIds.length}`);
-console.log(`Condition IDs: ${conditionIds.join(", ")}`);
-
 /**
  *
  * @param condition
