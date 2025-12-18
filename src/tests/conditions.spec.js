@@ -4,8 +4,8 @@ import { dirname, join } from "node:path";
 
 import { test, expect } from "@playwright/test";
 
-import { createConditionsForForm } from "./conditions";
-import { ComponentsInitializer } from "./helpers/components-mapper";
+import { createConditionsForForm } from "../conditions";
+import { ComponentsInitializer } from "../helpers/components-mapper";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const form = JSON.parse(

@@ -3,12 +3,12 @@ import path from "node:path";
 
 import { test, expect } from "@playwright/test";
 
-import { ComponentsInitializer } from "./helpers/components-mapper";
+import { ComponentsInitializer } from "../helpers/components-mapper";
 
 const allComponentsForm = JSON.parse(
-  await readFile(new URL("./data/unicorn.json", import.meta.url), "utf8")
+  await readFile(new URL("../data/unicorn.json", import.meta.url), "utf8")
 );
-
+// test data for each component type
 const componentData = {
   DatePartsField: ["01", "01", "2000"],
   RadiosField: ["Option 1"],
