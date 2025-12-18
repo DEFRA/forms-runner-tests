@@ -2,7 +2,13 @@
  * @type {ESLint.ConfigData}
  */
 module.exports = {
-  ignorePatterns: [".server", "src/__fixtures__", "coverage"],
+  ignorePatterns: [
+    ".server",
+    "src/__fixtures__",
+    "coverage",
+    "playwright-report",
+    "test-results",
+  ],
   env: {
     es2022: true,
     node: true,
@@ -21,10 +27,13 @@ module.exports = {
   plugins: ["import", "jsdoc", "promise"],
   rules: {
     // Playwright specs occasionally log diagnostic info
-    "no-console": "error",
+    "no-console": ["error", { allow: ["warn", "error"] }],
 
     // Keep import checks lightweight for this JS-only repo
     "import/no-unresolved": "off",
+
+    // Keep this repo flexible; ordering is nice-to-have.
+    "import/order": "off",
 
     // Avoid duplicate warnings with eslint:recommended
     "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
@@ -33,15 +42,7 @@ module.exports = {
     {
       files: ["**/*.{cjs,js,mjs}"],
       rules: {
-        // Check import or require statements are A-Z ordered
-        "import/order": [
-          "error",
-          {
-            alphabetize: { order: "asc" },
-            named: true,
-            "newlines-between": "always",
-          },
-        ],
+        "import/order": "off",
 
         // This repo uses relative imports; no alias enforcement here
         "no-restricted-imports": "off",

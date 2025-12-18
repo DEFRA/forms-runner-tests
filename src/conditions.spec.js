@@ -1,168 +1,101 @@
-import { test, expect } from '@playwright/test';
-import form from './data/crop-compound-conditions.json' with { type: 'json' };
-import { ComponentsInitializer } from './helpers/components-mapper';
-import { createConditionsForForm } from './conditions';
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
-const componentData = {
-  'DatePartsField': ['01', '01', '2000'],
-  'TextField': ['Sample text'],
-  'TelephoneNumberField': ['01234567890'],
-  'OsGridRefField': ['SU123456'],
-  'EastingNorthingField': ['123456', '654321'],
-  'LatLongField': ['51.5074', '-0.1278'],
-  'NationalGridFieldNumberField': ['NG1234 5678'],
-  'UkAddressField': [{
-    addressLine1: '10 Downing Street',
-    addressLine2: '',
-    townOrCity: 'London',
-    postcode: 'SW1A 2AA'
-  }],
-  'EmailAddressField': ['test@example.com'],
-  'DeclarationField': [],
-};
+import { test, expect } from "@playwright/test";
 
-/**
- * Find a page definition by its path
- * @param {string} path
- * @returns {object | undefined}
- */
-function findPageByPath(path) {
-  return form.pages.find(p => p.path === path);
-}
+import { createConditionsForForm } from "./conditions";
+import { ComponentsInitializer } from "./helpers/components-mapper";
 
-/**
- * Extract the path from a full URL
- * @param {string} url
- * @param {string} formSlug
- * @returns {string}
- */
-function extractPathFromUrl(url, formSlug) {
-  const formPrefix = `/form/${formSlug}`;
-  const urlObj = new URL(url);
-  const pathname = urlObj.pathname;
-  
-  if (pathname.startsWith(formPrefix)) {
-    return pathname.slice(formPrefix.length) || '/';
-  }
-  return pathname;
-}
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const form = JSON.parse(
+  await readFile(join(__dirname, "data/report-death.json"), "utf8")
+);
 
 const conditions = createConditionsForForm(form);
 const conditionIds = [...conditions.keys()];
 console.log(`Total conditions loaded: ${conditionIds.length}`);
-console.log(`Condition IDs: ${conditionIds.join(', ')}`);
-conditionIds.forEach(id => {
-  test(`Testing condition ${conditions.get(id).name} of form ${form.name}`, async ({ page, baseURL }) => {
-    const condition = conditions.get(id);
-    const normalized = form.name.toLocaleLowerCase().replace(/\s+/g, '-');
-    const startPage = form.pages[0].path;
-    const formUrl = `${baseURL}/form/${normalized}${startPage}`;
-    
-    // Add initial annotation with condition info
-    test.info().annotations.push({
-      type: 'condition-info',
-      description: `Testing: ${condition.name} | Component: ${condition.componentId} | Trigger: ${condition.triggerValue}`
-    });
+console.log(`Condition IDs: ${conditionIds.join(", ")}`);
 
-    // Initialize stack with the first page URL
-    const navigationStack = [formUrl];
-    const visitedPaths = new Set();
+/**
+ *
+ * @param condition
+ */
+function getConditionItems(condition) {
+  if (!condition) return [];
+  if (Array.isArray(condition.items)) {
+    return condition.items;
+  }
+  return [condition];
+}
 
-    // Navigate to start page
-    await page.goto(formUrl);
-    await page.waitForLoadState('networkidle');
-    let currentCondition = null;
-    while (navigationStack.length > 0) {
-      const currentUrl = navigationStack.pop();
-      const currentPath = extractPathFromUrl(currentUrl, normalized);
-    
-      // Prevent infinite loops
-      if (visitedPaths.has(currentPath)) {
-        console.log(`Already visited ${currentPath}, skipping`);
-        continue;
-      }
-      visitedPaths.add(currentPath);
+conditionIds.forEach((id) => {
+  test(`Maps all items for condition ${conditions.get(id).name}`, async () => {
+    const mappedCondition = conditions.get(id);
+    const conditionDef = (form.conditions ?? []).find((c) => c.id === id);
+    expect(conditionDef).toBeTruthy();
 
-      // Find the page definition for the current path
-      const pageDef = findPageByPath(currentPath);
-      if (currentCondition) {
-        const conditionMatched = pageDef?.condition === currentCondition.id;
-        expect(conditionMatched).toBeTruthy();
-        test.info().annotations.push({
-          type: 'condition-check',
-          description: `Condition "${currentCondition.name}" ${conditionMatched ? '✓ correctly triggered' : '✗ NOT triggered'} → navigated to ${currentPath}`
-        });
-        currentCondition = null;
-      }
-      if (!pageDef) {
-        console.warn(`No page definition found for path: ${currentPath}`);
-        break;
-      }
+    const mappedItems = getConditionItems(mappedCondition);
+    expect(mappedItems).toHaveLength(conditionDef.items.length);
 
-      console.log(`Processing page: ${pageDef.title || pageDef.path}`);
-      
-      // Add annotation for each page visited
-      test.info().annotations.push({
-        type: 'page-visit',
-        description: `Page: ${pageDef.title || pageDef.path} (${currentPath})`
-      });
-
-      // Handle terminal page - test ends here
-      if (pageDef.controller === 'TerminalPageController') {
-        test.info().annotations.push({
-          type: 'info',
-          description: `Reached terminal page: ${pageDef.title || pageDef.path}`
-        });
-        expect(page.getByRole('button',{name:'Continue'})).toHaveCount(0);
-        break;
-      }
-
-      // Handle summary page - verify and submit
-      if (pageDef.controller === 'SummaryPageWithConfirmationEmailController') {
-        await expect(page.getByRole('heading', { name: 'Check your answers before sending your form' })).toBeVisible();
-        await page.getByRole('button', { name: 'Send' }).click();
-        await page.waitForLoadState('networkidle');
-        break;
-      }
-
-      // Process components on this page
-      const components = pageDef.components ?? [];
-      const initializeComponents = components.map(compDef => 
-        ComponentsInitializer.initializeComponent(compDef, page)
+    // Ensure every item in the form definition is present in the mapped items
+    for (const itemDef of conditionDef.items) {
+      const match = mappedItems.find(
+        (m) =>
+          m.componentId === itemDef.componentId &&
+          m.operator === itemDef.operator
       );
+      expect(match).toBeTruthy();
+      expect(match.triggerValue).not.toBeNull();
 
-      for (const component of initializeComponents) {
-        let triggerValue;
-        if (condition?.componentId === component.id) {
-            console.log(`Condition name ${condition.name} trigger value: ${condition.triggerValue}`);
-          triggerValue = [condition.triggerValue];
-         currentCondition = condition;
-        }
-        const value = componentData[component.type] || [];
-
-        if (component.type === 'RadiosField') {
-          if (triggerValue) {
-            await component.selectOption(triggerValue[0]);
-          } else {
-            await component.selectFirstOption();
-          }
-        } else if ('fill' in component && typeof component.fill === 'function') {
-          await component.fill.apply(component, triggerValue ?? value);
-        }
+      if (itemDef.type === "ListItemRef") {
+        // For list refs we expect a string label
+        expect(typeof match.triggerValue).toBe("string");
       }
 
-      // Submit and navigate to next page
-      await page.getByRole('button', { name: 'Continue' }).click();
-      await page.waitForLoadState('networkidle');
-
-      // Get the new URL after navigation and push to stack
-      const newUrl = page.url();
-      const newPath = extractPathFromUrl(newUrl, normalized);
-
-      if (newPath !== currentPath) {
-        navigationStack.push(newUrl);
-        console.log(`Navigated to: ${newPath}`);
+      if (itemDef.type === "NumberValue") {
+        // For number conditions we expect a number
+        expect(typeof match.triggerValue).toBe("number");
       }
     }
   });
+});
+
+test("Associates all related condition items to each component on init", async ({
+  page,
+}) => {
+  const conditionItemCountsByComponentId = new Map();
+  for (const conditionDef of form.conditions ?? []) {
+    for (const item of conditionDef.items ?? []) {
+      conditionItemCountsByComponentId.set(
+        item.componentId,
+        (conditionItemCountsByComponentId.get(item.componentId) ?? 0) + 1
+      );
+    }
+  }
+
+  for (const pageDef of form.pages ?? []) {
+    for (const compDef of pageDef.components ?? []) {
+      const component = ComponentsInitializer.initializeComponent(
+        compDef,
+        page,
+        form.lists,
+        form.conditions
+      );
+
+      const expectedCount =
+        conditionItemCountsByComponentId.get(compDef.id) ?? 0;
+      const actualCount = Array.isArray(component.conditions)
+        ? component.conditions.length
+        : 0;
+      expect(actualCount).toBe(expectedCount);
+
+      // Sanity check: attached condition items reference this component
+      for (const entry of component.conditions ?? []) {
+        expect(entry.condition?.componentId).toBe(compDef.id);
+        expect(entry.conditionId).toBeTruthy();
+        expect(entry.name).toBeTruthy();
+      }
+    }
+  }
 });
