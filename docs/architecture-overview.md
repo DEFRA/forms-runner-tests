@@ -17,7 +17,7 @@ The core idea is:
 
 - `src/config.js`
   - Loads `.env` via `dotenv`.
-  - Validates and normalizes environment variables using `zod`.
+  - Validates and normalizes environment variables using `joi`.
 
 - `src/helpers/components-mapper.js`
   - Central mapping layer that connects JSON → runtime objects.
