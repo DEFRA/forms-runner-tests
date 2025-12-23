@@ -119,8 +119,3 @@ npm run lint
 - `npm run test:debug`: run tests with the Playwright inspector
 - `npm run report`: open the last HTML report
 - `npm run lint`: run ESLint
-
-The following scripts exist but may currently be placeholders (no matching files in `src/` at the time of writing):
-
-- `npm run test:parser`
-- `npm run inspect`
