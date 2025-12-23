@@ -1,4 +1,4 @@
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 
 /**
  * Controller for NationalGridFieldNumber components (single input for national grid number).
@@ -10,8 +10,8 @@ export class NationalGridFieldNumberController extends BaseFieldController {
    * @param {string} value
    * @returns {boolean}
    */
-  static isValidFormat(value) {
-    const pattern = /^[A-Z]{2}\d{8}$/i;
-    return pattern.test(value);
+  static isValidFormat (value) {
+    const pattern = /^[A-Z]{2}\d{8}$/i
+    return pattern.test(value)
   }
 }

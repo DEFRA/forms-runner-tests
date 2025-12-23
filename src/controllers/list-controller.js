@@ -1,41 +1,42 @@
 export class List {
-  constructor() {
-    this.list = new Map();
+  constructor () {
+    this.list = new Map()
   }
 
-  addItem(key, value) {
-    this.list.set(key, value);
+  addItem (key, value) {
+    this.list.set(key, value)
   }
+
   /**
    * @param {string} key
    * @returns {object | undefined}
    */
-  getItem(key) {
-    return this.list.get(key);
+  getItem (key) {
+    return this.list.get(key)
   }
 
   /**
    * Get all items in the list
    * @returns {Array<object>}
    */
-  getAllItems() {
-    return Array.from(this.list.values());
+  getAllItems () {
+    return Array.from(this.list.values())
   }
 
   /**
    * Get all item keys
    * @returns {Array<string>}
    */
-  getAllKeys() {
-    return Array.from(this.list.keys());
+  getAllKeys () {
+    return Array.from(this.list.keys())
   }
 
   /**
    * Get the size of the list
    * @returns {number}
    */
-  size() {
-    return this.list.size;
+  size () {
+    return this.list.size
   }
 }
 
@@ -59,18 +60,18 @@ export class ListController {
   /**
    * @param {ListControllerOptions} options
    */
-  constructor({ id, name, title, type, items }) {
-    this.id = id;
-    this.name = name;
-    this.title = title;
-    this.type = type;
-    this.list = new List();
-    this.items = items || [];
+  constructor ({ id, name, title, type, items }) {
+    this.id = id
+    this.name = name
+    this.title = title
+    this.type = type
+    this.list = new List()
+    this.items = items || []
 
     // Initialize list with items if provided
     if (items && Array.isArray(items)) {
       for (const item of items) {
-        this.list.addItem(item.id, item);
+        this.list.addItem(item.id, item)
       }
     }
   }
@@ -80,9 +81,9 @@ export class ListController {
    * @param {string} key
    * @param {ListItem} value
    */
-  addItem(key, value) {
-    this.list.addItem(key, value);
-    this.items.push(value);
+  addItem (key, value) {
+    this.list.addItem(key, value)
+    this.items.push(value)
   }
 
   /**
@@ -90,8 +91,8 @@ export class ListController {
    * @param {string} key
    * @returns {ListItem | undefined}
    */
-  getItem(key) {
-    return this.list.getItem(key);
+  getItem (key) {
+    return this.list.getItem(key)
   }
 
   /**
@@ -99,8 +100,8 @@ export class ListController {
    * @param {string} key
    * @returns {ListItem | undefined}
    */
-  findItem(key) {
-    return this.list.getItem(key);
+  findItem (key) {
+    return this.list.getItem(key)
   }
 
   /**
@@ -108,8 +109,8 @@ export class ListController {
    * @param {string} text
    * @returns {ListItem | undefined}
    */
-  findItemByText(text) {
-    return this.items.find((item) => item.text === text);
+  findItemByText (text) {
+    return this.items.find((item) => item.text === text)
   }
 
   /**
@@ -117,63 +118,63 @@ export class ListController {
    * @param {string} value
    * @returns {ListItem | undefined}
    */
-  findItemByValue(value) {
-    return this.items.find((item) => item.value === value);
+  findItemByValue (value) {
+    return this.items.find((item) => item.value === value)
   }
 
   /**
    * Get the underlying List object
    * @returns {List}
    */
-  getList() {
-    return this.list;
+  getList () {
+    return this.list
   }
 
   /**
    * Get all items as an array
    * @returns {ListItem[]}
    */
-  getAllItems() {
-    return this.items;
+  getAllItems () {
+    return this.items
   }
 
   /**
    * Get all item texts as an array
    * @returns {string[]}
    */
-  getAllTexts() {
-    return this.items.map((item) => item.text);
+  getAllTexts () {
+    return this.items.map((item) => item.text)
   }
 
   /**
    * Get all item values as an array
    * @returns {string[]}
    */
-  getAllValues() {
-    return this.items.map((item) => item.value);
+  getAllValues () {
+    return this.items.map((item) => item.value)
   }
 
   /**
    * Get the first item in the list
    * @returns {ListItem | undefined}
    */
-  getFirstItem() {
-    return this.items[0];
+  getFirstItem () {
+    return this.items[0]
   }
 
   /**
    * Get the last item in the list
    * @returns {ListItem | undefined}
    */
-  getLastItem() {
-    return this.items[this.items.length - 1];
+  getLastItem () {
+    return this.items[this.items.length - 1]
   }
 
   /**
    * Get the number of items in the list
    * @returns {number}
    */
-  size() {
-    return this.items.length;
+  size () {
+    return this.items.length
   }
 }

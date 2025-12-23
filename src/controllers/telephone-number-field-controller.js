@@ -1,4 +1,4 @@
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 
 /**
  * Controller for TelephoneNumberField components.
@@ -10,10 +10,10 @@ export class TelephoneNumberFieldController extends BaseFieldController {
    * @param {string} value
    * @returns {boolean}
    */
-  static isValidUKPhoneNumber(value) {
+  static isValidUKPhoneNumber (value) {
     // Basic UK phone number validation
-    const pattern = /^(?:(?:\+44)|(?:0))(?:\d{10}|\d{9})$/;
-    const cleaned = value.replace(/[\s-]/g, "");
-    return pattern.test(cleaned);
+    const pattern = /^(?:(?:\+44)|(?:0))(?:\d{10}|\d{9})$/
+    const cleaned = value.replace(/[\s-]/g, '')
+    return pattern.test(cleaned)
   }
 }

@@ -5,9 +5,9 @@ import {
   IsLessThanCondition,
   IsAtLeastCondition,
   IsAtMostCondition,
-} from "./conditions.js";
+} from './conditions.js'
 
-import { ConditionMapper } from "../helpers/components-mapper.js";
+import { ConditionMapper } from '../helpers/components-mapper.js'
 
 export {
   IsCondition,
@@ -16,7 +16,7 @@ export {
   IsLessThanCondition,
   IsAtLeastCondition,
   IsAtMostCondition,
-};
+}
 
 /**
  * @typedef {object} ConditionItemDefinition
@@ -57,8 +57,8 @@ export {
  * @param {import("@playwright/test").Page} page - Playwright page object
  * @returns {object | null} - Condition instance or null if operator not supported
  */
-export function createCondition(conditionDef, formDefinition, page) {
-  return ConditionMapper.createCondition(conditionDef, formDefinition, page);
+export function createCondition (conditionDef, formDefinition, page) {
+  return ConditionMapper.createCondition(conditionDef, formDefinition, page)
 }
 
 /**
@@ -67,8 +67,8 @@ export function createCondition(conditionDef, formDefinition, page) {
  * @param {import("@playwright/test").Page} page - Playwright page object
  * @returns {Map<string, object>} - Map of condition ID to condition instance
  */
-export function createConditionsForForm(formDefinition, page) {
-  return ConditionMapper.createConditionsForForm(formDefinition, page);
+export function createConditionsForForm (formDefinition, page) {
+  return ConditionMapper.createConditionsForForm(formDefinition, page)
 }
 
 /**
@@ -77,14 +77,14 @@ export function createConditionsForForm(formDefinition, page) {
  * @param {Map<string, object>} conditionsMap - Map of condition instances
  * @returns {object | undefined} - The condition instance or undefined
  */
-export function getConditionForPage(pageDef, conditionsMap) {
-  return ConditionMapper.getConditionForPage(pageDef, conditionsMap);
+export function getConditionForPage (pageDef, conditionsMap) {
+  return ConditionMapper.getConditionForPage(pageDef, conditionsMap)
 }
 
 /**
  * Get list of supported operators
  * @returns {string[]}
  */
-export function getSupportedOperators() {
-  return ConditionMapper.getSupportedOperators();
+export function getSupportedOperators () {
+  return ConditionMapper.getSupportedOperators()
 }

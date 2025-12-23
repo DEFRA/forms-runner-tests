@@ -5,24 +5,24 @@
 export default {
   semi: false,
   singleQuote: true,
-  trailingComma: "none",
+  trailingComma: 'none',
   overrides: [
     {
-      files: "*.md",
+      files: '*.md',
       options: {
-        embeddedLanguageFormatting: "off",
+        embeddedLanguageFormatting: 'off',
         singleQuote: false,
       },
     },
     {
-      files: "*.scss",
+      files: '*.scss',
       options: {
         printWidth: 120,
         singleQuote: false,
       },
     },
   ],
-};
+}
 
 /**
  * @import { Config } from 'prettier'

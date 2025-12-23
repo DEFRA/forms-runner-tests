@@ -1,4 +1,4 @@
-import * as Controllers from "../controllers/index";
+import * as Controllers from '../controllers/index'
 
 import {
   IsCondition,
@@ -7,7 +7,7 @@ import {
   IsLessThanCondition,
   IsAtLeastCondition,
   IsAtMostCondition,
-} from "../conditions/conditions.js";
+} from '../conditions/conditions.js'
 
 export const componentsMapper = {
   TextField: Controllers.TextFieldController,
@@ -30,7 +30,7 @@ export const componentsMapper = {
   MultilineTextField: Controllers.MultilineTextFieldController,
   FileUploadField: Controllers.FileUploadFieldController,
   // Add other component mappings here
-};
+}
 
 /**
  *  @typedef {object} EmailAddressFieldDefinition
@@ -58,17 +58,17 @@ export class ComponentsInitializer {
    * @param {Array} [conditions]
    * @returns typeof
    */
-  static initializeComponent(
+  static initializeComponent (
     componentDefinition,
     page,
     lists = [],
     conditions = []
   ) {
-    const ComponentClass = componentsMapper[componentDefinition.type];
+    const ComponentClass = componentsMapper[componentDefinition.type]
     if (!ComponentClass) {
       throw new Error(
         `Unsupported component type: ${componentDefinition.type}`
-      );
+      )
     }
     /**
      *  @type {.}
@@ -76,17 +76,17 @@ export class ComponentsInitializer {
     const component = new ComponentClass({
       ...componentDefinition,
       page,
-    });
+    })
     // if there is a list associated, we can fetch it from the form definition
     if (componentDefinition.list) {
-      const listDef = lists.find((l) => l.id === componentDefinition.list);
+      const listDef = lists.find((l) => l.id === componentDefinition.list)
       if (!listDef) {
         throw new Error(
           `List with ID ${componentDefinition.list} not found for component ${componentDefinition.id}`
-        );
+        )
       }
-      const list = new Controllers.ListController(listDef);
-      component.list = list;
+      const list = new Controllers.ListController(listDef)
+      component.list = list
     }
 
     // Attach any conditions that reference this component
@@ -95,10 +95,10 @@ export class ComponentsInitializer {
         componentDefinition.id,
         conditions,
         { lists, formDefinition: undefined, page }
-      );
-      component.conditions = Array.isArray(componentConditions) ? componentConditions : [componentConditions];
+      )
+      component.conditions = Array.isArray(componentConditions) ? componentConditions : [componentConditions]
     }
-    return component;
+    return component
   }
 }
 
@@ -112,12 +112,12 @@ export class ConditionMapper {
    */
   static CONDITION_MAP = {
     is: IsCondition,
-    "is not": IsNotCondition,
-    "is more than": IsMoreThanCondition,
-    "is less than": IsLessThanCondition,
-    "is at least": IsAtLeastCondition,
-    "is at most": IsAtMostCondition,
-  };
+    'is not': IsNotCondition,
+    'is more than': IsMoreThanCondition,
+    'is less than': IsLessThanCondition,
+    'is at least': IsAtLeastCondition,
+    'is at most': IsAtMostCondition,
+  }
 
   /**
    * Create a condition item instance from a condition item definition.
@@ -127,25 +127,25 @@ export class ConditionMapper {
    * @param {import("@playwright/test").Page} [page]
    * @returns {object | null}
    */
-  static createConditionItem(conditionDef, item, formDefinition, page) {
-    const ConditionClass = this.CONDITION_MAP[item.operator];
+  static createConditionItem (conditionDef, item, formDefinition, page) {
+    const ConditionClass = this.CONDITION_MAP[item.operator]
     if (!ConditionClass) {
-      console.warn(`No condition class found for operator: ${item.operator}`);
-      return null;
+      console.warn(`No condition class found for operator: ${item.operator}`)
+      return null
     }
 
     // Create a ListController if this is a ListItemRef type
-    let listController;
-    if (item.type === "ListItemRef") {
-      const listId = item?.value?.listId;
+    let listController
+    if (item.type === 'ListItemRef') {
+      const listId = item?.value?.listId
       const listDef = listId
         ? (formDefinition.lists ?? []).find((l) => l.id === listId)
-        : this.findListForComponent(formDefinition, item.componentId);
+        : this.findListForComponent(formDefinition, item.componentId)
 
       if (!listDef) {
         throw new Error(
           `List not found for ListItemRef condition item ${item.id} (component ${item.componentId})`
-        );
+        )
       }
 
       listController = new Controllers.ListController({
@@ -154,7 +154,7 @@ export class ConditionMapper {
         title: listDef.title,
         type: listDef.type,
         items: listDef.items,
-      });
+      })
     }
 
     return new ConditionClass({
@@ -167,7 +167,7 @@ export class ConditionMapper {
       value: item.value,
       type: item.type,
       list: listController,
-    });
+    })
   }
 
   /**
@@ -176,23 +176,23 @@ export class ConditionMapper {
    * @param {string} componentId
    * @returns {object | undefined}
    */
-  static findListForComponent(formDefinition, componentId) {
+  static findListForComponent (formDefinition, componentId) {
     for (const page of formDefinition.pages ?? []) {
-      if (!page.components || page.components.length === 0) continue;
-      const component = page.components.find((c) => c.id === componentId);
+      if (!page.components || page.components.length === 0) continue
+      const component = page.components.find((c) => c.id === componentId)
       if (component && component.list) {
         const list = (formDefinition.lists ?? []).find(
           (l) => l.id === component.list
-        );
+        )
         if (list) {
-          return list;
+          return list
         }
         throw new Error(
           `List with ID ${component.list} not found for component ${componentId}`
-        );
+        )
       }
     }
-    return undefined;
+    return undefined
   }
 
   /**
@@ -203,13 +203,13 @@ export class ConditionMapper {
    * @param {import("@playwright/test").Page} [page]
    * @returns {object | null}
    */
-  static createCondition(conditionDef, formDefinition, page) {
-    const items = conditionDef?.items ?? [];
+  static createCondition (conditionDef, formDefinition, page) {
+    const items = conditionDef?.items ?? []
     if (items.length === 0) {
       console.warn(
-        `Condition ${conditionDef?.displayName ?? "(unknown)"} has no items`
-      );
-      return null;
+        `Condition ${conditionDef?.displayName ?? '(unknown)'} has no items`
+      )
+      return null
     }
 
     // Single item condition: preserve previous API shape
@@ -219,7 +219,7 @@ export class ConditionMapper {
         items[0],
         formDefinition,
         page
-      );
+      )
     }
 
     // Multi-item condition: return a composite wrapper that exposes the item instances
@@ -227,10 +227,10 @@ export class ConditionMapper {
       .map((item) =>
         this.createConditionItem(conditionDef, item, formDefinition, page)
       )
-      .filter(Boolean);
+      .filter(Boolean)
 
     if (mappedItems.length === 0) {
-      return null;
+      return null
     }
 
     return {
@@ -238,10 +238,10 @@ export class ConditionMapper {
       name: conditionDef.displayName,
       coordinator: conditionDef.coordinator,
       items: mappedItems,
-      get componentIds() {
-        return mappedItems.map((c) => c.componentId);
+      get componentIds () {
+        return mappedItems.map((c) => c.componentId)
       },
-    };
+    }
   }
 
   /**
@@ -250,21 +250,21 @@ export class ConditionMapper {
    * @param {import("@playwright/test").Page} [page]
    * @returns {Map<string, object>}
    */
-  static createConditionsForForm(formDefinition, page) {
-    const conditionsMap = new Map();
+  static createConditionsForForm (formDefinition, page) {
+    const conditionsMap = new Map()
 
     for (const conditionDef of formDefinition.conditions ?? []) {
       const condition = this.createCondition(
         conditionDef,
         formDefinition,
         page
-      );
+      )
       if (condition) {
-        conditionsMap.set(conditionDef.id, condition);
+        conditionsMap.set(conditionDef.id, condition)
       }
     }
 
-    return conditionsMap;
+    return conditionsMap
   }
 
   /**
@@ -275,34 +275,34 @@ export class ConditionMapper {
    * @param {{lists?: Array, formDefinition?: object, page?: import('@playwright/test').Page}} context
    * @returns {Array<{conditionId: string, name: string, coordinator?: string, itemId: string, condition: object}>}
    */
-  static getConditionItemsForComponent(
+  static getConditionItemsForComponent (
     componentId,
     conditionsDefinition,
     context = {}
   ) {
-    const { lists = [], formDefinition, page } = context;
+    const { lists = [], formDefinition, page } = context
 
     // Minimal form definition for list lookups via ListItemRef.value.listId
     const dummyFormDefinition = formDefinition ?? {
       lists,
       pages: [],
       conditions: conditionsDefinition,
-    };
+    }
 
-    const results = [];
-    const allConditions = conditionsDefinition ?? [];
+    const results = []
+    const allConditions = conditionsDefinition ?? []
     for (const conditionDef of allConditions) {
-      const conditionItems = conditionDef?.items ?? [];
+      const conditionItems = conditionDef?.items ?? []
       for (const item of conditionItems) {
-        if (item.componentId !== componentId) continue;
+        if (item.componentId !== componentId) continue
         const conditionInstance = this.createConditionItem(
           conditionDef,
           item,
           dummyFormDefinition,
           page
-        );
+        )
 
-        if (!conditionInstance) continue;
+        if (!conditionInstance) continue
 
         results.push({
           conditionId: conditionDef.id,
@@ -310,11 +310,11 @@ export class ConditionMapper {
           coordinator: conditionDef.coordinator,
           itemId: item.id,
           condition: conditionInstance,
-        });
+        })
       }
     }
 
-    return results;
+    return results
   }
 
   /**
@@ -323,18 +323,18 @@ export class ConditionMapper {
    * @param {Map<string, object>} conditionsMap
    * @returns {object | undefined}
    */
-  static getConditionForPage(pageDef, conditionsMap) {
+  static getConditionForPage (pageDef, conditionsMap) {
     if (!pageDef?.condition) {
-      return undefined;
+      return undefined
     }
-    return conditionsMap.get(pageDef.condition);
+    return conditionsMap.get(pageDef.condition)
   }
 
   /**
    * Get list of supported operators
    * @returns {string[]}
    */
-  static getSupportedOperators() {
-    return Object.keys(this.CONDITION_MAP);
+  static getSupportedOperators () {
+    return Object.keys(this.CONDITION_MAP)
   }
 }

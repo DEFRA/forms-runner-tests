@@ -1,11 +1,11 @@
-import { z } from "zod";
-import dotenv from "dotenv";
+import { z } from 'zod'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 export const configSchema = z.object({
-  TEST_ENVIRONMENT: z.enum(["local", "test", "prod"]).default("local"),
+  TEST_ENVIRONMENT: z.enum(['local', 'test', 'prod']).default('local'),
   TIMEOUT: z.coerce.number().default(30000),
-});
+})
 
-export const config = configSchema.parse(process.env);
+export const config = configSchema.parse(process.env)

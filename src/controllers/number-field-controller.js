@@ -1,4 +1,4 @@
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 
 /**
  * Controller for NumberField components.
@@ -9,17 +9,17 @@ export class NumberFieldController extends BaseFieldController {
    * Fill the number field with a numeric value
    * @param {number|string} value - The numeric value to enter
    */
-  async fill(value) {
-    await this.find().fill(String(value));
-    return this;
+  async fill (value) {
+    await this.find().fill(String(value))
+    return this
   }
 
   /**
    * Get the current value as a number
    * @returns {Promise<number>}
    */
-  async getNumericValue() {
-    const value = await this.getValue();
-    return parseFloat(value);
+  async getNumericValue () {
+    const value = await this.getValue()
+    return parseFloat(value)
   }
 }

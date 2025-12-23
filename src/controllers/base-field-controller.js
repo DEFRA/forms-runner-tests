@@ -21,7 +21,7 @@ export class BaseFieldController {
   /**
    * @param {BaseFieldControllerParams} params
    */
-  constructor({
+  constructor ({
     title,
     page,
     name,
@@ -33,28 +33,28 @@ export class BaseFieldController {
     schema,
     list,
   }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.type = type;
-    this.hint = hint;
-    this.options = options;
-    this.id = id;
-    this.shortDescription = shortDescription;
-    this.schema = schema;
-    this.list = list;
+    this.title = title
+    this.page = page
+    this.name = name
+    this.type = type
+    this.hint = hint
+    this.options = options
+    this.id = id
+    this.shortDescription = shortDescription
+    this.schema = schema
+    this.list = list
     /**
      * @type{ import("../conditions/conditions.js" ).IsCondition[] }
      */
-    this.conditions = [];
+    this.conditions = []
   }
 
   /**
    * Check if the field is required
    * @returns {boolean}
    */
-  isRequired() {
-    return this.options?.required === true;
+  isRequired () {
+    return this.options?.required === true
   }
 
   /**
@@ -62,8 +62,8 @@ export class BaseFieldController {
    * Override this in subclasses for custom element location strategies.
    * @returns {import("@playwright/test").Locator}
    */
-  find() {
-    return this.page.locator(`#${this.name}`);
+  find () {
+    return this.page.locator(`#${this.name}`)
   }
 
   /**
@@ -72,11 +72,11 @@ export class BaseFieldController {
    * @param {import("@playwright/test").Expect} expect
    * @returns {Promise<this>}
    */
-  async assertions(expect) {
-    const element = this.find();
-    await expect(element).toBeVisible();
-    await expect(element).toBeEnabled();
-    return this;
+  async assertions (expect) {
+    const element = this.find()
+    await expect(element).toBeVisible()
+    await expect(element).toBeEnabled()
+    return this
   }
 
   /**
@@ -85,26 +85,26 @@ export class BaseFieldController {
    * @param {string} value
    * @returns {Promise<this>}
    */
-  async fill(value) {
-    await this.find().fill(value);
-    return this;
+  async fill (value) {
+    await this.find().fill(value)
+    return this
   }
 
   /**
    * Clear the field value
    * @returns {Promise<this>}
    */
-  async clear() {
-    await this.find().clear();
-    return this;
+  async clear () {
+    await this.find().clear()
+    return this
   }
 
   /**
    * Get the current value of the field
    * @returns {Promise<string>}
    */
-  async getValue() {
-    return await this.find().inputValue();
+  async getValue () {
+    return await this.find().inputValue()
   }
 }
 
@@ -117,18 +117,18 @@ export class BaseGroupFieldController extends BaseFieldController {
    * Find the fieldset element containing the group
    * @returns {import("@playwright/test").Locator}
    */
-  findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
+  findFieldset () {
+    return this.page.getByRole('group', { name: this.title })
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    * @returns {Promise<this>}
    */
-  async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
-    return this;
+  async assertions (expect) {
+    const fieldset = this.findFieldset()
+    await expect(fieldset).toBeVisible()
+    return this
   }
 }
 
@@ -140,27 +140,27 @@ export class BaseCompositeFieldController extends BaseFieldController {
    * Find the fieldset element containing all inputs
    * @returns {import("@playwright/test").Locator}
    */
-  findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
+  findFieldset () {
+    return this.page.getByRole('group', { name: this.title })
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    * @returns {Promise<this>}
    */
-  async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
-    return this;
+  async assertions (expect) {
+    const fieldset = this.findFieldset()
+    await expect(fieldset).toBeVisible()
+    return this
   }
 
   /**
    * Composite fields don't have a single find() - override to throw
    * @returns {never}
    */
-  find() {
+  find () {
     throw new Error(
       `${this.type} is a composite field. Use specific find methods instead.`
-    );
+    )
   }
 }
