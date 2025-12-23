@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 import { config } from './src/config'
 const baseURLs = {
-  local: 'http://localhost:3009',
+  local: 'http://localhost:3009'
 }
 
 const baseURL = baseURLs[config.TEST_ENVIRONMENT] || baseURLs.local
@@ -25,7 +25,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on',
+    trace: 'on'
   },
 
   /* Configure projects for major browsers */
@@ -34,9 +34,9 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
+        viewport: { width: 1920, height: 1080 }
       },
-      retries: 1,
-    },
-  ],
+      retries: 1
+    }
+  ]
 })

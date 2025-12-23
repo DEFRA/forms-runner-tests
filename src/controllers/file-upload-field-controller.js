@@ -9,7 +9,7 @@ const MimeTypeMap = {
   jpg: 'image/jpeg',
   jpeg: 'image/jpeg',
   png: 'image/png',
-  txt: 'text/plain',
+  txt: 'text/plain'
 }
 
 const createFileBuffer = () => {
@@ -22,7 +22,7 @@ const createFile = (fileName) => {
   return {
     name: fileName,
     mimeType,
-    buffer: createFileBuffer(),
+    buffer: createFileBuffer()
   }
 }
 
@@ -35,7 +35,7 @@ export class FileUploadFieldController extends BaseFieldController {
    * Find the file input element by name attribute
    * @returns {import("@playwright/test").Locator}
    */
-  find () {
+  find() {
     // File inputs in GOV.UK forms typically use id attribute
     return this.page.locator(`input[type="file"][id="${this.name}"]`)
   }
@@ -44,14 +44,14 @@ export class FileUploadFieldController extends BaseFieldController {
    * Find the file input by label text
    * @returns {import("@playwright/test").Locator}
    */
-  findByLabel () {
+  findByLabel() {
     return this.page.getByLabel(this.title)
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const element = this.find()
     await expect(element).toBeAttached()
     return this
@@ -62,7 +62,7 @@ export class FileUploadFieldController extends BaseFieldController {
    * @param {string} filePath - The path to the file to upload
    * @param _filePath
    */
-  async uploadFile (_filePath) {
+  async uploadFile(_filePath) {
     const mimeType =
       this.getAcceptedTypes()?.split(',')[0].trim() || 'text/plain'
     const fileExtensionMap = Object.entries(MimeTypeMap)
@@ -74,9 +74,9 @@ export class FileUploadFieldController extends BaseFieldController {
     return this
   }
 
-  async clickUploadButton () {
+  async clickUploadButton() {
     const uploadButton = this.page.getByRole('button', {
-      name: /upload file/i,
+      name: /upload file/i
     })
     await uploadButton.click()
     // wait for upload to complete if necessary
@@ -91,7 +91,7 @@ export class FileUploadFieldController extends BaseFieldController {
         {
           timeout: 15000,
           interval: 1000,
-          message: 'Waiting for file to be uploaded',
+          message: 'Waiting for file to be uploaded'
         }
       )
       .toBe(true)
@@ -99,7 +99,7 @@ export class FileUploadFieldController extends BaseFieldController {
     return this
   }
 
-  async uploadFiles () {
+  async uploadFiles() {
     const mimeType =
       this.getAcceptedTypes()?.split(',')[0]?.trim() || 'text/plain'
     const fileExtensionMap = Object.entries(MimeTypeMap)
@@ -117,7 +117,7 @@ export class FileUploadFieldController extends BaseFieldController {
    * Fill method for compatibility with component filling logic
    * @param {string | string[]} value - File path or array of file paths to upload
    */
-  async fill (value) {
+  async fill(value) {
     if (Array.isArray(value)) {
       await this.uploadFiles()
     } else {
@@ -130,7 +130,7 @@ export class FileUploadFieldController extends BaseFieldController {
   /**
    * Clear the file input (remove selected files)
    */
-  async clear () {
+  async clear() {
     await this.find().setInputFiles([])
     return this
   }
@@ -139,7 +139,7 @@ export class FileUploadFieldController extends BaseFieldController {
    * Get the accepted file types for this input
    * @returns {string | undefined}
    */
-  getAcceptedTypes () {
+  getAcceptedTypes() {
     return this.options?.accept
   }
 
@@ -148,7 +148,7 @@ export class FileUploadFieldController extends BaseFieldController {
    * @param {string} mimeType - The MIME type to check (e.g., 'application/pdf')
    * @returns {boolean}
    */
-  isFileTypeAccepted (mimeType) {
+  isFileTypeAccepted(mimeType) {
     const accepted = this.getAcceptedTypes()
     if (!accepted) {
       return true // No restriction means all types accepted

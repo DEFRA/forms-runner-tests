@@ -10,7 +10,7 @@ export class OsGridRefFieldController extends BaseFieldController {
    * @param {string} value
    * @returns {boolean}
    */
-  static isValidFormat (value) {
+  static isValidFormat(value) {
     const pattern = /^[A-Z]{2}\d{6}$/i
     return pattern.test(value)
   }

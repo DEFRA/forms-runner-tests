@@ -8,34 +8,34 @@ export class DeclarationFieldController extends BaseFieldController {
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findCheckbox () {
+  findCheckbox() {
     return this.page.getByLabel('I understand and agree')
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findDeclarationContent () {
+  findDeclarationContent() {
     return this.page.locator(`[data-declaration-id="${this.id}"]`)
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const checkbox = this.findCheckbox()
     await expect(checkbox).toBeVisible()
     await expect(checkbox).toBeEnabled()
     return this
   }
 
-  async fill () {
+  async fill() {
     const checkbox = this.findCheckbox()
     await checkbox.check({ force: true, timeout: 5000 })
     return this
   }
 
-  async decline () {
+  async decline() {
     const checkbox = this.findCheckbox()
     await checkbox.uncheck()
     return this
@@ -45,14 +45,14 @@ export class DeclarationFieldController extends BaseFieldController {
    * Check if the declaration is accepted
    * @returns {Promise<boolean>}
    */
-  async isAccepted () {
+  async isAccepted() {
     return await this.findCheckbox().isChecked()
   }
 
   /**
    * Toggle the declaration checkbox
    */
-  async toggle () {
+  async toggle() {
     await this.findCheckbox().click()
     return this
   }

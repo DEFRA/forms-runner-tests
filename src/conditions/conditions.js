@@ -25,7 +25,7 @@ export class IsCondition {
   /**
    * @param {IsConditionOptions} options
    */
-  constructor ({ page, id, name, operator, componentId, value, type, list }) {
+  constructor({ page, id, name, operator, componentId, value, type, list }) {
     this.page = page
     this.id = id
     this.name = name
@@ -40,7 +40,7 @@ export class IsCondition {
    * Get all items from the list
    * @returns {ListItem[]}
    */
-  get listItems () {
+  get listItems() {
     if (this.type === 'ListItemRef' && this.list) {
       return this.list.getAllItems()
     }
@@ -51,7 +51,7 @@ export class IsCondition {
    * Get the list item that triggers this condition
    * @returns {ListItem | null}
    */
-  get triggerListItem () {
+  get triggerListItem() {
     if (this.type === 'ListItemRef' && this.list) {
       return this.list.getItem(this.value.itemId) || null
     }
@@ -68,7 +68,7 @@ export class IsCondition {
    * Get a list item that does NOT trigger this condition
    * @returns {ListItem | null}
    */
-  get nonTriggerListItem () {
+  get nonTriggerListItem() {
     if (this.type === 'ListItemRef' && this.list) {
       const items = this.list.getAllItems()
       return items.find((item) => item.id !== this.value.itemId) || null
@@ -88,7 +88,7 @@ export class IsCondition {
    * Get the value (text) that triggers this condition
    * @returns {string | null}
    */
-  get triggerValue () {
+  get triggerValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value : null
     }
@@ -103,7 +103,7 @@ export class IsCondition {
    * Get a value (text) that does NOT trigger this condition
    * @returns {string | null}
    */
-  get nonTriggerValue () {
+  get nonTriggerValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value + 1 : null
     }
@@ -118,7 +118,7 @@ export class IsCondition {
    * Get all non-triggering list items
    * @returns {ListItem[]}
    */
-  get allNonTriggerItems () {
+  get allNonTriggerItems() {
     if (this.type === 'ListItemRef' && this.list) {
       return this.list
         .getAllItems()
@@ -139,7 +139,7 @@ export class IsCondition {
  * @param {any} value
  * @returns {value is RelativeDateValue}
  */
-function isRelativeDateValue (value) {
+function isRelativeDateValue(value) {
   return (
     value &&
     typeof value === 'object' &&
@@ -153,7 +153,7 @@ function isRelativeDateValue (value) {
  * @param {RelativeDateValue} relative
  * @returns {Date}
  */
-function getThresholdDate (relative) {
+function getThresholdDate(relative) {
   const date = new Date()
   const directionMultiplier =
     relative.direction === 'in the past'
@@ -168,9 +168,7 @@ function getThresholdDate (relative) {
   }
 
   if (relative.unit === 'years') {
-    date.setFullYear(
-      date.getFullYear() + directionMultiplier * relative.period
-    )
+    date.setFullYear(date.getFullYear() + directionMultiplier * relative.period)
     return date
   }
 
@@ -184,7 +182,7 @@ function getThresholdDate (relative) {
  * @param {number} days
  * @returns {Date}
  */
-function addDays (date, days) {
+function addDays(date, days) {
   const out = new Date(date.getTime())
   out.setDate(out.getDate() + days)
   return out
@@ -204,7 +202,7 @@ export class IsMoreThanCondition {
   /**
    * @param {IsMoreThanConditionOptions} options
    */
-  constructor ({ page, id, name, operator, componentId, value, type }) {
+  constructor({ page, id, name, operator, componentId, value, type }) {
     this.page = page
     this.id = id
     this.name = name
@@ -218,7 +216,7 @@ export class IsMoreThanCondition {
    * Get a value that triggers this condition (value > threshold)
    * @returns {number | Date | null}
    */
-  get triggerValue () {
+  get triggerValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value + 1 : null
     }
@@ -239,7 +237,7 @@ export class IsMoreThanCondition {
    * Get a value that does NOT trigger this condition (value <= threshold)
    * @returns {number | Date | null}
    */
-  get nonTriggerValue () {
+  get nonTriggerValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value : null
     }
@@ -256,7 +254,7 @@ export class IsMoreThanCondition {
    * Get the boundary value (the threshold itself)
    * @returns {number | Date | null}
    */
-  get boundaryValue () {
+  get boundaryValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value : null
     }
@@ -272,7 +270,7 @@ export class IsMoreThanCondition {
    * Get a value well below the threshold
    * @returns {number | null}
    */
-  get safeLowValue () {
+  get safeLowValue() {
     return this.type === 'NumberValue' ? Math.max(0, this.value - 1) : null
   }
 }
@@ -291,7 +289,7 @@ export class IsLessThanCondition {
   /**
    * @param {IsLessThanConditionOptions} options
    */
-  constructor ({ page, id, name, operator, componentId, value, type }) {
+  constructor({ page, id, name, operator, componentId, value, type }) {
     this.page = page
     this.id = id
     this.name = name
@@ -305,7 +303,7 @@ export class IsLessThanCondition {
    * Get a value that triggers this condition (value < threshold)
    * @returns {number | Date | null}
    */
-  get triggerValue () {
+  get triggerValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value - 1 : null
     }
@@ -326,7 +324,7 @@ export class IsLessThanCondition {
    * Get a value that does NOT trigger this condition (value >= threshold)
    * @returns {number | Date | null}
    */
-  get nonTriggerValue () {
+  get nonTriggerValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value : null
     }
@@ -343,7 +341,7 @@ export class IsLessThanCondition {
    * Get the boundary value (the threshold itself)
    * @returns {number | Date | null}
    */
-  get boundaryValue () {
+  get boundaryValue() {
     if (this.type === 'NumberValue') {
       return typeof this.value === 'number' ? this.value : null
     }
@@ -370,7 +368,7 @@ export class IsAtLeastCondition {
   /**
    * @param {IsAtLeastConditionOptions} options
    */
-  constructor ({ page, id, name, operator, componentId, value, type }) {
+  constructor({ page, id, name, operator, componentId, value, type }) {
     this.page = page
     this.id = id
     this.name = name
@@ -384,7 +382,7 @@ export class IsAtLeastCondition {
    * Get a value that triggers this condition (value >= threshold)
    * @returns {number | null}
    */
-  get triggerValue () {
+  get triggerValue() {
     return this.type === 'NumberValue' ? this.value : null
   }
 
@@ -392,7 +390,7 @@ export class IsAtLeastCondition {
    * Get a value that does NOT trigger this condition (value < threshold)
    * @returns {number | null}
    */
-  get nonTriggerValue () {
+  get nonTriggerValue() {
     return this.type === 'NumberValue' ? this.value - 1 : null
   }
 }
@@ -411,7 +409,7 @@ export class IsAtMostCondition {
   /**
    * @param {IsAtMostConditionOptions} options
    */
-  constructor ({ page, id, name, operator, componentId, value, type }) {
+  constructor({ page, id, name, operator, componentId, value, type }) {
     this.page = page
     this.id = id
     this.name = name
@@ -425,7 +423,7 @@ export class IsAtMostCondition {
    * Get a value that triggers this condition (value <= threshold)
    * @returns {number | null}
    */
-  get triggerValue () {
+  get triggerValue() {
     return this.type === 'NumberValue' ? this.value : null
   }
 
@@ -433,7 +431,7 @@ export class IsAtMostCondition {
    * Get a value that does NOT trigger this condition (value > threshold)
    * @returns {number | null}
    */
-  get nonTriggerValue () {
+  get nonTriggerValue() {
     return this.type === 'NumberValue' ? this.value + 1 : null
   }
 }
@@ -453,7 +451,7 @@ export class IsNotCondition {
   /**
    * @param {IsNotConditionOptions} options
    */
-  constructor ({ page, id, name, operator, componentId, value, type, list }) {
+  constructor({ page, id, name, operator, componentId, value, type, list }) {
     this.page = page
     this.id = id
     this.name = name
@@ -468,7 +466,7 @@ export class IsNotCondition {
    * Get all items from the list
    * @returns {ListItem[]}
    */
-  get listItems () {
+  get listItems() {
     if (this.type === 'ListItemRef' && this.list) {
       return this.list.getAllItems()
     }
@@ -479,7 +477,7 @@ export class IsNotCondition {
    * Get the list item that does NOT match (triggers "is not" condition)
    * @returns {ListItem | null}
    */
-  get triggerListItem () {
+  get triggerListItem() {
     if (this.type === 'ListItemRef' && this.list) {
       const items = this.list.getAllItems()
       return items.find((item) => item.id !== this.value.itemId) || null
@@ -491,7 +489,7 @@ export class IsNotCondition {
    * Get the list item that DOES match (does not trigger "is not" condition)
    * @returns {ListItem | null}
    */
-  get nonTriggerListItem () {
+  get nonTriggerListItem() {
     if (this.type === 'ListItemRef' && this.list) {
       return this.list.getItem(this.value.itemId) || null
     }
@@ -502,7 +500,7 @@ export class IsNotCondition {
    * Get a value (text) that triggers this condition
    * @returns {string | null}
    */
-  get triggerValue () {
+  get triggerValue() {
     const item = this.triggerListItem
     return item ? item.text : null
   }
@@ -511,7 +509,7 @@ export class IsNotCondition {
    * Get the value (text) that does NOT trigger this condition
    * @returns {string | null}
    */
-  get nonTriggerValue () {
+  get nonTriggerValue() {
     const item = this.nonTriggerListItem
     return item ? item.text : null
   }

@@ -9,7 +9,7 @@ export class MultilineTextFieldController extends BaseFieldController {
    * Type text into the textarea (simulates key presses)
    * @param {string} value - The text to type
    */
-  async type (value) {
+  async type(value) {
     await this.find().pressSequentially(value)
     return this
   }
@@ -18,7 +18,7 @@ export class MultilineTextFieldController extends BaseFieldController {
    * Append text to existing content in the textarea
    * @param {string} value - The text to append
    */
-  async append (value) {
+  async append(value) {
     const currentValue = await this.getValue()
     await this.fill(currentValue + value)
     return this

@@ -10,7 +10,7 @@ export class TelephoneNumberFieldController extends BaseFieldController {
    * @param {string} value
    * @returns {boolean}
    */
-  static isValidUKPhoneNumber (value) {
+  static isValidUKPhoneNumber(value) {
     // Basic UK phone number validation
     const pattern = /^(?:(?:\+44)|(?:0))(?:\d{10}|\d{9})$/
     const cleaned = value.replace(/[\s-]/g, '')

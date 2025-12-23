@@ -15,7 +15,7 @@ const conditionIds = [...conditions.keys()]
  *
  * @param condition
  */
-function getConditionItems (condition) {
+function getConditionItems(condition) {
   if (!condition) return []
   if (Array.isArray(condition.items)) {
     return condition.items
@@ -56,7 +56,7 @@ conditionIds.forEach((id) => {
 })
 
 test('Associates all related condition items to each component on init', async ({
-  page,
+  page
 }) => {
   const conditionItemCountsByComponentId = new Map()
   for (const conditionDef of form.conditions ?? []) {

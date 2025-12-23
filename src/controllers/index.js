@@ -2,7 +2,7 @@
 export {
   BaseFieldController,
   BaseGroupFieldController,
-  BaseCompositeFieldController,
+  BaseCompositeFieldController
 } from './base-field-controller.js'
 
 // Controller exports

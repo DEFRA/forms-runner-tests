@@ -8,28 +8,28 @@ export class LatLongFieldController extends BaseCompositeFieldController {
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findLatitudeInput () {
+  findLatitudeInput() {
     return this.page.locator(`#${this.name}__latitude`)
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findLongitudeInput () {
+  findLongitudeInput() {
     return this.page.getByRole('textbox', { name: 'Longitude' })
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findFieldset () {
+  findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const fieldset = this.findFieldset()
     await expect(fieldset).toBeVisible()
 
@@ -48,7 +48,7 @@ export class LatLongFieldController extends BaseCompositeFieldController {
    * @param {string} latitude - Latitude value (for GB: 49.850 to 60.859)
    * @param {string} longitude - Longitude value (for GB: -13.687 to 1.767)
    */
-  async fill (latitude, longitude) {
+  async fill(latitude, longitude) {
     await this.findLatitudeInput().fill(latitude)
     await this.findLongitudeInput().fill(longitude)
     return this
@@ -60,7 +60,7 @@ export class LatLongFieldController extends BaseCompositeFieldController {
    * @param {number} longitude
    * @returns {boolean}
    */
-  static isWithinGBBounds (latitude, longitude) {
+  static isWithinGBBounds(latitude, longitude) {
     const isLatValid = latitude >= 49.85 && latitude <= 60.859
     const isLongValid = longitude >= -13.687 && longitude <= 1.767
     return isLatValid && isLongValid

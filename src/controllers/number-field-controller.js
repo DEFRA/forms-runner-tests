@@ -9,7 +9,7 @@ export class NumberFieldController extends BaseFieldController {
    * Fill the number field with a numeric value
    * @param {number|string} value - The numeric value to enter
    */
-  async fill (value) {
+  async fill(value) {
     await this.find().fill(String(value))
     return this
   }
@@ -18,7 +18,7 @@ export class NumberFieldController extends BaseFieldController {
    * Get the current value as a number
    * @returns {Promise<number>}
    */
-  async getNumericValue () {
+  async getNumericValue() {
     const value = await this.getValue()
     return parseFloat(value)
   }

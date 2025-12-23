@@ -10,7 +10,7 @@ export class EmailAddressFieldController extends BaseFieldController {
    * @param {string} value
    * @returns {boolean}
    */
-  static isValidEmail (value) {
+  static isValidEmail(value) {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return pattern.test(value)
   }

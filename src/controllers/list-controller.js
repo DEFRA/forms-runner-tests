@@ -1,9 +1,9 @@
 export class List {
-  constructor () {
+  constructor() {
     this.list = new Map()
   }
 
-  addItem (key, value) {
+  addItem(key, value) {
     this.list.set(key, value)
   }
 
@@ -11,7 +11,7 @@ export class List {
    * @param {string} key
    * @returns {object | undefined}
    */
-  getItem (key) {
+  getItem(key) {
     return this.list.get(key)
   }
 
@@ -19,7 +19,7 @@ export class List {
    * Get all items in the list
    * @returns {Array<object>}
    */
-  getAllItems () {
+  getAllItems() {
     return Array.from(this.list.values())
   }
 
@@ -27,7 +27,7 @@ export class List {
    * Get all item keys
    * @returns {Array<string>}
    */
-  getAllKeys () {
+  getAllKeys() {
     return Array.from(this.list.keys())
   }
 
@@ -35,7 +35,7 @@ export class List {
    * Get the size of the list
    * @returns {number}
    */
-  size () {
+  size() {
     return this.list.size
   }
 }
@@ -60,7 +60,7 @@ export class ListController {
   /**
    * @param {ListControllerOptions} options
    */
-  constructor ({ id, name, title, type, items }) {
+  constructor({ id, name, title, type, items }) {
     this.id = id
     this.name = name
     this.title = title
@@ -81,7 +81,7 @@ export class ListController {
    * @param {string} key
    * @param {ListItem} value
    */
-  addItem (key, value) {
+  addItem(key, value) {
     this.list.addItem(key, value)
     this.items.push(value)
   }
@@ -91,7 +91,7 @@ export class ListController {
    * @param {string} key
    * @returns {ListItem | undefined}
    */
-  getItem (key) {
+  getItem(key) {
     return this.list.getItem(key)
   }
 
@@ -100,7 +100,7 @@ export class ListController {
    * @param {string} key
    * @returns {ListItem | undefined}
    */
-  findItem (key) {
+  findItem(key) {
     return this.list.getItem(key)
   }
 
@@ -109,7 +109,7 @@ export class ListController {
    * @param {string} text
    * @returns {ListItem | undefined}
    */
-  findItemByText (text) {
+  findItemByText(text) {
     return this.items.find((item) => item.text === text)
   }
 
@@ -118,7 +118,7 @@ export class ListController {
    * @param {string} value
    * @returns {ListItem | undefined}
    */
-  findItemByValue (value) {
+  findItemByValue(value) {
     return this.items.find((item) => item.value === value)
   }
 
@@ -126,7 +126,7 @@ export class ListController {
    * Get the underlying List object
    * @returns {List}
    */
-  getList () {
+  getList() {
     return this.list
   }
 
@@ -134,7 +134,7 @@ export class ListController {
    * Get all items as an array
    * @returns {ListItem[]}
    */
-  getAllItems () {
+  getAllItems() {
     return this.items
   }
 
@@ -142,7 +142,7 @@ export class ListController {
    * Get all item texts as an array
    * @returns {string[]}
    */
-  getAllTexts () {
+  getAllTexts() {
     return this.items.map((item) => item.text)
   }
 
@@ -150,7 +150,7 @@ export class ListController {
    * Get all item values as an array
    * @returns {string[]}
    */
-  getAllValues () {
+  getAllValues() {
     return this.items.map((item) => item.value)
   }
 
@@ -158,7 +158,7 @@ export class ListController {
    * Get the first item in the list
    * @returns {ListItem | undefined}
    */
-  getFirstItem () {
+  getFirstItem() {
     return this.items[0]
   }
 
@@ -166,7 +166,7 @@ export class ListController {
    * Get the last item in the list
    * @returns {ListItem | undefined}
    */
-  getLastItem () {
+  getLastItem() {
     return this.items[this.items.length - 1]
   }
 
@@ -174,7 +174,7 @@ export class ListController {
    * Get the number of items in the list
    * @returns {number}
    */
-  size () {
+  size() {
     return this.items.length
   }
 }

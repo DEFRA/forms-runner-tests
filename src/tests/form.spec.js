@@ -25,8 +25,8 @@ const componentData = {
       addressLine1: '10 Downing Street',
       addressLine2: '',
       townOrCity: 'London',
-      postcode: 'SW1A 2AA',
-    },
+      postcode: 'SW1A 2AA'
+    }
   ],
   EmailAddressField: ['test@example.com'],
   AutocompleteField: [],
@@ -35,8 +35,8 @@ const componentData = {
   CheckboxesField: [],
   MultilineTextField: ['This is sample multiline text for testing purpose.'],
   FileUploadField: [
-    path.resolve(new URL('../data/sample-file.pdf', import.meta.url).pathname),
-  ],
+    path.resolve(new URL('../data/sample-file.pdf', import.meta.url).pathname)
+  ]
 }
 
 // UUID regex pattern
@@ -50,7 +50,7 @@ const REPEAT_SUMMARY_PATTERN = /^(.+)\/summary$/
  * @param {string} path
  * @returns {object | undefined}
  */
-function findPageByPath (path) {
+function findPageByPath(path) {
   let pageDef = allComponentsForm.pages.find((p) => p.path === path)
 
   // could be repeat page with UUID?
@@ -79,7 +79,7 @@ function findPageByPath (path) {
  * @param {string} path
  * @returns {boolean}
  */
-function isRepeatSummaryPath (path) {
+function isRepeatSummaryPath(path) {
   if (!REPEAT_SUMMARY_PATTERN.test(path)) {
     return false
   }
@@ -93,7 +93,7 @@ function isRepeatSummaryPath (path) {
  * @param {string} path
  * @returns {boolean}
  */
-function isRepeatPageInstance (path) {
+function isRepeatPageInstance(path) {
   return UUID_PATTERN.test(path)
 }
 
@@ -103,7 +103,7 @@ function isRepeatPageInstance (path) {
  * @param {string} formSlug
  * @returns {string}
  */
-function extractPathFromUrl (url, formSlug) {
+function extractPathFromUrl(url, formSlug) {
   const formPrefix = `/form/${formSlug}`
   const urlObj = new URL(url)
   const pathname = urlObj.pathname
@@ -166,7 +166,7 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
     if (pageDef.controller === 'TerminalPageController') {
       test.info().annotations.push({
         type: 'info',
-        description: `Reached terminal page: ${pageDef.title || pageDef.path}`,
+        description: `Reached terminal page: ${pageDef.title || pageDef.path}`
       })
       break
     }
@@ -188,7 +188,7 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
     // provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
     if (isRepeatSummaryPath(currentPath)) {
       const addAnotherButton = page.getByRole('button', {
-        name: /add another/i,
+        name: /add another/i
       })
       if ((await addAnotherButton.count()) > 0) {
         // We're on the repeat summary - click Continue to proceed
@@ -279,7 +279,7 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
  * @param {object} summaryPageDef
  * @returns {string}
  */
-function buttonText (summaryPageDef) {
+function buttonText(summaryPageDef) {
   if (
     summaryPageDef.components &&
     summaryPageDef.components.some((component) => component.type === 'Markdown')

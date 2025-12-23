@@ -53,13 +53,11 @@ Each class is designed to be a pure data object with computed properties.
 Supports these `type` values:
 
 - `ListItemRef`
-
   - Uses a `ListController` to translate `value.itemId` into list item text.
   - `triggerValue` = selected item text
   - `nonTriggerValue` = a different item’s text
 
 - `NumberValue`
-
   - `triggerValue` = the numeric value
   - `nonTriggerValue` = a different numeric value (value + 1)
 

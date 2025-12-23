@@ -13,13 +13,11 @@ A controller is responsible for:
 Base classes live in `src/controllers/base-field-controller.js`:
 
 - `BaseFieldController`
-
   - Default `find()` uses `#${name}`.
   - Default `assertions(expect)` checks visible + enabled.
   - Default `fill(value)` calls `locator.fill(value)`.
 
 - `BaseGroupFieldController`
-
   - For radios/checkboxes groups.
   - Uses `getByRole('group', { name: title })` (fieldset/legend semantics).
 

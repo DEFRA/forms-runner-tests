@@ -11,7 +11,7 @@ export class TextFieldController extends BaseFieldController {
    * If a regex schema is defined, generates a matching value.
    * @param {string} value - The text to enter (may be overridden by regex)
    */
-  async fill (value) {
+  async fill(value) {
     if (this.schema?.regex) {
       const regex = new RegExp(this.schema.regex)
       const randExp = new RandExp(regex.source)

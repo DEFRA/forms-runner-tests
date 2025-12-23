@@ -5,49 +5,49 @@ import { BaseCompositeFieldController } from './base-field-controller.js'
  * Extends BaseCompositeFieldController which provides constructor and isRequired().
  */
 export class UkAddressFieldController extends BaseCompositeFieldController {
-  usesPostcodeLookup () {
+  usesPostcodeLookup() {
     return this.options?.usePostcodeLookup === true
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findAddressLine1 () {
+  findAddressLine1() {
     return this.page.locator(`#${this.name}__addressLine1`)
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findAddressLine2 () {
+  findAddressLine2() {
     return this.page.locator(`#${this.name}__addressLine2`)
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findTownOrCity () {
+  findTownOrCity() {
     return this.page.locator(`#${this.name}__town`)
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findCounty () {
+  findCounty() {
     return this.page.locator(`#${this.name}__county`)
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findPostcode () {
+  findPostcode() {
     return this.page.locator(`#${this.name}__postcode`)
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
-  findFieldset () {
+  findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
@@ -55,7 +55,7 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * For postcode lookup mode
    * @returns {import("@playwright/test").Locator}
    */
-  findPostcodeLookupInput () {
+  findPostcodeLookupInput() {
     return this.page.locator(`#${this.name}__postcode`)
   }
 
@@ -63,7 +63,7 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * For postcode lookup mode
    * @returns {import("@playwright/test").Locator}
    */
-  findFindAddressButton () {
+  findFindAddressButton() {
     return this.page.locator(`#${this.name}__findAddress`)
   }
 
@@ -71,14 +71,14 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * For postcode lookup mode
    * @returns {import("@playwright/test").Locator}
    */
-  findAddressDropdown () {
+  findAddressDropdown() {
     return this.page.getByRole('combobox', { name: 'Select an address' })
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const fieldset = this.findFieldset()
     await expect(fieldset).toBeVisible()
 
@@ -106,7 +106,7 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * @property {string} postcode
    * @param {AddressDetails} address
    */
-  async fill (address) {
+  async fill(address) {
     await this.findAddressLine1().fill(address.addressLine1)
     if (address.addressLine2) {
       await this.findAddressLine2().fill(address.addressLine2)
@@ -123,7 +123,7 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * For postcode lookup mode - search for an address
    * @param {string} postcode
    */
-  async searchPostcode (postcode) {
+  async searchPostcode(postcode) {
     await this.findPostcodeLookupInput().fill(postcode)
     await this.findFindAddressButton().click()
     return this
@@ -133,7 +133,7 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * For postcode lookup mode - select an address from dropdown
    * @param {string} addressText
    */
-  async selectAddress (addressText) {
+  async selectAddress(addressText) {
     await this.findAddressDropdown().selectOption({ label: addressText })
     return this
   }

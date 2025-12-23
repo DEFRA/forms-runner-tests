@@ -12,17 +12,14 @@ The core idea is:
 ## High-level module map
 
 - `playwright.config.js`
-
   - Sets Playwright configuration (test directory, reporter, trace, browser project).
   - Computes `baseURL` from environment configuration.
 
 - `src/config.js`
-
   - Loads `.env` via `dotenv`.
   - Validates and normalizes environment variables using `zod`.
 
 - `src/helpers/components-mapper.js`
-
   - Central mapping layer that connects JSON → runtime objects.
   - Exposes:
     - `componentsMapper`: component type → controller class
@@ -30,12 +27,10 @@ The core idea is:
     - `ConditionMapper`: operator → condition class + helpers to build condition instances
 
 - `src/controllers/*`
-
   - One controller per component type. Each controller encapsulates locators + fill/assert logic.
   - All controllers generally follow the same contract: `find()`, `assertions(expect)`, `fill(value)`.
 
 - `src/conditions/*`
-
   - `src/conditions/conditions.js`: condition classes implementing `triggerValue` and `nonTriggerValue`.
   - `src/conditions/index.js`: public exports and helpers that proxy to `ConditionMapper`.
 

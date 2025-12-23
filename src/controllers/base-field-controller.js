@@ -21,7 +21,7 @@ export class BaseFieldController {
   /**
    * @param {BaseFieldControllerParams} params
    */
-  constructor ({
+  constructor({
     title,
     page,
     name,
@@ -31,7 +31,7 @@ export class BaseFieldController {
     id,
     shortDescription,
     schema,
-    list,
+    list
   }) {
     this.title = title
     this.page = page
@@ -53,7 +53,7 @@ export class BaseFieldController {
    * Check if the field is required
    * @returns {boolean}
    */
-  isRequired () {
+  isRequired() {
     return this.options?.required === true
   }
 
@@ -62,7 +62,7 @@ export class BaseFieldController {
    * Override this in subclasses for custom element location strategies.
    * @returns {import("@playwright/test").Locator}
    */
-  find () {
+  find() {
     return this.page.locator(`#${this.name}`)
   }
 
@@ -72,7 +72,7 @@ export class BaseFieldController {
    * @param {import("@playwright/test").Expect} expect
    * @returns {Promise<this>}
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const element = this.find()
     await expect(element).toBeVisible()
     await expect(element).toBeEnabled()
@@ -85,7 +85,7 @@ export class BaseFieldController {
    * @param {string} value
    * @returns {Promise<this>}
    */
-  async fill (value) {
+  async fill(value) {
     await this.find().fill(value)
     return this
   }
@@ -94,7 +94,7 @@ export class BaseFieldController {
    * Clear the field value
    * @returns {Promise<this>}
    */
-  async clear () {
+  async clear() {
     await this.find().clear()
     return this
   }
@@ -103,7 +103,7 @@ export class BaseFieldController {
    * Get the current value of the field
    * @returns {Promise<string>}
    */
-  async getValue () {
+  async getValue() {
     return await this.find().inputValue()
   }
 }
@@ -117,7 +117,7 @@ export class BaseGroupFieldController extends BaseFieldController {
    * Find the fieldset element containing the group
    * @returns {import("@playwright/test").Locator}
    */
-  findFieldset () {
+  findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
@@ -125,7 +125,7 @@ export class BaseGroupFieldController extends BaseFieldController {
    * @param {import("@playwright/test").Expect} expect
    * @returns {Promise<this>}
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const fieldset = this.findFieldset()
     await expect(fieldset).toBeVisible()
     return this
@@ -140,7 +140,7 @@ export class BaseCompositeFieldController extends BaseFieldController {
    * Find the fieldset element containing all inputs
    * @returns {import("@playwright/test").Locator}
    */
-  findFieldset () {
+  findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
@@ -148,7 +148,7 @@ export class BaseCompositeFieldController extends BaseFieldController {
    * @param {import("@playwright/test").Expect} expect
    * @returns {Promise<this>}
    */
-  async assertions (expect) {
+  async assertions(expect) {
     const fieldset = this.findFieldset()
     await expect(fieldset).toBeVisible()
     return this
@@ -158,7 +158,7 @@ export class BaseCompositeFieldController extends BaseFieldController {
    * Composite fields don't have a single find() - override to throw
    * @returns {never}
    */
-  find () {
+  find() {
     throw new Error(
       `${this.type} is a composite field. Use specific find methods instead.`
     )

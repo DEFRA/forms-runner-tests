@@ -11,17 +11,17 @@ export default {
       files: '*.md',
       options: {
         embeddedLanguageFormatting: 'off',
-        singleQuote: false,
-      },
+        singleQuote: false
+      }
     },
     {
       files: '*.scss',
       options: {
         printWidth: 120,
-        singleQuote: false,
-      },
-    },
-  ],
+        singleQuote: false
+      }
+    }
+  ]
 }
 
 /**

@@ -10,7 +10,7 @@ export class NationalGridFieldNumberController extends BaseFieldController {
    * @param {string} value
    * @returns {boolean}
    */
-  static isValidFormat (value) {
+  static isValidFormat(value) {
     const pattern = /^[A-Z]{2}\d{8}$/i
     return pattern.test(value)
   }
