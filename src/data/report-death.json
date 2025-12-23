@@ -1,0 +1,676 @@
+{
+  "name": "Report death",
+  "engine": "V2",
+  "schema": 2,
+  "startPage": "/summary",
+  "pages": [
+    {
+      "title": "",
+      "path": "/what-do-you-want-to-report",
+      "components": [
+        {
+          "type": "RadiosField",
+          "title": "What do you want to report?",
+          "name": "AUQhPt",
+          "shortDescription": "Report a death or report a bankruptcy",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "list": "f06bdbc2-7c0b-4496-bc10-796fda770fe8",
+          "id": "f405690a-a8a7-4823-a59c-00ea0acd1e86"
+        }
+      ],
+      "next": [],
+      "id": "f0e8b430-b14e-47e2-a4fc-d087e49f5631"
+    },
+    {
+      "title": "",
+      "path": "/did-the-person-who-died-leave-a-will",
+      "components": [
+        {
+          "type": "RadiosField",
+          "title": "Did the person who died leave a will?",
+          "name": "HcJopE",
+          "shortDescription": "Is there a will",
+          "hint": "",
+          "list": "6de3d386-55b0-4d4f-aec3-73e279c446ee",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "8fa6f332-fc28-4d1b-b2df-46a78fcac297"
+        }
+      ],
+      "next": [],
+      "id": "a2b8a86a-94ec-4d60-a691-d9f338883507",
+      "condition": "261d1483-22fd-4dc2-bb0d-b16dd6ad6e10"
+    },
+    {
+      "title": "",
+      "path": "/when-did-the-licence-holder-die",
+      "components": [
+        {
+          "type": "DatePartsField",
+          "title": "When did the licence holder die?",
+          "name": "yqWegT",
+          "shortDescription": "Date when the licence holder died",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "208a6f19-4188-4dad-a26e-9ebe11e57950"
+        }
+      ],
+      "next": [],
+      "id": "566de5d0-9551-495f-86ea-5e785beb4502",
+      "condition": "55c7fe91-9585-4ffc-b799-4a81156abfe1"
+    },
+    {
+      "title": "",
+      "path": "/are-you-named-as-an-executor-on-the-will",
+      "components": [
+        {
+          "type": "YesNoField",
+          "title": "Are you named as an executor on the will?",
+          "name": "iCnAEb",
+          "shortDescription": "Are you named as an executor on the will?",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "1e62be89-d114-4630-abe1-a09dfd332e47"
+        }
+      ],
+      "next": [],
+      "id": "64cd5180-c130-47a8-ae81-e29520a90e4c",
+      "condition": "55c7fe91-9585-4ffc-b799-4a81156abfe1"
+    },
+    {
+      "title": "You cannot change a licence if you are not named as the executor of the will",
+      "controller": "TerminalPageController",
+      "path": "/you-cannot-change-a-licence-if-you-are-not-named-as-the-executor-of-the-will",
+      "components": [
+        {
+          "type": "Markdown",
+          "content": "You must be named as the executor of the will to request a change to a water resources licence.",
+          "options": {},
+          "schema": {},
+          "name": "NdoqmF",
+          "id": "861f118e-fbba-4069-b5ec-3ef41b7c235d"
+        }
+      ],
+      "next": [],
+      "id": "682a27b7-0d72-40cb-b81f-4c9c85557580",
+      "condition": "45313064-7dc6-44f3-aadb-1d2eb24ed227"
+    },
+    {
+      "title": "",
+      "path": "/have-the-letters-of-administration-been-issued",
+      "components": [
+        {
+          "type": "YesNoField",
+          "title": "Have the letters of administration been issued?",
+          "name": "eHutso",
+          "shortDescription": "Have the letters of administration been issued?",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "54c55dfb-a95d-4404-a925-b48891348d28"
+        }
+      ],
+      "next": [],
+      "id": "391df328-f296-48ad-9958-c4a617465ff3",
+      "condition": "efc0d0af-920c-4620-a442-464d406cd8cb"
+    },
+    {
+      "title": "Letters of administration",
+      "controller": "TerminalPageController",
+      "path": "/letters-of-administration",
+      "components": [
+        {
+          "id": "0fcc063f-f80e-4fe5-87f4-94e9d7bb47bd",
+          "type": "Markdown",
+          "content": "The letters of administration must first be issued before you can notify the Environment Agency of a change to a water resources licence.",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": [],
+      "id": "21780413-e2b0-41f4-bc83-a900754041d2",
+      "condition": "b8b2c39b-17d7-4539-abc9-60821f236ee9"
+    },
+    {
+      "title": "",
+      "path": "/when-was-the-grant-of-letters-of-administration-issued",
+      "components": [
+        {
+          "type": "DatePartsField",
+          "title": "When was the grant of letters of administration issued?",
+          "name": "ZwrfjB",
+          "shortDescription": "Date of grant of letters of administration issued",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "c92719d1-d125-4126-9131-8f5a28f21824"
+        }
+      ],
+      "next": [],
+      "id": "d0d2d3eb-68d8-40a3-ae1f-23f8672bb48b",
+      "condition": "efc0d0af-920c-4620-a442-464d406cd8cb"
+    },
+    {
+      "title": "",
+      "path": "/are-you-named-as-an-administrator-in-the-letters-of-administration",
+      "components": [
+        {
+          "type": "YesNoField",
+          "title": "Are you named as an administrator in the letters of administration?",
+          "name": "uEwfWT",
+          "shortDescription": "Are you named as an administrator in the letters of administration?",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "cbd4e7b0-228c-44ba-a7b4-16886ccdb7b4"
+        }
+      ],
+      "next": [],
+      "id": "84fb035c-0cdc-4543-bfde-0f48b9a44d26",
+      "condition": "efc0d0af-920c-4620-a442-464d406cd8cb"
+    },
+    {
+      "title": "Not named in the letters of administration",
+      "controller": "TerminalPageController",
+      "path": "/not-named-in-the-letters-of-administration",
+      "components": [
+        {
+          "type": "Markdown",
+          "content": "You cannot change a water resources licence if you are not named in the letters of administration.",
+          "options": {},
+          "schema": {},
+          "name": "HAsUaU",
+          "id": "42df1ff8-a901-4f0c-bee7-5a07282078ad"
+        }
+      ],
+      "next": [],
+      "id": "13bac72b-b3ec-4491-bde6-93b67537e51a",
+      "condition": "9988d9e0-b6da-4090-9158-8158461d8e6e"
+    },
+    {
+      "title": "",
+      "path": "/has-a-bankruptcy-order-been-issued",
+      "components": [
+        {
+          "type": "YesNoField",
+          "title": "Has a bankruptcy order been issued?",
+          "name": "mtwZWv",
+          "shortDescription": "Has a bankruptcy order been issued?",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "43c7f00b-d56b-45ff-9050-e486c6f3fb32"
+        }
+      ],
+      "next": [],
+      "id": "9e419c05-7d84-48c6-8bda-fe3954dc497c",
+      "condition": "fa95ca4f-f6b0-4bb3-959e-c766cbe70932"
+    },
+    {
+      "title": "Bankruptcy order must be issued",
+      "controller": "TerminalPageController",
+      "path": "/bankruptcy-order-must-be-issued",
+      "components": [
+        {
+          "id": "2b63e203-58fb-49f7-a3be-e7436578aaa2",
+          "type": "Markdown",
+          "content": "The bankruptcy order must first be issued before you can request a change to a water resources licence.",
+          "options": {},
+          "schema": {}
+        }
+      ],
+      "next": [],
+      "id": "dc095ae4-e360-4c48-93ac-6ca61e9247d4",
+      "condition": "8e367e4a-654c-47c9-bbe5-2ec54a20cb1f"
+    },
+    {
+      "title": "",
+      "path": "/when-was-the-bankruptcy-order-made",
+      "components": [
+        {
+          "type": "DatePartsField",
+          "title": "When was the bankruptcy order made?",
+          "name": "jLSGcy",
+          "shortDescription": "Date the bankruptcy order was made",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "23bd45da-a263-4e25-aad9-3cea8f98bedf"
+        }
+      ],
+      "next": [],
+      "id": "a6846b75-6360-4a9f-b01f-6b5f067c3461",
+      "condition": "fa95ca4f-f6b0-4bb3-959e-c766cbe70932"
+    },
+    {
+      "title": "",
+      "path": "/are-you-named-as-a-trustee-in-bankruptcy-in-the-order",
+      "components": [
+        {
+          "type": "YesNoField",
+          "title": "Are you named as a trustee in bankruptcy in the order?",
+          "name": "CXHnWr",
+          "shortDescription": "Are you named as a trustee in bankruptcy in the order?",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "2c3e5567-36c7-4a2c-9ada-ebeca40ba2d0"
+        }
+      ],
+      "next": [],
+      "id": "c43021e4-93b9-4df9-9524-4407660f025f",
+      "condition": "fa95ca4f-f6b0-4bb3-959e-c766cbe70932"
+    },
+    {
+      "title": "You must be a trustee in bankruptcy",
+      "controller": "TerminalPageController",
+      "path": "/you-must-be-a-trustee-in-bankruptcy",
+      "components": [
+        {
+          "type": "Markdown",
+          "content": "To request a change to a water resources licence, you must be a trustee in bankruptcy.",
+          "options": {},
+          "schema": {},
+          "name": "XZQAkd",
+          "id": "edbb67d7-a605-4f01-9be5-2bcee7364394"
+        }
+      ],
+      "next": [],
+      "id": "d46bb2ce-a7b9-42fb-bf21-90b46fc70346",
+      "condition": "9e001379-5aec-4629-bcc4-e626aa30bc74"
+    },
+    {
+      "title": "What is the name currently shown on the licence?",
+      "path": "/what-is-the-name-currently-shown-on-the-licence",
+      "components": [
+        {
+          "type": "TextField",
+          "title": "First name",
+          "name": "bMbUuX",
+          "shortDescription": "First name currently shown on the licence",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "5e9575ec-c05c-446e-8f86-32a1f18c06ae"
+        },
+        {
+          "type": "TextField",
+          "title": "Last name",
+          "name": "mYeRTN",
+          "shortDescription": "Last name currently shown on the licence",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "25a2e888-3b79-4aa9-beba-0a4b8e1c6cb4"
+        }
+      ],
+      "next": [],
+      "id": "5b50c7a4-6bd6-424c-b50b-f6a24bf9cd97"
+    },
+    {
+      "title": "",
+      "path": "/whats-the-licence-number",
+      "components": [
+        {
+          "type": "TextField",
+          "title": "What's the licence number?",
+          "name": "jAKjvy",
+          "shortDescription": "Licence number",
+          "hint": "For example, AB123456",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "f0e47693-ed0a-40f4-b045-910268f9239f"
+        }
+      ],
+      "next": [],
+      "id": "fdc9ccc3-e1dc-4bf7-b9df-486b4eab5462"
+    },
+    {
+      "title": "What's your name?",
+      "path": "/whats-your-name",
+      "components": [
+        {
+          "type": "TextField",
+          "title": "First name",
+          "name": "sLbKOM",
+          "shortDescription": "First name of the applicant",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "5d90bf12-0ba8-4f92-9040-74ba351e9e77"
+        },
+        {
+          "type": "TextField",
+          "title": "Last name",
+          "name": "MvOTqn",
+          "shortDescription": "Last name of the applicant",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "fa319f70-1206-47b3-ba3c-91f9a7a6895e"
+        }
+      ],
+      "next": [],
+      "id": "297d7e77-18ae-4206-8dc1-4fba0b835384"
+    },
+    {
+      "title": "",
+      "path": "/whats-your-address",
+      "components": [
+        {
+          "type": "UkAddressField",
+          "title": "What's your address?",
+          "name": "ytUAtI",
+          "shortDescription": "Address of the applicant",
+          "hint": "",
+          "options": {
+            "required": true,
+            "usePostcodeLookup": true
+          },
+          "schema": {},
+          "id": "1a94a6ba-0f6d-4181-b592-632dab590c37"
+        }
+      ],
+      "next": [],
+      "id": "2f271a8e-20a3-4fb4-8073-202106db6c15"
+    },
+    {
+      "title": "",
+      "path": "/whats-your-phone-number",
+      "components": [
+        {
+          "type": "TelephoneNumberField",
+          "title": "What's your phone number?",
+          "name": "jjYcWd",
+          "shortDescription": "Phone number of the applicant",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "9c3f72fe-7884-4277-927f-7bb80bf67e1a"
+        }
+      ],
+      "next": [],
+      "id": "5d958aea-fabc-416d-9d60-e4af6fb1a72a"
+    },
+    {
+      "title": "",
+      "path": "/whats-your-email-address",
+      "components": [
+        {
+          "type": "EmailAddressField",
+          "title": "What's your email address?",
+          "name": "TcynBy",
+          "shortDescription": "Email address of the applicant",
+          "hint": "",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "7aa7e470-014c-4a42-b2dd-e41857cef7bc"
+        }
+      ],
+      "next": [],
+      "id": "6a14b6ad-511d-4969-8c10-341f2e815cf0"
+    },
+    {
+      "id": "449a45f6-4541-4a46-91bd-8b8931b07b50",
+      "title": "",
+      "path": "/summary",
+      "controller": "SummaryPageWithConfirmationEmailController",
+      "next": [],
+      "components": [
+        {
+          "type": "Markdown",
+          "content": "By sending your application, you are asking us, the Environment Agency to vest the licence.",
+          "options": {},
+          "schema": {},
+          "id": "f5f76ca3-0115-43fc-9556-bd3c0aabdead"
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "items": [
+        {
+          "id": "ab7cf315-ca09-4d4f-8b07-2282cb99e928",
+          "componentId": "f405690a-a8a7-4823-a59c-00ea0acd1e86",
+          "operator": "is",
+          "value": {
+            "itemId": "19e2ab1c-6a0e-4799-b50e-4eea26112fa7",
+            "listId": "f06bdbc2-7c0b-4496-bc10-796fda770fe8"
+          },
+          "type": "ListItemRef"
+        }
+      ],
+      "displayName": "Is Report a death",
+      "id": "261d1483-22fd-4dc2-bb0d-b16dd6ad6e10"
+    },
+    {
+      "items": [
+        {
+          "id": "6a6efe57-0e85-454d-b3b0-29ac9f014fda",
+          "componentId": "f405690a-a8a7-4823-a59c-00ea0acd1e86",
+          "operator": "is",
+          "value": {
+            "itemId": "2d8b7afc-1f63-4ee5-87f0-2b595dcd77cc",
+            "listId": "f06bdbc2-7c0b-4496-bc10-796fda770fe8"
+          },
+          "type": "ListItemRef"
+        }
+      ],
+      "displayName": "Is Report a bankruptcy",
+      "id": "fa95ca4f-f6b0-4bb3-959e-c766cbe70932"
+    },
+    {
+      "items": [
+        {
+          "id": "2f191961-0c06-45bb-8bf1-71e4c040ec4e",
+          "componentId": "54c55dfb-a95d-4404-a925-b48891348d28",
+          "operator": "is",
+          "value": false,
+          "type": "BooleanValue"
+        }
+      ],
+      "displayName": "No, letters of administration have not been issued",
+      "id": "b8b2c39b-17d7-4539-abc9-60821f236ee9"
+    },
+    {
+      "items": [
+        {
+          "id": "2902554d-9e1b-45d7-a338-05aef4173452",
+          "componentId": "54c55dfb-a95d-4404-a925-b48891348d28",
+          "operator": "is",
+          "value": true,
+          "type": "BooleanValue"
+        }
+      ],
+      "displayName": "Yes, the letters of administration have been issued",
+      "id": "af06277e-a494-4add-9e63-8e0fa092e17f"
+    },
+    {
+      "items": [
+        {
+          "id": "1e2f9b4a-70de-4734-8b75-faebfb8a8174",
+          "componentId": "cbd4e7b0-228c-44ba-a7b4-16886ccdb7b4",
+          "operator": "is",
+          "value": false,
+          "type": "BooleanValue"
+        }
+      ],
+      "displayName": "No, is not named as an administrator in the letters of administration",
+      "id": "9988d9e0-b6da-4090-9158-8158461d8e6e"
+    },
+    {
+      "items": [
+        {
+          "id": "4353b347-7f3c-490c-9f34-0e56e6f1ac81",
+          "componentId": "43c7f00b-d56b-45ff-9050-e486c6f3fb32",
+          "operator": "is",
+          "value": false,
+          "type": "BooleanValue"
+        }
+      ],
+      "displayName": "No, a bankruptcy order has not been issued",
+      "id": "8e367e4a-654c-47c9-bbe5-2ec54a20cb1f"
+    },
+    {
+      "items": [
+        {
+          "id": "8889df4e-fd92-4297-bab4-49347f0df063",
+          "componentId": "2c3e5567-36c7-4a2c-9ada-ebeca40ba2d0",
+          "operator": "is",
+          "value": false,
+          "type": "BooleanValue"
+        }
+      ],
+      "displayName": "No, is not named as a trustee in bankruptcy in the order",
+      "id": "9e001379-5aec-4629-bcc4-e626aa30bc74"
+    },
+    {
+      "items": [
+        {
+          "id": "d5344163-3945-47a7-ae35-3b7209a31e13",
+          "componentId": "208a6f19-4188-4dad-a26e-9ebe11e57950",
+          "operator": "is more than",
+          "value": {
+            "period": 15,
+            "unit": "months",
+            "direction": "in the past"
+          },
+          "type": "RelativeDate"
+        }
+      ],
+      "displayName": "More than 15 months from the date of death",
+      "id": "1ffde90b-21d2-45e2-aabf-53f9e53c7d69"
+    },
+    {
+      "items": [
+        {
+          "id": "59a80bf8-8631-46bc-ae57-1aa70083f150",
+          "componentId": "1e62be89-d114-4630-abe1-a09dfd332e47",
+          "operator": "is",
+          "value": false,
+          "type": "BooleanValue"
+        }
+      ],
+      "displayName": "No, not named as an executor of will",
+      "id": "45313064-7dc6-44f3-aadb-1d2eb24ed227"
+    },
+    {
+      "items": [
+        {
+          "id": "d16521a8-d58b-4863-96d4-288b36a5f659",
+          "componentId": "8fa6f332-fc28-4d1b-b2df-46a78fcac297",
+          "operator": "is",
+          "value": {
+            "itemId": "8e0efb6d-5376-4fcd-800a-ed2f7363def0",
+            "listId": "6de3d386-55b0-4d4f-aec3-73e279c446ee"
+          },
+          "type": "ListItemRef"
+        }
+      ],
+      "displayName": "No, the person who died did not leave a will (administrator)",
+      "id": "efc0d0af-920c-4620-a442-464d406cd8cb"
+    },
+    {
+      "items": [
+        {
+          "id": "25047429-ebf1-4dfa-8bad-a265b8d4acd7",
+          "componentId": "8fa6f332-fc28-4d1b-b2df-46a78fcac297",
+          "operator": "is",
+          "value": {
+            "itemId": "93aa487d-989f-4dd2-8cb8-c3479cd12d38",
+            "listId": "6de3d386-55b0-4d4f-aec3-73e279c446ee"
+          },
+          "type": "ListItemRef"
+        }
+      ],
+      "displayName": "Yes, the person who died left a will",
+      "id": "55c7fe91-9585-4ffc-b799-4a81156abfe1"
+    }
+  ],
+  "sections": [],
+  "lists": [
+    {
+      "name": "CkUkkp",
+      "title": "List for question AUQhPt",
+      "type": "string",
+      "items": [
+        {
+          "id": "19e2ab1c-6a0e-4799-b50e-4eea26112fa7",
+          "text": "Report a death",
+          "value": "Report a death"
+        },
+        {
+          "id": "2d8b7afc-1f63-4ee5-87f0-2b595dcd77cc",
+          "text": "Report a bankruptcy",
+          "value": "Report a bankruptcy"
+        }
+      ],
+      "id": "f06bdbc2-7c0b-4496-bc10-796fda770fe8"
+    },
+    {
+      "name": "PJDncI",
+      "title": "List for question HcJopE",
+      "type": "string",
+      "items": [
+        {
+          "id": "8e0efb6d-5376-4fcd-800a-ed2f7363def0",
+          "text": "No, the person who died did not leave a will",
+          "value": "No, the person who died did not leave a will",
+          "hint": {
+            "text": "If the person who died did not leave a will, an administrator is appointed based on inheritance rules",
+            "id": "eeac07cb-a497-4536-a7f2-a7d0aaccdb9c"
+          }
+        },
+        {
+          "id": "93aa487d-989f-4dd2-8cb8-c3479cd12d38",
+          "text": "Yes, the person who died left a will",
+          "value": "Yes, the person who died left a will",
+          "hint": {
+            "text": "If the person who died left a will, it will name an executor",
+            "id": "81f3847d-5d59-4ba3-b795-34c3461d1a0b"
+          }
+        }
+      ],
+      "id": "6de3d386-55b0-4d4f-aec3-73e279c446ee"
+    }
+  ]
+}
