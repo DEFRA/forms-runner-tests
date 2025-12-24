@@ -478,6 +478,6 @@ function buttonText(summaryPageDef) {
   ) {
     return 'Accept and send'
   } else {
-    return 'send'
+    return 'Send'
   }
 }
