@@ -8,8 +8,8 @@ export class List {
   }
 
   /**
-   * @param {string} key
-   * @returns {object | undefined}
+   * @param {string} key  item key
+   * @returns {object | undefined} The item object or undefined if not found
    */
   getItem(key) {
     return this.list.get(key)
@@ -17,7 +17,7 @@ export class List {
 
   /**
    * Get all items in the list
-   * @returns {Array<object>}
+   * @returns {Array<object>}  Array of all items
    */
   getAllItems() {
     return Array.from(this.list.values())

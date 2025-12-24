@@ -8,6 +8,7 @@ export class NumberFieldController extends BaseFieldController {
   /**
    * Fill the number field with a numeric value
    * @param {number|string} value - The numeric value to enter
+   * @returns {Promise<NumberFieldController>} The controller instance for chaining.
    */
   async fill(value) {
     await this.find().fill(String(value))

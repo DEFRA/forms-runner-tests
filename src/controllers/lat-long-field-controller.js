@@ -16,7 +16,7 @@ export class LatLongFieldController extends BaseCompositeFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findLongitudeInput() {
-    return this.page.getByRole('textbox', { name: 'Longitude' })
+    return this.page.locator(`#${this.name}__longitude`)
   }
 
   /**
@@ -28,6 +28,7 @@ export class LatLongFieldController extends BaseCompositeFieldController {
 
   /**
    * @param {import("@playwright/test").Expect} expect
+   * @returns {Promise<LatLongFieldController>} The controller instance for chaining.
    */
   async assertions(expect) {
     const fieldset = this.findFieldset()
@@ -47,22 +48,11 @@ export class LatLongFieldController extends BaseCompositeFieldController {
   /**
    * @param {string} latitude - Latitude value (for GB: 49.850 to 60.859)
    * @param {string} longitude - Longitude value (for GB: -13.687 to 1.767)
+   * @returns {Promise<LatLongFieldController>} The controller instance for chaining.
    */
   async fill(latitude, longitude) {
     await this.findLatitudeInput().fill(latitude)
     await this.findLongitudeInput().fill(longitude)
     return this
-  }
-
-  /**
-   * Validates if coordinates are within Great Britain bounds
-   * @param {number} latitude
-   * @param {number} longitude
-   * @returns {boolean}
-   */
-  static isWithinGBBounds(latitude, longitude) {
-    const isLatValid = latitude >= 49.85 && latitude <= 60.859
-    const isLongValid = longitude >= -13.687 && longitude <= 1.767
-    return isLatValid && isLongValid
   }
 }

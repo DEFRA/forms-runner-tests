@@ -1,4 +1,5 @@
 import { BaseCompositeFieldController } from './base-field-controller.js'
+import { expect } from '@playwright/test'
 
 /**
  * Controller for UkAddressField components (multi-field address input).
@@ -109,6 +110,10 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * @returns {Promise<UkAddressFieldController>} The controller instance for chaining.
    */
   async fill(address) {
+    if (this.usesPostcodeLookup()) {
+      this.fillPostcode(address.postcode)
+      return this
+    }
     await this.findAddressLine1().fill(address.addressLine1)
     if (address.addressLine2) {
       await this.findAddressLine2().fill(address.addressLine2)

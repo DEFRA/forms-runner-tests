@@ -69,7 +69,7 @@ export class ComponentsInitializer {
       throw new Error(`Unsupported component type: ${componentDefinition.type}`)
     }
     /**
-     *  @type {.}
+     *  @type {keyof Controllers}
      */
     const component = new ComponentClass({
       ...componentDefinition,

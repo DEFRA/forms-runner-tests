@@ -12,9 +12,18 @@ const MimeTypeMap = {
   txt: 'text/plain'
 }
 
+/**
+ * Create a buffer with sample file content
+ * @returns {Buffer}
+ */
 const createFileBuffer = () => {
   return Buffer.from('Sample file content', 'utf-8')
 }
+/**
+ * Create a file object for upload
+ * @param {string} fileName - The name of the file
+ * @returns {{name: string, mimeType: string, buffer: Buffer}}
+ */
 
 const createFile = (fileName) => {
   const extension = fileName.split('.').pop().toLowerCase()
@@ -50,6 +59,7 @@ export class FileUploadFieldController extends BaseFieldController {
 
   /**
    * @param {import("@playwright/test").Expect} expect
+   * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
    */
   async assertions(expect) {
     const element = this.find()
@@ -57,12 +67,11 @@ export class FileUploadFieldController extends BaseFieldController {
     return this
   }
 
-  /**
-   * Upload a file to the file input
-   * @param {string} filePath - The path to the file to upload
-   * @param _filePath
-   */
-  async uploadFile(_filePath) {
+/**
+ * 
+ * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
+ */
+  async uploadFile() {
     const mimeType =
       this.getAcceptedTypes()?.split(',')[0].trim() || 'text/plain'
     const fileExtensionMap = Object.entries(MimeTypeMap)
@@ -116,6 +125,7 @@ export class FileUploadFieldController extends BaseFieldController {
   /**
    * Fill method for compatibility with component filling logic
    * @param {string | string[]} value - File path or array of file paths to upload
+   * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
    */
   async fill(value) {
     if (Array.isArray(value)) {
@@ -129,6 +139,7 @@ export class FileUploadFieldController extends BaseFieldController {
 
   /**
    * Clear the file input (remove selected files)
+   * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
    */
   async clear() {
     await this.find().setInputFiles([])

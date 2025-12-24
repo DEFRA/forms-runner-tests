@@ -5,5 +5,10 @@ export default [
   ...neostandard({
     noStyle: true
   }),
+
   jsdoc.configs['flat/recommended']
+,
+  {
+    ignores: ['playwright-report/**']
+  }
 ]
