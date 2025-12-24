@@ -1,4 +1,4 @@
-export class List {
+class List {
   constructor() {
     this.list = new Map()
   }
@@ -25,7 +25,7 @@ export class List {
 
   /**
    * Get all item keys
-   * @returns {Array<string>}
+   * @returns {Array<string>} Array of item keys
    */
   getAllKeys() {
     return Array.from(this.list.keys())
@@ -33,7 +33,7 @@ export class List {
 
   /**
    * Get the size of the list
-   * @returns {number}
+   * @returns {number} Number of items in the list
    */
   size() {
     return this.list.size
@@ -42,9 +42,9 @@ export class List {
 
 /**
  * @typedef {object} ListItem
- * @property {string} id
- * @property {string} text
- * @property {string} value
+ * @property {string} id Item id
+ * @property {string} text Display text
+ * @property {string} value Stored value
  */
 
 /**
@@ -58,7 +58,7 @@ export class List {
 
 export class ListController {
   /**
-   * @param {ListControllerOptions} options
+   * @param {ListControllerOptions} options Controller options
    */
   constructor({ id, name, title, type, items }) {
     this.id = id
@@ -78,8 +78,8 @@ export class ListController {
 
   /**
    * Add an item to the list
-   * @param {string} key
-   * @param {ListItem} value
+   * @param {string} key Item id
+   * @param {ListItem} value Item
    */
   addItem(key, value) {
     this.list.addItem(key, value)
@@ -88,8 +88,8 @@ export class ListController {
 
   /**
    * Get an item by its ID
-   * @param {string} key
-   * @returns {ListItem | undefined}
+   * @param {string} key Item id
+   * @returns {ListItem | undefined} Item if found
    */
   getItem(key) {
     return this.list.getItem(key)
@@ -97,8 +97,8 @@ export class ListController {
 
   /**
    * Find an item by its ID (alias for getItem)
-   * @param {string} key
-   * @returns {ListItem | undefined}
+   * @param {string} key Item id
+   * @returns {ListItem | undefined} Item if found
    */
   findItem(key) {
     return this.list.getItem(key)
@@ -106,8 +106,8 @@ export class ListController {
 
   /**
    * Find an item by its text value
-   * @param {string} text
-   * @returns {ListItem | undefined}
+   * @param {string} text Display text
+   * @returns {ListItem | undefined} Item if found
    */
   findItemByText(text) {
     return this.items.find((item) => item.text === text)
@@ -115,8 +115,8 @@ export class ListController {
 
   /**
    * Find an item by its value
-   * @param {string} value
-   * @returns {ListItem | undefined}
+   * @param {string} value Stored value
+   * @returns {ListItem | undefined} Item if found
    */
   findItemByValue(value) {
     return this.items.find((item) => item.value === value)
@@ -124,7 +124,7 @@ export class ListController {
 
   /**
    * Get the underlying List object
-   * @returns {List}
+   * @returns {List} Internal list storage
    */
   getList() {
     return this.list
@@ -132,7 +132,7 @@ export class ListController {
 
   /**
    * Get all items as an array
-   * @returns {ListItem[]}
+   * @returns {ListItem[]} All items
    */
   getAllItems() {
     return this.items
@@ -140,7 +140,7 @@ export class ListController {
 
   /**
    * Get all item texts as an array
-   * @returns {string[]}
+   * @returns {string[]} All item texts
    */
   getAllTexts() {
     return this.items.map((item) => item.text)
@@ -148,7 +148,7 @@ export class ListController {
 
   /**
    * Get all item values as an array
-   * @returns {string[]}
+   * @returns {string[]} All item values
    */
   getAllValues() {
     return this.items.map((item) => item.value)
@@ -156,7 +156,7 @@ export class ListController {
 
   /**
    * Get the first item in the list
-   * @returns {ListItem | undefined}
+   * @returns {ListItem | undefined} First item if present
    */
   getFirstItem() {
     return this.items[0]
@@ -164,7 +164,7 @@ export class ListController {
 
   /**
    * Get the last item in the list
-   * @returns {ListItem | undefined}
+   * @returns {ListItem | undefined} Last item if present
    */
   getLastItem() {
     return this.items[this.items.length - 1]
@@ -172,7 +172,7 @@ export class ListController {
 
   /**
    * Get the number of items in the list
-   * @returns {number}
+   * @returns {number} Number of items
    */
   size() {
     return this.items.length
