@@ -11,7 +11,9 @@
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",
     "inspect": "node src/helpers/inspect-form.js",
-    "lint": "eslint . "
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"**/*.{js,cjs,md,json,config.js,test.js}\""
   },
   "keywords": [],
   "author": "",
@@ -19,15 +21,14 @@
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "@types/node": "^24.10.1",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.32.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-jsdoc": "^61.5.0",
-    "eslint-plugin-promise": "^7.2.1"
+    "neostandard": "^0.12.2"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
-    "randexp": "^0.5.3",
-    "zod": "^4.1.13"
+    "joi": "^18.0.2",
+    "prettier": "^3.7.4",
+    "randexp": "^0.5.3"
   }
 }

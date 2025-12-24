@@ -7,10 +7,10 @@ export class MarkdownController {
    * @param {string} id
    */
   constructor({ content, page, type, id }) {
-    this.content = content;
-    this.page = page;
-    this.id = id;
-    this.type = type;
+    this.content = content
+    this.page = page
+    this.id = id
+    this.type = type
   }
 
   /**
@@ -18,7 +18,7 @@ export class MarkdownController {
    * @returns {boolean}
    */
   isRequired() {
-    return false;
+    return false
   }
 
   /**
@@ -26,7 +26,7 @@ export class MarkdownController {
    * @returns {import("@playwright/test").Locator}
    */
   find() {
-    return this.page.locator(`[data-component-id="${this.id}"]`);
+    return this.page.locator(`[data-component-id="${this.id}"]`)
   }
 
   /**
@@ -35,7 +35,7 @@ export class MarkdownController {
    * @returns {import("@playwright/test").Locator}
    */
   findByText(text) {
-    return this.page.getByText(text);
+    return this.page.getByText(text)
   }
 
   /**
@@ -43,12 +43,12 @@ export class MarkdownController {
    */
   async assertions(expect) {
     // Check that the markdown content text is visible on the page
-    const textToFind = this.content.substring(0, 50).trim();
+    const textToFind = this.content.substring(0, 50).trim()
     if (textToFind) {
-      const element = this.findByText(textToFind);
-      await expect(element).toBeVisible();
+      const element = this.findByText(textToFind)
+      await expect(element).toBeVisible()
     }
-    return this;
+    return this
   }
 
   /**
@@ -57,8 +57,8 @@ export class MarkdownController {
    * @param {string} text
    */
   async assertContainsText(expect, text) {
-    const element = this.findByText(text);
-    await expect(element).toBeVisible();
-    return this;
+    const element = this.findByText(text)
+    await expect(element).toBeVisible()
+    return this
   }
 }

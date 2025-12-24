@@ -31,22 +31,22 @@ export class BaseFieldController {
     id,
     shortDescription,
     schema,
-    list,
+    list
   }) {
-    this.title = title;
-    this.page = page;
-    this.name = name;
-    this.type = type;
-    this.hint = hint;
-    this.options = options;
-    this.id = id;
-    this.shortDescription = shortDescription;
-    this.schema = schema;
-    this.list = list;
+    this.title = title
+    this.page = page
+    this.name = name
+    this.type = type
+    this.hint = hint
+    this.options = options
+    this.id = id
+    this.shortDescription = shortDescription
+    this.schema = schema
+    this.list = list
     /**
      * @type{ import("../conditions/conditions.js" ).IsCondition[] }
      */
-    this.conditions = [];
+    this.conditions = []
   }
 
   /**
@@ -54,7 +54,7 @@ export class BaseFieldController {
    * @returns {boolean}
    */
   isRequired() {
-    return this.options?.required === true;
+    return this.options?.required === true
   }
 
   /**
@@ -63,7 +63,7 @@ export class BaseFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   find() {
-    return this.page.locator(`#${this.name}`);
+    return this.page.locator(`#${this.name}`)
   }
 
   /**
@@ -73,10 +73,10 @@ export class BaseFieldController {
    * @returns {Promise<this>}
    */
   async assertions(expect) {
-    const element = this.find();
-    await expect(element).toBeVisible();
-    await expect(element).toBeEnabled();
-    return this;
+    const element = this.find()
+    await expect(element).toBeVisible()
+    await expect(element).toBeEnabled()
+    return this
   }
 
   /**
@@ -86,8 +86,8 @@ export class BaseFieldController {
    * @returns {Promise<this>}
    */
   async fill(value) {
-    await this.find().fill(value);
-    return this;
+    await this.find().fill(value)
+    return this
   }
 
   /**
@@ -95,8 +95,8 @@ export class BaseFieldController {
    * @returns {Promise<this>}
    */
   async clear() {
-    await this.find().clear();
-    return this;
+    await this.find().clear()
+    return this
   }
 
   /**
@@ -104,7 +104,7 @@ export class BaseFieldController {
    * @returns {Promise<string>}
    */
   async getValue() {
-    return await this.find().inputValue();
+    return await this.find().inputValue()
   }
 }
 
@@ -118,7 +118,7 @@ export class BaseGroupFieldController extends BaseFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
+    return this.page.getByRole('group', { name: this.title })
   }
 
   /**
@@ -126,9 +126,9 @@ export class BaseGroupFieldController extends BaseFieldController {
    * @returns {Promise<this>}
    */
   async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
-    return this;
+    const fieldset = this.findFieldset()
+    await expect(fieldset).toBeVisible()
+    return this
   }
 }
 
@@ -141,7 +141,7 @@ export class BaseCompositeFieldController extends BaseFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
+    return this.page.getByRole('group', { name: this.title })
   }
 
   /**
@@ -149,9 +149,9 @@ export class BaseCompositeFieldController extends BaseFieldController {
    * @returns {Promise<this>}
    */
   async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
-    return this;
+    const fieldset = this.findFieldset()
+    await expect(fieldset).toBeVisible()
+    return this
   }
 
   /**
@@ -161,6 +161,6 @@ export class BaseCompositeFieldController extends BaseFieldController {
   find() {
     throw new Error(
       `${this.type} is a composite field. Use specific find methods instead.`
-    );
+    )
   }
 }

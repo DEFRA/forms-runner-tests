@@ -1,4 +1,4 @@
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 
 /**
  * Controller for EmailAddressField components.
@@ -11,7 +11,7 @@ export class EmailAddressFieldController extends BaseFieldController {
    * @returns {boolean}
    */
   static isValidEmail(value) {
-    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return pattern.test(value);
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return pattern.test(value)
   }
 }

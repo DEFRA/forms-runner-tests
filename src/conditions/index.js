@@ -4,10 +4,10 @@ import {
   IsMoreThanCondition,
   IsLessThanCondition,
   IsAtLeastCondition,
-  IsAtMostCondition,
-} from "./conditions.js";
+  IsAtMostCondition
+} from './conditions.js'
 
-import { ConditionMapper } from "../helpers/components-mapper.js";
+import { ConditionMapper } from '../helpers/components-mapper.js'
 
 export {
   IsCondition,
@@ -15,8 +15,8 @@ export {
   IsMoreThanCondition,
   IsLessThanCondition,
   IsAtLeastCondition,
-  IsAtMostCondition,
-};
+  IsAtMostCondition
+}
 
 /**
  * @typedef {object} ConditionItemDefinition
@@ -58,7 +58,7 @@ export {
  * @returns {object | null} - Condition instance or null if operator not supported
  */
 export function createCondition(conditionDef, formDefinition, page) {
-  return ConditionMapper.createCondition(conditionDef, formDefinition, page);
+  return ConditionMapper.createCondition(conditionDef, formDefinition, page)
 }
 
 /**
@@ -68,7 +68,7 @@ export function createCondition(conditionDef, formDefinition, page) {
  * @returns {Map<string, object>} - Map of condition ID to condition instance
  */
 export function createConditionsForForm(formDefinition, page) {
-  return ConditionMapper.createConditionsForForm(formDefinition, page);
+  return ConditionMapper.createConditionsForForm(formDefinition, page)
 }
 
 /**
@@ -78,7 +78,7 @@ export function createConditionsForForm(formDefinition, page) {
  * @returns {object | undefined} - The condition instance or undefined
  */
 export function getConditionForPage(pageDef, conditionsMap) {
-  return ConditionMapper.getConditionForPage(pageDef, conditionsMap);
+  return ConditionMapper.getConditionForPage(pageDef, conditionsMap)
 }
 
 /**
@@ -86,5 +86,5 @@ export function getConditionForPage(pageDef, conditionsMap) {
  * @returns {string[]}
  */
 export function getSupportedOperators() {
-  return ConditionMapper.getSupportedOperators();
+  return ConditionMapper.getSupportedOperators()
 }

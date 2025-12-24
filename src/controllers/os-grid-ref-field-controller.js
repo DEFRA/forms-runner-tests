@@ -1,4 +1,4 @@
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 
 /**
  * Controller for OsGridRefField components (single input for OS grid reference).
@@ -11,7 +11,7 @@ export class OsGridRefFieldController extends BaseFieldController {
    * @returns {boolean}
    */
   static isValidFormat(value) {
-    const pattern = /^[A-Z]{2}\d{6}$/i;
-    return pattern.test(value);
+    const pattern = /^[A-Z]{2}\d{6}$/i
+    return pattern.test(value)
   }
 }

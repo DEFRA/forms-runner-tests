@@ -1,4 +1,4 @@
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 
 /**
  * Controller for MultilineTextField (textarea) components.
@@ -10,8 +10,8 @@ export class MultilineTextFieldController extends BaseFieldController {
    * @param {string} value - The text to type
    */
   async type(value) {
-    await this.find().pressSequentially(value);
-    return this;
+    await this.find().pressSequentially(value)
+    return this
   }
 
   /**
@@ -19,8 +19,8 @@ export class MultilineTextFieldController extends BaseFieldController {
    * @param {string} value - The text to append
    */
   async append(value) {
-    const currentValue = await this.getValue();
-    await this.fill(currentValue + value);
-    return this;
+    const currentValue = await this.getValue()
+    await this.fill(currentValue + value)
+    return this
   }
 }

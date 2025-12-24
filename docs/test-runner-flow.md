@@ -46,7 +46,6 @@ Repeat page handling:
 Checks performed:
 
 1. Condition mapping correctness
-
    - Loads all conditions via `createConditionsForForm(form)`.
    - For each condition:
      - Ensures every JSON condition item maps to a runtime item.

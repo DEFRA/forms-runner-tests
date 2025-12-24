@@ -26,14 +26,14 @@ export class IsCondition {
    * @param {IsConditionOptions} options
    */
   constructor({ page, id, name, operator, componentId, value, type, list }) {
-    this.page = page;
-    this.id = id;
-    this.name = name;
-    this.operator = operator;
-    this.componentId = componentId;
-    this.value = value;
-    this.type = type;
-    this.list = list;
+    this.page = page
+    this.id = id
+    this.name = name
+    this.operator = operator
+    this.componentId = componentId
+    this.value = value
+    this.type = type
+    this.list = list
   }
 
   /**
@@ -41,10 +41,10 @@ export class IsCondition {
    * @returns {ListItem[]}
    */
   get listItems() {
-    if (this.type === "ListItemRef" && this.list) {
-      return this.list.getAllItems();
+    if (this.type === 'ListItemRef' && this.list) {
+      return this.list.getAllItems()
     }
-    return [];
+    return []
   }
 
   /**
@@ -52,16 +52,16 @@ export class IsCondition {
    * @returns {ListItem | null}
    */
   get triggerListItem() {
-    if (this.type === "ListItemRef" && this.list) {
-      return this.list.getItem(this.value.itemId) || null;
+    if (this.type === 'ListItemRef' && this.list) {
+      return this.list.getItem(this.value.itemId) || null
     }
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value : null
     }
-    if (this.type === "BooleanValue") {
-      return typeof this.value === "boolean" ? this.value : null;
+    if (this.type === 'BooleanValue') {
+      return typeof this.value === 'boolean' ? this.value : null
     }
-    return null;
+    return null
   }
 
   /**
@@ -69,19 +69,19 @@ export class IsCondition {
    * @returns {ListItem | null}
    */
   get nonTriggerListItem() {
-    if (this.type === "ListItemRef" && this.list) {
-      const items = this.list.getAllItems();
-      return items.find((item) => item.id !== this.value.itemId) || null;
+    if (this.type === 'ListItemRef' && this.list) {
+      const items = this.list.getAllItems()
+      return items.find((item) => item.id !== this.value.itemId) || null
     }
-    if (this.type === "NumberValue") {
+    if (this.type === 'NumberValue') {
       // For "is" with numbers, any different number is a non-trigger.
-      return typeof this.value === "number" ? this.value + 1 : null;
+      return typeof this.value === 'number' ? this.value + 1 : null
     }
-    if (this.type === "BooleanValue") {
+    if (this.type === 'BooleanValue') {
       // For "is" with booleans, the opposite boolean is a non-trigger.
-      return typeof this.value === "boolean" ? !this.value : null;
+      return typeof this.value === 'boolean' ? !this.value : null
     }
-    return null;
+    return null
   }
 
   /**
@@ -89,14 +89,14 @@ export class IsCondition {
    * @returns {string | null}
    */
   get triggerValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value : null
     }
-    if (this.type === "BooleanValue") {
-      return typeof this.value === "boolean" ? this.value : null;
+    if (this.type === 'BooleanValue') {
+      return typeof this.value === 'boolean' ? this.value : null
     }
-    const item = this.triggerListItem;
-    return item ? item.text : null;
+    const item = this.triggerListItem
+    return item ? item.text : null
   }
 
   /**
@@ -104,14 +104,14 @@ export class IsCondition {
    * @returns {string | null}
    */
   get nonTriggerValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value + 1 : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value + 1 : null
     }
-    if (this.type === "BooleanValue") {
-      return typeof this.value === "boolean" ? !this.value : null;
+    if (this.type === 'BooleanValue') {
+      return typeof this.value === 'boolean' ? !this.value : null
     }
-    const item = this.nonTriggerListItem;
-    return item ? item.text : null;
+    const item = this.nonTriggerListItem
+    return item ? item.text : null
   }
 
   /**
@@ -119,12 +119,12 @@ export class IsCondition {
    * @returns {ListItem[]}
    */
   get allNonTriggerItems() {
-    if (this.type === "ListItemRef" && this.list) {
+    if (this.type === 'ListItemRef' && this.list) {
       return this.list
         .getAllItems()
-        .filter((item) => item.id !== this.value.itemId);
+        .filter((item) => item.id !== this.value.itemId)
     }
-    return [];
+    return []
   }
 }
 
@@ -142,11 +142,11 @@ export class IsCondition {
 function isRelativeDateValue(value) {
   return (
     value &&
-    typeof value === "object" &&
-    typeof value.period === "number" &&
-    typeof value.unit === "string" &&
-    typeof value.direction === "string"
-  );
+    typeof value === 'object' &&
+    typeof value.period === 'number' &&
+    typeof value.unit === 'string' &&
+    typeof value.direction === 'string'
+  )
 }
 
 /**
@@ -154,29 +154,27 @@ function isRelativeDateValue(value) {
  * @returns {Date}
  */
 function getThresholdDate(relative) {
-  const date = new Date();
+  const date = new Date()
   const directionMultiplier =
-    relative.direction === "in the past"
+    relative.direction === 'in the past'
       ? -1
-      : relative.direction === "in the future"
-      ? 1
-      : -1;
+      : relative.direction === 'in the future'
+        ? 1
+        : -1
 
-  if (relative.unit === "months") {
-    date.setMonth(date.getMonth() + directionMultiplier * relative.period);
-    return date;
+  if (relative.unit === 'months') {
+    date.setMonth(date.getMonth() + directionMultiplier * relative.period)
+    return date
   }
 
-  if (relative.unit === "years") {
-    date.setFullYear(
-      date.getFullYear() + directionMultiplier * relative.period
-    );
-    return date;
+  if (relative.unit === 'years') {
+    date.setFullYear(date.getFullYear() + directionMultiplier * relative.period)
+    return date
   }
 
   // Default to days
-  date.setDate(date.getDate() + directionMultiplier * relative.period);
-  return date;
+  date.setDate(date.getDate() + directionMultiplier * relative.period)
+  return date
 }
 
 /**
@@ -185,9 +183,9 @@ function getThresholdDate(relative) {
  * @returns {Date}
  */
 function addDays(date, days) {
-  const out = new Date(date.getTime());
-  out.setDate(out.getDate() + days);
-  return out;
+  const out = new Date(date.getTime())
+  out.setDate(out.getDate() + days)
+  return out
 }
 
 /**
@@ -205,13 +203,13 @@ export class IsMoreThanCondition {
    * @param {IsMoreThanConditionOptions} options
    */
   constructor({ page, id, name, operator, componentId, value, type }) {
-    this.page = page;
-    this.id = id;
-    this.name = name;
-    this.operator = operator;
-    this.componentId = componentId;
-    this.value = value;
-    this.type = type;
+    this.page = page
+    this.id = id
+    this.name = name
+    this.operator = operator
+    this.componentId = componentId
+    this.value = value
+    this.type = type
   }
 
   /**
@@ -219,20 +217,20 @@ export class IsMoreThanCondition {
    * @returns {number | Date | null}
    */
   get triggerValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value + 1 : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value + 1 : null
     }
 
-    if (this.type === "RelativeDate" && isRelativeDateValue(this.value)) {
+    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
       // "More than N [units] in the past" means a date earlier than the threshold.
       // "More than N [units] in the future" means a date later than the threshold.
-      const threshold = getThresholdDate(this.value);
-      return this.value.direction === "in the future"
+      const threshold = getThresholdDate(this.value)
+      return this.value.direction === 'in the future'
         ? addDays(threshold, 1)
-        : addDays(threshold, -1);
+        : addDays(threshold, -1)
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -240,16 +238,16 @@ export class IsMoreThanCondition {
    * @returns {number | Date | null}
    */
   get nonTriggerValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value : null
     }
 
-    if (this.type === "RelativeDate" && isRelativeDateValue(this.value)) {
+    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
       // Use the boundary date itself as a safe non-trigger.
-      return getThresholdDate(this.value);
+      return getThresholdDate(this.value)
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -257,15 +255,15 @@ export class IsMoreThanCondition {
    * @returns {number | Date | null}
    */
   get boundaryValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value : null
     }
 
-    if (this.type === "RelativeDate" && isRelativeDateValue(this.value)) {
-      return getThresholdDate(this.value);
+    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
+      return getThresholdDate(this.value)
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -273,7 +271,7 @@ export class IsMoreThanCondition {
    * @returns {number | null}
    */
   get safeLowValue() {
-    return this.type === "NumberValue" ? Math.max(0, this.value - 1) : null;
+    return this.type === 'NumberValue' ? Math.max(0, this.value - 1) : null
   }
 }
 
@@ -292,13 +290,13 @@ export class IsLessThanCondition {
    * @param {IsLessThanConditionOptions} options
    */
   constructor({ page, id, name, operator, componentId, value, type }) {
-    this.page = page;
-    this.id = id;
-    this.name = name;
-    this.operator = operator;
-    this.componentId = componentId;
-    this.value = value;
-    this.type = type;
+    this.page = page
+    this.id = id
+    this.name = name
+    this.operator = operator
+    this.componentId = componentId
+    this.value = value
+    this.type = type
   }
 
   /**
@@ -306,20 +304,20 @@ export class IsLessThanCondition {
    * @returns {number | Date | null}
    */
   get triggerValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value - 1 : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value - 1 : null
     }
 
-    if (this.type === "RelativeDate" && isRelativeDateValue(this.value)) {
+    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
       // "Less than N [units] in the past" means a date later than the threshold.
       // "Less than N [units] in the future" means a date earlier than the threshold.
-      const threshold = getThresholdDate(this.value);
-      return this.value.direction === "in the future"
+      const threshold = getThresholdDate(this.value)
+      return this.value.direction === 'in the future'
         ? addDays(threshold, -1)
-        : addDays(threshold, 1);
+        : addDays(threshold, 1)
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -327,16 +325,16 @@ export class IsLessThanCondition {
    * @returns {number | Date | null}
    */
   get nonTriggerValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value : null
     }
 
-    if (this.type === "RelativeDate" && isRelativeDateValue(this.value)) {
+    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
       // Use the boundary date itself as a safe non-trigger.
-      return getThresholdDate(this.value);
+      return getThresholdDate(this.value)
     }
 
-    return null;
+    return null
   }
 
   /**
@@ -344,15 +342,15 @@ export class IsLessThanCondition {
    * @returns {number | Date | null}
    */
   get boundaryValue() {
-    if (this.type === "NumberValue") {
-      return typeof this.value === "number" ? this.value : null;
+    if (this.type === 'NumberValue') {
+      return typeof this.value === 'number' ? this.value : null
     }
 
-    if (this.type === "RelativeDate" && isRelativeDateValue(this.value)) {
-      return getThresholdDate(this.value);
+    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
+      return getThresholdDate(this.value)
     }
 
-    return null;
+    return null
   }
 }
 
@@ -371,13 +369,13 @@ export class IsAtLeastCondition {
    * @param {IsAtLeastConditionOptions} options
    */
   constructor({ page, id, name, operator, componentId, value, type }) {
-    this.page = page;
-    this.id = id;
-    this.name = name;
-    this.operator = operator;
-    this.componentId = componentId;
-    this.value = value;
-    this.type = type;
+    this.page = page
+    this.id = id
+    this.name = name
+    this.operator = operator
+    this.componentId = componentId
+    this.value = value
+    this.type = type
   }
 
   /**
@@ -385,7 +383,7 @@ export class IsAtLeastCondition {
    * @returns {number | null}
    */
   get triggerValue() {
-    return this.type === "NumberValue" ? this.value : null;
+    return this.type === 'NumberValue' ? this.value : null
   }
 
   /**
@@ -393,7 +391,7 @@ export class IsAtLeastCondition {
    * @returns {number | null}
    */
   get nonTriggerValue() {
-    return this.type === "NumberValue" ? this.value - 1 : null;
+    return this.type === 'NumberValue' ? this.value - 1 : null
   }
 }
 
@@ -412,13 +410,13 @@ export class IsAtMostCondition {
    * @param {IsAtMostConditionOptions} options
    */
   constructor({ page, id, name, operator, componentId, value, type }) {
-    this.page = page;
-    this.id = id;
-    this.name = name;
-    this.operator = operator;
-    this.componentId = componentId;
-    this.value = value;
-    this.type = type;
+    this.page = page
+    this.id = id
+    this.name = name
+    this.operator = operator
+    this.componentId = componentId
+    this.value = value
+    this.type = type
   }
 
   /**
@@ -426,7 +424,7 @@ export class IsAtMostCondition {
    * @returns {number | null}
    */
   get triggerValue() {
-    return this.type === "NumberValue" ? this.value : null;
+    return this.type === 'NumberValue' ? this.value : null
   }
 
   /**
@@ -434,7 +432,7 @@ export class IsAtMostCondition {
    * @returns {number | null}
    */
   get nonTriggerValue() {
-    return this.type === "NumberValue" ? this.value + 1 : null;
+    return this.type === 'NumberValue' ? this.value + 1 : null
   }
 }
 
@@ -454,14 +452,14 @@ export class IsNotCondition {
    * @param {IsNotConditionOptions} options
    */
   constructor({ page, id, name, operator, componentId, value, type, list }) {
-    this.page = page;
-    this.id = id;
-    this.name = name;
-    this.operator = operator;
-    this.componentId = componentId;
-    this.value = value;
-    this.type = type;
-    this.list = list;
+    this.page = page
+    this.id = id
+    this.name = name
+    this.operator = operator
+    this.componentId = componentId
+    this.value = value
+    this.type = type
+    this.list = list
   }
 
   /**
@@ -469,10 +467,10 @@ export class IsNotCondition {
    * @returns {ListItem[]}
    */
   get listItems() {
-    if (this.type === "ListItemRef" && this.list) {
-      return this.list.getAllItems();
+    if (this.type === 'ListItemRef' && this.list) {
+      return this.list.getAllItems()
     }
-    return [];
+    return []
   }
 
   /**
@@ -480,11 +478,11 @@ export class IsNotCondition {
    * @returns {ListItem | null}
    */
   get triggerListItem() {
-    if (this.type === "ListItemRef" && this.list) {
-      const items = this.list.getAllItems();
-      return items.find((item) => item.id !== this.value.itemId) || null;
+    if (this.type === 'ListItemRef' && this.list) {
+      const items = this.list.getAllItems()
+      return items.find((item) => item.id !== this.value.itemId) || null
     }
-    return null;
+    return null
   }
 
   /**
@@ -492,10 +490,10 @@ export class IsNotCondition {
    * @returns {ListItem | null}
    */
   get nonTriggerListItem() {
-    if (this.type === "ListItemRef" && this.list) {
-      return this.list.getItem(this.value.itemId) || null;
+    if (this.type === 'ListItemRef' && this.list) {
+      return this.list.getItem(this.value.itemId) || null
     }
-    return null;
+    return null
   }
 
   /**
@@ -503,8 +501,8 @@ export class IsNotCondition {
    * @returns {string | null}
    */
   get triggerValue() {
-    const item = this.triggerListItem;
-    return item ? item.text : null;
+    const item = this.triggerListItem
+    return item ? item.text : null
   }
 
   /**
@@ -512,7 +510,7 @@ export class IsNotCondition {
    * @returns {string | null}
    */
   get nonTriggerValue() {
-    const item = this.nonTriggerListItem;
-    return item ? item.text : null;
+    const item = this.nonTriggerListItem
+    return item ? item.text : null
   }
 }

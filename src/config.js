@@ -1,11 +1,14 @@
-import { z } from "zod";
-import dotenv from "dotenv";
+import joi from 'joi'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
-export const configSchema = z.object({
-  TEST_ENVIRONMENT: z.enum(["local", "test", "prod"]).default("local"),
-  TIMEOUT: z.coerce.number().default(30000),
-});
+export const configSchema = joi.object({
+  TEST_ENVIRONMENT: joi
+    .string()
+    .allow('local', 'test', 'prod')
+    .default('local'),
+  TIMEOUT: joi.number().default(30000)
+})
 
-export const config = configSchema.parse(process.env);
+export const config = joi.attempt(process.env, configSchema)

@@ -1,4 +1,4 @@
-import { BaseGroupFieldController } from "./base-field-controller.js";
+import { BaseGroupFieldController } from './base-field-controller.js'
 
 /**
  * Controller for RadioField components.
@@ -11,7 +11,7 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findOption(optionText) {
-    return this.page.getByRole("radio", { name: optionText });
+    return this.page.getByRole('radio', { name: optionText })
   }
 
   /**
@@ -19,7 +19,7 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findAllOptions() {
-    return this.page.getByRole("radio");
+    return this.page.getByRole('radio')
   }
 
   /**
@@ -27,15 +27,15 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @param {string} optionText - The text label of the radio option to select
    */
   async selectOption(optionText) {
-    const option = this.findOption(optionText);
-    await option.check();
-    return this;
+    const option = this.findOption(optionText)
+    await option.check()
+    return this
   }
 
   async selectFirstOption() {
-    const firstOption = this.findAllOptions().first();
-    await firstOption.check();
-    return this;
+    const firstOption = this.findAllOptions().first()
+    await firstOption.check()
+    return this
   }
 
   /**
@@ -43,9 +43,9 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @param {string} value - The value of the radio option to select
    */
   async selectByValue(value) {
-    const radio = this.page.locator(`input[type="radio"][value="${value}"]`);
-    await radio.check();
-    return this;
+    const radio = this.page.locator(`input[type="radio"][value="${value}"]`)
+    await radio.check()
+    return this
   }
 
   /**
@@ -55,12 +55,12 @@ export class RadioFieldController extends BaseGroupFieldController {
   async getSelectedValue() {
     const checkedRadio = this.findFieldset().locator(
       'input[type="radio"]:checked'
-    );
-    const count = await checkedRadio.count();
+    )
+    const count = await checkedRadio.count()
     if (count === 0) {
-      return null;
+      return null
     }
-    return await checkedRadio.getAttribute("value");
+    return await checkedRadio.getAttribute('value')
   }
 
   /**
@@ -69,8 +69,8 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @returns {Promise<boolean>}
    */
   async isOptionSelected(optionText) {
-    const option = this.findOption(optionText);
-    return await option.isChecked();
+    const option = this.findOption(optionText)
+    return await option.isChecked()
   }
 
   /**
@@ -78,6 +78,6 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @returns {Promise<number>}
    */
   async getOptionsCount() {
-    return await this.findAllOptions().count();
+    return await this.findAllOptions().count()
   }
 }

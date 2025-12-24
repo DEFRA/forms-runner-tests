@@ -1,30 +1,30 @@
-import { expect } from "@playwright/test";
+import { expect } from '@playwright/test'
 
-import { BaseFieldController } from "./base-field-controller.js";
+import { BaseFieldController } from './base-field-controller.js'
 const MimeTypeMap = {
-  pdf: "application/pdf",
-  doc: "application/msword",
-  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  odt: "application/vnd.oasis.opendocument.text",
-  jpg: "image/jpeg",
-  jpeg: "image/jpeg",
-  png: "image/png",
-  txt: "text/plain",
-};
+  pdf: 'application/pdf',
+  doc: 'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  odt: 'application/vnd.oasis.opendocument.text',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  txt: 'text/plain'
+}
 
 const createFileBuffer = () => {
-  return Buffer.from("Sample file content", "utf-8");
-};
+  return Buffer.from('Sample file content', 'utf-8')
+}
 
 const createFile = (fileName) => {
-  const extension = fileName.split(".").pop().toLowerCase();
-  const mimeType = MimeTypeMap[extension] || "application/octet-stream";
+  const extension = fileName.split('.').pop().toLowerCase()
+  const mimeType = MimeTypeMap[extension] || 'application/octet-stream'
   return {
     name: fileName,
-    mimeType: mimeType,
-    buffer: createFileBuffer(),
-  };
-};
+    mimeType,
+    buffer: createFileBuffer()
+  }
+}
 
 /**
  * Controller for FileUploadField components.
@@ -37,7 +37,7 @@ export class FileUploadFieldController extends BaseFieldController {
    */
   find() {
     // File inputs in GOV.UK forms typically use id attribute
-    return this.page.locator(`input[type="file"][id="${this.name}"]`);
+    return this.page.locator(`input[type="file"][id="${this.name}"]`)
   }
 
   /**
@@ -45,16 +45,16 @@ export class FileUploadFieldController extends BaseFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findByLabel() {
-    return this.page.getByLabel(this.title);
+    return this.page.getByLabel(this.title)
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    */
   async assertions(expect) {
-    const element = this.find();
-    await expect(element).toBeAttached();
-    return this;
+    const element = this.find()
+    await expect(element).toBeAttached()
+    return this
   }
 
   /**
@@ -64,53 +64,53 @@ export class FileUploadFieldController extends BaseFieldController {
    */
   async uploadFile(_filePath) {
     const mimeType =
-      this.getAcceptedTypes()?.split(",")[0].trim() || "text/plain";
-    const fileExtensionMap = Object.entries(MimeTypeMap);
+      this.getAcceptedTypes()?.split(',')[0].trim() || 'text/plain'
+    const fileExtensionMap = Object.entries(MimeTypeMap)
     const extension =
-      fileExtensionMap.find(([_ext, type]) => type === mimeType)?.[0] || "txt";
-    const fileName = `test-file.${extension}`;
-    const file = createFile(fileName);
-    await this.find().setInputFiles(file);
-    return this;
+      fileExtensionMap.find(([_ext, type]) => type === mimeType)?.[0] || 'txt'
+    const fileName = `test-file.${extension}`
+    const file = createFile(fileName)
+    await this.find().setInputFiles(file)
+    return this
   }
 
   async clickUploadButton() {
-    const uploadButton = this.page.getByRole("button", {
-      name: /upload file/i,
-    });
-    await uploadButton.click();
+    const uploadButton = this.page.getByRole('button', {
+      name: /upload file/i
+    })
+    await uploadButton.click()
     // wait for upload to complete if necessary
     await expect
       .poll(
         async () => {
           const count = await this.page
-            .getByText("1 file uploaded", { exact: true })
-            .count();
-          return count > 0;
+            .getByText('1 file uploaded', { exact: true })
+            .count()
+          return count > 0
         },
         {
           timeout: 15000,
           interval: 1000,
-          message: "Waiting for file to be uploaded",
+          message: 'Waiting for file to be uploaded'
         }
       )
-      .toBe(true);
-    await this.page.waitForLoadState("networkidle");
-    return this;
+      .toBe(true)
+    await this.page.waitForLoadState('networkidle')
+    return this
   }
 
   async uploadFiles() {
     const mimeType =
-      this.getAcceptedTypes()?.split(",")[0]?.trim() || "text/plain";
-    const fileExtensionMap = Object.entries(MimeTypeMap);
+      this.getAcceptedTypes()?.split(',')[0]?.trim() || 'text/plain'
+    const fileExtensionMap = Object.entries(MimeTypeMap)
     const extension =
-      fileExtensionMap.find(([_ext, type]) => type === mimeType)?.[0] || "txt";
-    const fileName = `test-file.${extension}`;
-    const file1 = createFile(fileName);
-    const file2 = createFile(`second-${fileName}`);
-    const files = [file1, file2];
-    await this.find().setInputFiles(files);
-    return this;
+      fileExtensionMap.find(([_ext, type]) => type === mimeType)?.[0] || 'txt'
+    const fileName = `test-file.${extension}`
+    const file1 = createFile(fileName)
+    const file2 = createFile(`second-${fileName}`)
+    const files = [file1, file2]
+    await this.find().setInputFiles(files)
+    return this
   }
 
   /**
@@ -119,20 +119,20 @@ export class FileUploadFieldController extends BaseFieldController {
    */
   async fill(value) {
     if (Array.isArray(value)) {
-      await this.uploadFiles();
+      await this.uploadFiles()
     } else {
-      await this.uploadFile(value);
+      await this.uploadFile(value)
     }
-    await this.clickUploadButton();
-    return this;
+    await this.clickUploadButton()
+    return this
   }
 
   /**
    * Clear the file input (remove selected files)
    */
   async clear() {
-    await this.find().setInputFiles([]);
-    return this;
+    await this.find().setInputFiles([])
+    return this
   }
 
   /**
@@ -140,7 +140,7 @@ export class FileUploadFieldController extends BaseFieldController {
    * @returns {string | undefined}
    */
   getAcceptedTypes() {
-    return this.options?.accept;
+    return this.options?.accept
   }
 
   /**
@@ -149,18 +149,18 @@ export class FileUploadFieldController extends BaseFieldController {
    * @returns {boolean}
    */
   isFileTypeAccepted(mimeType) {
-    const accepted = this.getAcceptedTypes();
+    const accepted = this.getAcceptedTypes()
     if (!accepted) {
-      return true; // No restriction means all types accepted
+      return true // No restriction means all types accepted
     }
-    return accepted.split(",").some((type) => {
-      const trimmedType = type.trim();
-      if (trimmedType === "*/*") return true;
-      if (trimmedType.endsWith("/*")) {
-        const category = trimmedType.slice(0, -2);
-        return mimeType.startsWith(category);
+    return accepted.split(',').some((type) => {
+      const trimmedType = type.trim()
+      if (trimmedType === '*/*') return true
+      if (trimmedType.endsWith('/*')) {
+        const category = trimmedType.slice(0, -2)
+        return mimeType.startsWith(category)
       }
-      return trimmedType === mimeType;
-    });
+      return trimmedType === mimeType
+    })
   }
 }

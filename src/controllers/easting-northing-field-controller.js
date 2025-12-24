@@ -1,4 +1,4 @@
-import { BaseCompositeFieldController } from "./base-field-controller.js";
+import { BaseCompositeFieldController } from './base-field-controller.js'
 
 /**
  * Controller for EastingNorthingField components (dual input for grid coordinates).
@@ -9,39 +9,39 @@ export class EastingNorthingFieldController extends BaseCompositeFieldController
    * @returns {import("@playwright/test").Locator}
    */
   findEastingInput() {
-    return this.page.getByRole("textbox", { name: "Easting" });
+    return this.page.getByRole('textbox', { name: 'Easting' })
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findNorthingInput() {
-    return this.page.getByRole("textbox", { name: "Northing" });
+    return this.page.getByRole('textbox', { name: 'Northing' })
   }
 
   /**
    * @returns {import("@playwright/test").Locator}
    */
   findFieldset() {
-    return this.page.getByRole("group", { name: this.title });
+    return this.page.getByRole('group', { name: this.title })
   }
 
   /**
    * @param {import("@playwright/test").Expect} expect
    */
   async assertions(expect) {
-    const fieldset = this.findFieldset();
-    await expect(fieldset).toBeVisible();
+    const fieldset = this.findFieldset()
+    await expect(fieldset).toBeVisible()
 
-    const eastingInput = this.findEastingInput();
-    const northingInput = this.findNorthingInput();
+    const eastingInput = this.findEastingInput()
+    const northingInput = this.findNorthingInput()
 
-    await expect(eastingInput).toBeVisible();
-    await expect(eastingInput).toBeEnabled();
-    await expect(northingInput).toBeVisible();
-    await expect(northingInput).toBeEnabled();
+    await expect(eastingInput).toBeVisible()
+    await expect(eastingInput).toBeEnabled()
+    await expect(northingInput).toBeVisible()
+    await expect(northingInput).toBeEnabled()
 
-    return this;
+    return this
   }
 
   /**
@@ -49,8 +49,8 @@ export class EastingNorthingFieldController extends BaseCompositeFieldController
    * @param {string} northing - Northing value (up to 7 digits, 0-1300000)
    */
   async fill(easting, northing) {
-    await this.findEastingInput().fill(easting);
-    await this.findNorthingInput().fill(northing);
-    return this;
+    await this.findEastingInput().fill(easting)
+    await this.findNorthingInput().fill(northing)
+    return this
   }
 }

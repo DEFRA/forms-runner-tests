@@ -1,17 +1,18 @@
 export class List {
   constructor() {
-    this.list = new Map();
+    this.list = new Map()
   }
 
   addItem(key, value) {
-    this.list.set(key, value);
+    this.list.set(key, value)
   }
+
   /**
    * @param {string} key
    * @returns {object | undefined}
    */
   getItem(key) {
-    return this.list.get(key);
+    return this.list.get(key)
   }
 
   /**
@@ -19,7 +20,7 @@ export class List {
    * @returns {Array<object>}
    */
   getAllItems() {
-    return Array.from(this.list.values());
+    return Array.from(this.list.values())
   }
 
   /**
@@ -27,7 +28,7 @@ export class List {
    * @returns {Array<string>}
    */
   getAllKeys() {
-    return Array.from(this.list.keys());
+    return Array.from(this.list.keys())
   }
 
   /**
@@ -35,7 +36,7 @@ export class List {
    * @returns {number}
    */
   size() {
-    return this.list.size;
+    return this.list.size
   }
 }
 
@@ -60,17 +61,17 @@ export class ListController {
    * @param {ListControllerOptions} options
    */
   constructor({ id, name, title, type, items }) {
-    this.id = id;
-    this.name = name;
-    this.title = title;
-    this.type = type;
-    this.list = new List();
-    this.items = items || [];
+    this.id = id
+    this.name = name
+    this.title = title
+    this.type = type
+    this.list = new List()
+    this.items = items || []
 
     // Initialize list with items if provided
     if (items && Array.isArray(items)) {
       for (const item of items) {
-        this.list.addItem(item.id, item);
+        this.list.addItem(item.id, item)
       }
     }
   }
@@ -81,8 +82,8 @@ export class ListController {
    * @param {ListItem} value
    */
   addItem(key, value) {
-    this.list.addItem(key, value);
-    this.items.push(value);
+    this.list.addItem(key, value)
+    this.items.push(value)
   }
 
   /**
@@ -91,7 +92,7 @@ export class ListController {
    * @returns {ListItem | undefined}
    */
   getItem(key) {
-    return this.list.getItem(key);
+    return this.list.getItem(key)
   }
 
   /**
@@ -100,7 +101,7 @@ export class ListController {
    * @returns {ListItem | undefined}
    */
   findItem(key) {
-    return this.list.getItem(key);
+    return this.list.getItem(key)
   }
 
   /**
@@ -109,7 +110,7 @@ export class ListController {
    * @returns {ListItem | undefined}
    */
   findItemByText(text) {
-    return this.items.find((item) => item.text === text);
+    return this.items.find((item) => item.text === text)
   }
 
   /**
@@ -118,7 +119,7 @@ export class ListController {
    * @returns {ListItem | undefined}
    */
   findItemByValue(value) {
-    return this.items.find((item) => item.value === value);
+    return this.items.find((item) => item.value === value)
   }
 
   /**
@@ -126,7 +127,7 @@ export class ListController {
    * @returns {List}
    */
   getList() {
-    return this.list;
+    return this.list
   }
 
   /**
@@ -134,7 +135,7 @@ export class ListController {
    * @returns {ListItem[]}
    */
   getAllItems() {
-    return this.items;
+    return this.items
   }
 
   /**
@@ -142,7 +143,7 @@ export class ListController {
    * @returns {string[]}
    */
   getAllTexts() {
-    return this.items.map((item) => item.text);
+    return this.items.map((item) => item.text)
   }
 
   /**
@@ -150,7 +151,7 @@ export class ListController {
    * @returns {string[]}
    */
   getAllValues() {
-    return this.items.map((item) => item.value);
+    return this.items.map((item) => item.value)
   }
 
   /**
@@ -158,7 +159,7 @@ export class ListController {
    * @returns {ListItem | undefined}
    */
   getFirstItem() {
-    return this.items[0];
+    return this.items[0]
   }
 
   /**
@@ -166,7 +167,7 @@ export class ListController {
    * @returns {ListItem | undefined}
    */
   getLastItem() {
-    return this.items[this.items.length - 1];
+    return this.items[this.items.length - 1]
   }
 
   /**
@@ -174,6 +175,6 @@ export class ListController {
    * @returns {number}
    */
   size() {
-    return this.items.length;
+    return this.items.length
   }
 }
