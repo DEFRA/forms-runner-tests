@@ -76,7 +76,8 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * @param {import("@playwright/test").Expect} expect Playwright expect function used for assertions.
+   * @returns {Promise<UkAddressFieldController>} // for chaining
    */
   async assertions(expect) {
     const fieldset = this.findFieldset()
@@ -99,12 +100,13 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
 
   /**
    * @typedef {object} AddressDetails
-   * @property {string} addressLine1
-   * @property {string} [addressLine2]
-   * @property {string} townOrCity
-   * @property {string} [county]
-   * @property {string} postcode
-   * @param {AddressDetails} address
+   * @property {string} addressLine1 First line of the address (e.g. building and street).
+   * @property {string} [addressLine2] Second line of the address (optional).
+   * @property {string} townOrCity Town or city name.
+   * @property {string} [county] County name (optional).
+   * @property {string} postcode UK postcode.
+   * @param {AddressDetails} address Address details to enter into the form.
+   * @returns {Promise<UkAddressFieldController>} The controller instance for chaining.
    */
   async fill(address) {
     await this.findAddressLine1().fill(address.addressLine1)
@@ -120,8 +122,84 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
   }
 
   /**
+   * For postcode lookup mode - fill in the postcode and trigger lookup
+   * @param {string} postcode The postcode to fill in.
+   * @returns {Promise<UkAddressFieldController>} The controller instance for chaining.
+   */
+  async fillPostcode(postcode) {
+    const componentRoot = this.page.locator(`#${this.name}`);
+    await componentRoot.waitFor({ state: "visible" });
+
+    const findAddressButton = componentRoot.getByRole("button", {
+      name: /find an address/i,
+    });
+
+    // The button can be enabled after client-side hydration; let Playwright auto-wait.
+    await expect(findAddressButton).toBeVisible();
+    await expect(findAddressButton).toBeEnabled();
+
+    await findAddressButton.click();
+
+    // Postcode lookup is typically a separate step/page.
+    await this.page.waitForURL(/postcode-lookup/i, { timeout: 15000 });
+
+    const postcodeInput = this.page.getByRole("textbox", {
+      name: /^postcode$/i,
+    });
+    await expect(postcodeInput).toBeVisible();
+    await postcodeInput.fill(postcode);
+
+    const buildingInput = this.page.getByRole("textbox", {
+      name: /building name or number/i,
+    });
+    if ((await buildingInput.count()) > 0) {
+      await buildingInput.fill("1");
+    }
+
+    const findLookupButton = this.page.getByRole("button", {
+      name: /^find address$/i,
+    });
+    await expect(findLookupButton).toBeEnabled();
+    await findLookupButton.click();
+
+    const addressDropdown = this.page.getByRole("combobox", {
+      name: /select an address/i,
+    });
+
+    if ((await addressDropdown.count()) > 0) {
+      await expect(addressDropdown).toBeEnabled();
+
+      const dropdownHandle = await addressDropdown.elementHandle();
+      if (dropdownHandle) {
+        await this.page.waitForFunction(
+          (el) =>
+            !!el &&
+            el.tagName === "SELECT" &&
+            "options" in el &&
+            el.options.length > 1,
+          dropdownHandle,
+          { timeout: 15000 }
+        );
+      }
+
+      await addressDropdown.selectOption({ index: 1 });
+    }
+
+    const useAddressButton = this.page.getByRole("button", {
+      name: /use this address/i,
+    });
+    await expect(useAddressButton).toBeEnabled();
+    await useAddressButton.click();
+
+    await this.page.waitForURL(/\/form\//i, { timeout: 15000 });
+    await this.page.waitForLoadState("networkidle");
+    return this;
+  }
+
+  /**
    * For postcode lookup mode - search for an address
-   * @param {string} postcode
+   * @param {string} postcode The postcode to search for.
+   * @returns {Promise<UkAddressFieldController>} The controller instance for chaining.
    */
   async searchPostcode(postcode) {
     await this.findPostcodeLookupInput().fill(postcode)
@@ -131,7 +209,8 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
 
   /**
    * For postcode lookup mode - select an address from dropdown
-   * @param {string} addressText
+   * @param {string} addressText The visible label of the address option to select.
+   * @returns {Promise<UkAddressFieldController>} The controller instance for chaining.
    */
   async selectAddress(addressText) {
     await this.findAddressDropdown().selectOption({ label: addressText })

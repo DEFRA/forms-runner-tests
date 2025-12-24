@@ -202,7 +202,6 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
         }
         continue // no need to go ahead
       }
-    }
 
     const isRepeatSummaryPage =
       (await page.getByRole('button', { name: /add another/i }).count()) > 0
@@ -274,10 +273,206 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
   }
 })
 
+test.describe(`${formName} required fields tests`, () => {
+  test("Initialize form", async ({ page, baseURL }) => {
+    test.setTimeout(120000);
+    const startPage = allComponentsForm.pages[0].path;
+    const formUrl = `${baseURL}/form/${normalized}${startPage}`;
+    // Initialize stack with the first page URL
+    const navigationStack = [formUrl];
+    const visitedPaths = new Set();
+
+    // Navigate to start page
+    await page.goto(formUrl);
+    await page.waitForLoadState("networkidle");
+
+    // Check that the start page is displayed
+    const startPageTitle = allComponentsForm.pages[0].title;
+    if (startPageTitle) {
+      await expect(
+        page.getByRole("heading", { name: startPageTitle })
+      ).toBeVisible();
+    }
+
+    while (navigationStack.length > 0) {
+      const currentUrl = navigationStack.pop();
+      const currentPath = extractPathFromUrl(currentUrl, normalized);
+
+      // For repeat pages with UUID, use base path for visited tracking
+      // But allow visiting the same repeat page base path with different UUIDs
+      const basePathForTracking = isRepeatPageInstance(currentPath)
+        ? currentPath // Use full path with UUID to allow multiple repeat instances
+        : currentPath;
+
+      // Prevent infinite loops
+      if (visitedPaths.has(basePathForTracking)) {
+        continue;
+      }
+      visitedPaths.add(basePathForTracking);
+
+      // Find the page definition for the current path
+      const pageDef = findPageByPath(allComponentsForm, currentPath);
+      if (!pageDef) {
+        break;
+      }
+
+      // Handle terminal page - test ends here
+      if (pageDef.controller === "TerminalPageController") {
+        test.info().annotations.push({
+          type: "info",
+          description: `Reached terminal page: ${
+            pageDef.title || pageDef.path
+          }`,
+        });
+        break;
+      }
+
+      // Handle main form summary page - verify and submit
+      if (pageDef.controller === "SummaryPageWithConfirmationEmailController") {
+        const headingText =
+          pageDef.title?.length > 0
+            ? pageDef.title
+            : "Check your answers before sending your form";
+        await expect(
+          page.getByRole("heading", { name: headingText })
+        ).toBeVisible();
+        await page.getByRole("button", { name: buttonText(pageDef) }).click();
+        await page.waitForLoadState("networkidle");
+        break;
+      }
+
+      //provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
+      if (isRepeatSummaryPath(allComponentsForm, currentPath)) {
+        const addAnotherButton = page.getByRole("button", {
+          name: /add another/i,
+        });
+        if ((await addAnotherButton.count()) > 0) {
+          // We're on the repeat summary - click Continue to proceed
+          await page.getByRole("button", { name: "Continue" }).click();
+          await page.waitForLoadState("networkidle");
+
+          const newUrl = page.url();
+          const newPath = extractPathFromUrl(newUrl, normalized);
+          if (newPath !== currentPath) {
+            navigationStack.push(newUrl);
+          }
+          continue; // no need to go ahead
+        }
+      }
+
+      const isRepeatSummaryPage =
+        (await page.getByRole("button", { name: /add another/i }).count()) > 0;
+      if (isRepeatSummaryPage && !isRepeatPageInstance(currentPath)) {
+        await page.getByRole("button", { name: "Continue" }).click();
+        await page.waitForLoadState("networkidle");
+
+        const newUrl = page.url();
+        const newPath = extractPathFromUrl(newUrl, normalized);
+        if (newPath !== currentPath) {
+          navigationStack.push(newUrl);
+        }
+        continue;
+      }
+
+      const initializedComponents = await initializeComponentsForPage(
+        pageDef,
+        page,
+        {
+          lists: allComponentsForm.lists,
+          conditions: allComponentsForm.conditions,
+        }
+      );
+
+      // run required-fields validation only on pages that actually have required components
+      const hasRequiredComponents = initializedComponents.some((component) => {
+        if (typeof component.isRequired === "function") {
+          return component.isRequired();
+        }
+        return component.isRequired === true;
+      });
+
+      if (hasRequiredComponents) {
+        console.log(
+          `Running required fields validation for page: ${currentPath}`
+        );
+
+        const pathBeforeValidation = extractPathFromUrl(page.url(), normalized);
+
+        const errorText = page
+          .locator(".govuk-error-summary")
+          .getByText("There is a problem");
+
+        const errorPromise = errorText
+          .waitFor({ state: "visible", timeout: 5000 })
+          .then(() => "error")
+          .catch(() => undefined);
+
+        const navigationPromise = page
+          .waitForURL(
+            (url) =>
+              extractPathFromUrl(url.toString(), normalized) !==
+              pathBeforeValidation,
+            { timeout: 5000 }
+          )
+          .then(() => "navigated")
+          .catch(() => undefined);
+
+        await page
+          .getByRole("button", { name: "Continue" })
+          .click({ noWaitAfter: true });
+        const outcome = await Promise.race([errorPromise, navigationPromise]);
+
+        if (outcome === "navigated") {
+          // No validation error was raised; return to this page so the fill flow stays in sync.
+          console.warn(
+            `No required-fields error shown; navigated away from ${pathBeforeValidation}`
+          );
+          await page.goBack();
+          await page.waitForURL(
+            (url) =>
+              extractPathFromUrl(url.toString(), normalized) ===
+              pathBeforeValidation,
+            { timeout: 10000 }
+          );
+        } else if (outcome === "error") {
+          await expect(errorText).toBeVisible();
+        } else {
+          throw new Error(
+            `Required-fields validation did not produce an error or navigation on: ${pathBeforeValidation}`
+          );
+        }
+      }
+
+      await fillInitializedComponents(initializedComponents, componentData);
+
+      // Submit and navigate to next page (avoid networkidle which can hang)
+      const urlBeforeContinue = page.url();
+      await page
+        .getByRole("button", { name: "Continue" })
+        .click({ noWaitAfter: true });
+      await page.waitForURL((url) => url.toString() !== urlBeforeContinue, {
+        timeout: 15000,
+      });
+      // ther should be no validation errors
+      const errorSummary = page.locator(".govuk-error-summary");
+      await expect(errorSummary.getByText("There is a problem")).toHaveCount(0);
+      const errorCount = await errorSummary.count();
+      expect(errorCount).toBe(0);
+
+      // Get the new URL after navigation and push to stack
+      const newUrl = page.url();
+      const newPath = extractPathFromUrl(newUrl, normalized);
+
+      if (newPath !== currentPath) {
+        navigationStack.push(newUrl);
+      }
+    }
+  });
+});
 /**
  *
- * @param {object} summaryPageDef
- * @returns {string}
+ * @param {object} summaryPageDef Summary page definition from the form JSON.
+ * @returns {string} Submit button text for the summary page.
  */
 function buttonText(summaryPageDef) {
   if (
