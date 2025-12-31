@@ -11,66 +11,66 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {import("@playwright/test").Locator} Address line 1 input.
    */
   findAddressLine1() {
     return this.page.locator(`#${this.name}__addressLine1`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {import("@playwright/test").Locator} Address line 2 input.
    */
   findAddressLine2() {
     return this.page.locator(`#${this.name}__addressLine2`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {import("@playwright/test").Locator} Town/city input.
    */
   findTownOrCity() {
     return this.page.locator(`#${this.name}__town`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {import("@playwright/test").Locator} County input.
    */
   findCounty() {
     return this.page.locator(`#${this.name}__county`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {import("@playwright/test").Locator} Postcode input.
    */
   findPostcode() {
     return this.page.locator(`#${this.name}__postcode`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {import("@playwright/test").Locator} Address fieldset group.
    */
   findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
-   * For postcode lookup mode
-   * @returns {import("@playwright/test").Locator}
+   * For postcode lookup mode.
+   * @returns {import("@playwright/test").Locator} Postcode lookup input.
    */
   findPostcodeLookupInput() {
     return this.page.locator(`#${this.name}__postcode`)
   }
 
   /**
-   * For postcode lookup mode
-   * @returns {import("@playwright/test").Locator}
+   * For postcode lookup mode.
+   * @returns {import("@playwright/test").Locator} Find address button.
    */
   findFindAddressButton() {
     return this.page.locator(`#${this.name}__findAddress`)
   }
 
   /**
-   * For postcode lookup mode
-   * @returns {import("@playwright/test").Locator}
+   * For postcode lookup mode.
+   * @returns {import("@playwright/test").Locator} Address dropdown.
    */
   findAddressDropdown() {
     return this.page.getByRole('combobox', { name: 'Select an address' })
@@ -111,7 +111,7 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    */
   async fill(address) {
     if (this.usesPostcodeLookup()) {
-      this.fillPostcode(address.postcode)
+      await this.fillPostcode(address.postcode)
       return this
     }
     await this.findAddressLine1().fill(address.addressLine1)
@@ -132,73 +132,76 @@ export class UkAddressFieldController extends BaseCompositeFieldController {
    * @returns {Promise<UkAddressFieldController>} The controller instance for chaining.
    */
   async fillPostcode(postcode) {
-    const componentRoot = this.page.locator(`#${this.name}`);
-    await componentRoot.waitFor({ state: "visible" });
+    const componentRoot = this.page.locator(`#${this.name}`)
+    await componentRoot.waitFor({ state: 'visible' })
 
-    const findAddressButton = componentRoot.getByRole("button", {
-      name: /find an address/i,
-    });
+    const findAddressButton = componentRoot.getByRole('button', {
+      name: /find an address/i
+    })
 
     // The button can be enabled after client-side hydration; let Playwright auto-wait.
-    await expect(findAddressButton).toBeVisible();
-    await expect(findAddressButton).toBeEnabled();
+    await expect(findAddressButton).toBeVisible()
+    await expect(findAddressButton).toBeEnabled()
 
-    await findAddressButton.click();
+    await findAddressButton.click()
 
     // Postcode lookup is typically a separate step/page.
-    await this.page.waitForURL(/postcode-lookup/i, { timeout: 15000 });
+    await this.page.waitForURL(/postcode-lookup/i, { timeout: 15000 })
 
-    const postcodeInput = this.page.getByRole("textbox", {
-      name: /^postcode$/i,
-    });
-    await expect(postcodeInput).toBeVisible();
-    await postcodeInput.fill(postcode);
+    const postcodeInput = this.page.getByRole('textbox', {
+      name: /^postcode$/i
+    })
+    await expect(postcodeInput).toBeVisible()
+    await postcodeInput.fill(postcode)
 
-    const buildingInput = this.page.getByRole("textbox", {
-      name: /building name or number/i,
-    });
+    const buildingInput = this.page.getByRole('textbox', {
+      name: /building name or number/i
+    })
     if ((await buildingInput.count()) > 0) {
-      await buildingInput.fill("1");
+      await buildingInput.fill('1')
     }
 
-    const findLookupButton = this.page.getByRole("button", {
-      name: /^find address$/i,
-    });
-    await expect(findLookupButton).toBeEnabled();
-    await findLookupButton.click();
+    const findLookupButton = this.page.getByRole('button', {
+      name: /^find address$/i
+    })
+    await expect(findLookupButton).toBeEnabled()
+    await findLookupButton.click()
 
-    const addressDropdown = this.page.getByRole("combobox", {
-      name: /select an address/i,
-    });
+    const addressDropdown = this.page.getByRole('combobox', {
+      name: /select an address/i
+    })
 
     if ((await addressDropdown.count()) > 0) {
-      await expect(addressDropdown).toBeEnabled();
+      await expect(addressDropdown).toBeEnabled()
 
-      const dropdownHandle = await addressDropdown.elementHandle();
+      const dropdownHandle = await addressDropdown.elementHandle()
       if (dropdownHandle) {
         await this.page.waitForFunction(
           (el) =>
             !!el &&
-            el.tagName === "SELECT" &&
-            "options" in el &&
+            el.tagName === 'SELECT' &&
+            'options' in el &&
             el.options.length > 1,
           dropdownHandle,
           { timeout: 15000 }
-        );
+        )
       }
 
-      await addressDropdown.selectOption({ index: 1 });
+      await addressDropdown.selectOption({ index: 1 })
     }
 
-    const useAddressButton = this.page.getByRole("button", {
-      name: /use this address/i,
-    });
-    await expect(useAddressButton).toBeEnabled();
-    await useAddressButton.click();
+    const useAddressButton = this.page.getByRole('button', {
+      name: /use this address/i
+    })
+    await expect(useAddressButton).toBeEnabled()
+    await useAddressButton.click()
 
-    await this.page.waitForURL(/\/form\//i, { timeout: 15000 });
-    await this.page.waitForLoadState("networkidle");
-    return this;
+    await this.page.waitForURL(/\/form\//i, { timeout: 15000 })
+
+    // Avoid `networkidle` here; the page can keep connections open.
+    // Instead, wait until we're back on the form page and this component is present again.
+    await this.page.locator(`#${this.name}`).waitFor({ state: 'visible' })
+    return this
   }
 
   /**

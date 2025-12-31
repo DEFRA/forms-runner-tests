@@ -53,7 +53,7 @@ export class BaseFieldController {
    * Check if the field is required
    * @returns {boolean}
    */
-  isRequired() {
+  get isRequired() {
     return this.options?.required === true
   }
 

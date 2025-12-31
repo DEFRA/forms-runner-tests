@@ -1,11 +1,9 @@
-import {
-  IsCondition,
-  IsNotCondition,
-  IsMoreThanCondition,
-  IsLessThanCondition,
-  IsAtLeastCondition,
-  IsAtMostCondition
-} from './conditions.js'
+import { IsCondition } from './is-condition.js'
+import { IsNotCondition } from './is-not-condition.js'
+import { IsMoreThanCondition } from './is-more-than-condition.js'
+import { IsLessThanCondition } from './is-less-than-condition.js'
+import { IsAtLeastCondition } from './is-at-least-condition.js'
+import { IsAtMostCondition } from './is-at-most-condition.js'
 
 import { ConditionMapper } from '../helpers/components-mapper.js'
 

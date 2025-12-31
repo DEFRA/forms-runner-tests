@@ -11,7 +11,7 @@ export class YesNoFieldController extends BaseGroupFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findOption(optionText) {
-    return this.page.getByRole('radio', { name: optionText })
+    return this.findFieldset().getByRole('radio', { name: optionText })
   }
 
   /**
@@ -19,7 +19,7 @@ export class YesNoFieldController extends BaseGroupFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findAllOptions() {
-    return this.page.getByRole('radio')
+    return this.findFieldset().getByRole('radio')
   }
 
   /**
@@ -28,13 +28,16 @@ export class YesNoFieldController extends BaseGroupFieldController {
    */
   async selectOption(optionText) {
     const option = this.findOption(optionText)
-    await option.check()
+    await option.scrollIntoViewIfNeeded()
+    await option.setChecked(true)
+    await option.waitFor({ state: 'attached' })
     return this
   }
 
   async selectFirstOption() {
     const firstOption = this.findAllOptions().first()
-    await firstOption.check()
+    await firstOption.scrollIntoViewIfNeeded()
+    await firstOption.setChecked(true)
     return this
   }
 
@@ -43,8 +46,11 @@ export class YesNoFieldController extends BaseGroupFieldController {
    * @param {string} value - The value of the radio option to select
    */
   async selectByValue(value) {
-    const radio = this.page.locator(`input[type="radio"][value="${value}"]`)
-    await radio.check()
+    const radio = this.findFieldset().locator(
+      `input[type="radio"][value="${value}"]`
+    )
+    await radio.scrollIntoViewIfNeeded()
+    await radio.setChecked(true)
     return this
   }
 

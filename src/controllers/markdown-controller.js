@@ -17,7 +17,7 @@ export class MarkdownController {
    * Markdown components are display-only and not required for form submission
    * @returns {boolean}
    */
-  isRequired() {
+  get isRequired() {
     return false
   }
 

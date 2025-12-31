@@ -5,6 +5,14 @@ import { test, expect } from '@playwright/test'
 
 import { ComponentsInitializer } from '../helpers/components-mapper'
 import {
+  createFormSlug,
+  extractPathFromUrl,
+  findPageByPath,
+  isRepeatPageInstance,
+  isRepeatSummaryPath,
+  summarySubmitButtonText
+} from '../helpers/common.js'
+import {
   initializeComponentsForPage,
   fillInitializedComponents
 } from '../helpers/PageInitializer.js'
@@ -40,85 +48,7 @@ const componentData = {
   FileUploadField: [] // file will be created on fly
 }
 
-// UUID regex pattern
-const UUID_PATTERN =
-  /^(.+)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
-// RepeatPageControllerSummary
-const REPEAT_SUMMARY_PATTERN = /^(.+)\/summary$/
-
-/**
- * @param {string} path
- * @returns {object | undefined}
- */
-function findPageByPath(path) {
-  let pageDef = allComponentsForm.pages.find((p) => p.path === path)
-
-  // could be repeat page with UUID?
-  if (!pageDef) {
-    const uuidMatch = path.match(UUID_PATTERN)
-    if (uuidMatch) {
-      const basePath = uuidMatch[1]
-      pageDef = allComponentsForm.pages.find((p) => p.path === basePath)
-    }
-  }
-
-  // could be summary?
-  if (!pageDef) {
-    const summaryMatch = path.match(REPEAT_SUMMARY_PATTERN)
-    if (summaryMatch) {
-      const basePath = summaryMatch[1]
-      pageDef = allComponentsForm.pages.find((p) => p.path === basePath)
-    }
-  }
-
-  return pageDef
-}
-
-/**
- * Check if a path is a repeat page summary (ends with /summary under a repeat page)
- * @param {string} path
- * @returns {boolean}
- */
-function isRepeatSummaryPath(path) {
-  if (!REPEAT_SUMMARY_PATTERN.test(path)) {
-    return false
-  }
-  const basePath = path.replace(/\/summary$/, '')
-  const pageDef = allComponentsForm.pages.find((p) => p.path === basePath)
-  return pageDef?.controller === 'RepeatPageController'
-}
-
-/**
- * Check if a path is a repeat page instance (has UUID suffix)
- * @param {string} path
- * @returns {boolean}
- */
-function isRepeatPageInstance(path) {
-  return UUID_PATTERN.test(path)
-}
-
-/**
- * Extract the path from a full URL
- * @param {string} url
- * @param {string} formSlug
- * @returns {string}
- */
-function extractPathFromUrl(url, formSlug) {
-  const formPrefix = `/form/${formSlug}`
-  const urlObj = new URL(url)
-  const pathname = urlObj.pathname
-
-  if (pathname.startsWith(formPrefix)) {
-    return pathname.slice(formPrefix.length) || '/'
-  }
-  return pathname
-}
-
-const normalized = allComponentsForm.name
-  .toLocaleLowerCase()
-  .replace(/[()]/g, '') // Remove parentheses
-  .replace(/\s+/g, '-') // Replace spaces with hyphens
+const normalized = createFormSlug(allComponentsForm.name)
 const formName = allComponentsForm.name
 test(`${formName} tests`, async ({ page, baseURL }) => {
   test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
@@ -155,7 +85,7 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
     visitedPaths.add(basePathForTracking)
 
     // Find the page definition for the current path
-    const pageDef = findPageByPath(currentPath)
+    const pageDef = findPageByPath(allComponentsForm, currentPath)
     if (!pageDef) {
       break
     }
@@ -178,13 +108,15 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
       await expect(
         page.getByRole('heading', { name: headingText })
       ).toBeVisible()
-      await page.getByRole('button', { name: buttonText(pageDef) }).click()
+      await page
+        .getByRole('button', { name: summarySubmitButtonText(pageDef) })
+        .click()
       await page.waitForLoadState('networkidle')
       break
     }
 
     // if its RepeatPageController's summary
-    if (isRepeatSummaryPath(currentPath)) {
+    if (isRepeatSummaryPath(allComponentsForm, currentPath)) {
       const addAnotherButton = page.getByRole('button', {
         name: /add another/i
       })
@@ -276,7 +208,7 @@ test(`${formName} tests`, async ({ page, baseURL }) => {
 })
 
 test.describe(`${formName} required fields tests`, () => {
-  test('Initialize form', async ({ page, baseURL }) => {
+  test('Required fields error tests', async ({ page, baseURL }) => {
     test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
     const startPage = allComponentsForm.pages[0].path
     const formUrl = `${baseURL}/form/${normalized}${startPage}`
@@ -310,7 +242,7 @@ test.describe(`${formName} required fields tests`, () => {
       visitedPaths.add(basePathForTracking)
 
       // Find the page definition for the current path
-      const pageDef = findPageByPath(currentPath)
+      const pageDef = findPageByPath(allComponentsForm, currentPath)
       if (!pageDef) {
         break
       }
@@ -333,12 +265,14 @@ test.describe(`${formName} required fields tests`, () => {
         await expect(
           page.getByRole('heading', { name: headingText })
         ).toBeVisible()
-        await page.getByRole('button', { name: buttonText(pageDef) }).click()
+        await page
+          .getByRole('button', { name: summarySubmitButtonText(pageDef) })
+          .click()
         await page.waitForLoadState('networkidle')
         break
       }
 
-      //provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
+      // provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
       if (isRepeatSummaryPath(allComponentsForm, currentPath)) {
         const addAnotherButton = page.getByRole('button', {
           name: /add another/i
@@ -381,12 +315,9 @@ test.describe(`${formName} required fields tests`, () => {
       )
 
       // run required-fields validation only on pages that actually have required components
-      const hasRequiredComponents = initializedComponents.some((component) => {
-        if (typeof component.isRequired === 'function') {
-          return component.isRequired()
-        }
-        return component.isRequired === true
-      })
+      const hasRequiredComponents = initializedComponents.some(
+        (component) => component.isRequired ?? false
+      )
 
       if (hasRequiredComponents) {
         console.log(
@@ -466,18 +397,141 @@ test.describe(`${formName} required fields tests`, () => {
     }
   })
 })
-/**
- *
- * @param {object} summaryPageDef Summary page definition from the form JSON.
- * @returns {string} Submit button text for the summary page.
- */
-function buttonText(summaryPageDef) {
-  if (
-    summaryPageDef.components &&
-    summaryPageDef.components.some((component) => component.type === 'Markdown')
-  ) {
-    return 'Accept and send'
-  } else {
-    return 'Send'
-  }
-}
+
+test.describe(`${formName} skip optional fields`, () => {
+  test('Skipping optional fields', async ({ page, baseURL }) => {
+    test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
+    const startPage = allComponentsForm.pages[0].path
+    const formUrl = `${baseURL}/form/${normalized}${startPage}`
+    // Initialize stack with the first page URL
+    const navigationStack = [formUrl]
+    const visitedPaths = new Set()
+
+    // Navigate to start page
+    await page.goto(formUrl)
+    await page.waitForLoadState('networkidle')
+
+    // Check that the start page is displayed
+    const startPageTitle = allComponentsForm.pages[0].title
+    if (startPageTitle) {
+      await expect(
+        page.getByRole('heading', { name: startPageTitle })
+      ).toBeVisible()
+    }
+
+    while (navigationStack.length > 0) {
+      const currentUrl = navigationStack.pop()
+      const currentPath = extractPathFromUrl(currentUrl, normalized)
+
+      // Track visited paths (including UUID paths) to prevent loops.
+      const basePathForTracking = currentPath
+
+      // Prevent infinite loops
+      if (visitedPaths.has(basePathForTracking)) {
+        continue
+      }
+      visitedPaths.add(basePathForTracking)
+
+      // Find the page definition for the current path
+      const pageDef = findPageByPath(allComponentsForm, currentPath)
+      if (!pageDef) {
+        break
+      }
+
+      // Handle terminal page - test ends here
+      if (pageDef.controller === 'TerminalPageController') {
+        test.info().annotations.push({
+          type: 'info',
+          description: `Reached terminal page: ${pageDef.title || pageDef.path}`
+        })
+        break
+      }
+
+      // Handle main form summary page - verify and submit
+      if (pageDef.controller === 'SummaryPageWithConfirmationEmailController') {
+        const headingText =
+          pageDef.title?.length > 0
+            ? pageDef.title
+            : 'Check your answers before sending your form'
+        await expect(
+          page.getByRole('heading', { name: headingText })
+        ).toBeVisible()
+        await page
+          .getByRole('button', { name: summarySubmitButtonText(pageDef) })
+          .click()
+        await page.waitForLoadState('networkidle')
+        break
+      }
+
+      // provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
+      if (isRepeatSummaryPath(allComponentsForm, currentPath)) {
+        const addAnotherButton = page.getByRole('button', {
+          name: /add another/i
+        })
+        if ((await addAnotherButton.count()) > 0) {
+          // We're on the repeat summary - click Continue to proceed
+          await page.getByRole('button', { name: 'Continue' }).click()
+          await page.waitForLoadState('networkidle')
+
+          const newUrl = page.url()
+          const newPath = extractPathFromUrl(newUrl, normalized)
+          if (newPath !== currentPath) {
+            navigationStack.push(newUrl)
+          }
+          continue // no need to go ahead
+        }
+      }
+
+      const isRepeatSummaryPage =
+        (await page.getByRole('button', { name: /add another/i }).count()) > 0
+      if (isRepeatSummaryPage && !isRepeatPageInstance(currentPath)) {
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await page.waitForLoadState('networkidle')
+
+        const newUrl = page.url()
+        const newPath = extractPathFromUrl(newUrl, normalized)
+        if (newPath !== currentPath) {
+          navigationStack.push(newUrl)
+        }
+        continue
+      }
+
+      const initializedComponents = await initializeComponentsForPage(
+        pageDef,
+        page,
+        {
+          lists: allComponentsForm.lists,
+          conditions: allComponentsForm.conditions
+        }
+      )
+
+      await fillInitializedComponents(
+        initializedComponents,
+        componentData,
+        true
+      )
+
+      // Submit and navigate to next page (avoid networkidle which can hang)
+      const urlBeforeContinue = page.url()
+      await page
+        .getByRole('button', { name: 'Continue' })
+        .click({ noWaitAfter: true })
+      await page.waitForURL((url) => url.toString() !== urlBeforeContinue, {
+        timeout: 15000
+      })
+      // there should be no validation errors
+      const errorSummary = page.locator('.govuk-error-summary')
+      await expect(errorSummary.getByText('There is a problem')).toHaveCount(0)
+      const errorCount = await errorSummary.count()
+      expect(errorCount).toBe(0)
+
+      // Get the new URL after navigation and push to stack
+      const newUrl = page.url()
+      const newPath = extractPathFromUrl(newUrl, normalized)
+
+      if (newPath !== currentPath) {
+        navigationStack.push(newUrl)
+      }
+    }
+  })
+})
