@@ -40,23 +40,29 @@ export class IsMoreThanCondition {
    * @returns {number | [number, number, number] | null} Trigger value.
    */
   get triggerValue() {
-    if (this.type === 'NumberValue') {
-      return typeof this.value === 'number' ? this.value + 1 : null
-    }
+    switch (this.type) {
+      case 'NumberValue':
+        return typeof this.value === 'number' ? this.value + 1 : null
 
-    if (this.type === 'DateValue') {
-      const threshold = new Date(this.value)
-      return toDateParts(addDays(threshold, 1))
-    }
+      case 'DateValue': {
+        const threshold = new Date(this.value)
+        return toDateParts(addDays(threshold, 1))
+      }
 
-    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
-      const threshold = getTriggerDate(this.value)
-      return this.value.direction === 'in the future'
-        ? toDateParts(addDays(threshold, 1))
-        : toDateParts(addDays(threshold, -1))
-    }
+      case 'RelativeDate': {
+        if (!isRelativeDateValue(this.value)) {
+          return null
+        }
 
-    return null
+        const threshold = getTriggerDate(this.value)
+        return this.value.direction === 'in the future'
+          ? toDateParts(addDays(threshold, 1))
+          : toDateParts(addDays(threshold, -1))
+      }
+
+      default:
+        return null
+    }
   }
 
   /**
@@ -64,20 +70,26 @@ export class IsMoreThanCondition {
    * @returns {number | [number, number, number] | null} Non-trigger value.
    */
   get nonTriggerValue() {
-    if (this.type === 'NumberValue') {
-      return typeof this.value === 'number' ? this.value : null
-    }
+    switch (this.type) {
+      case 'NumberValue':
+        return typeof this.value === 'number' ? this.value : null
 
-    if (this.type === 'DateValue') {
-      const threshold = new Date(this.value)
-      return toDateParts(threshold)
-    }
+      case 'DateValue': {
+        const threshold = new Date(this.value)
+        return toDateParts(threshold)
+      }
 
-    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
-      return toDateParts(getNonTriggerDate(this.value))
-    }
+      case 'RelativeDate': {
+        if (!isRelativeDateValue(this.value)) {
+          return null
+        }
 
-    return null
+        return toDateParts(getNonTriggerDate(this.value))
+      }
+
+      default:
+        return null
+    }
   }
 
   /**
@@ -85,20 +97,26 @@ export class IsMoreThanCondition {
    * @returns {number | [number, number, number] | null} Boundary value.
    */
   get boundaryValue() {
-    if (this.type === 'NumberValue') {
-      return typeof this.value === 'number' ? this.value : null
-    }
+    switch (this.type) {
+      case 'NumberValue':
+        return typeof this.value === 'number' ? this.value : null
 
-    if (this.type === 'DateValue') {
-      const threshold = new Date(this.value)
-      return toDateParts(threshold)
-    }
+      case 'DateValue': {
+        const threshold = new Date(this.value)
+        return toDateParts(threshold)
+      }
 
-    if (this.type === 'RelativeDate' && isRelativeDateValue(this.value)) {
-      return toDateParts(getTriggerDate(this.value))
-    }
+      case 'RelativeDate': {
+        if (!isRelativeDateValue(this.value)) {
+          return null
+        }
 
-    return null
+        return toDateParts(getTriggerDate(this.value))
+      }
+
+      default:
+        return null
+    }
   }
 
   /**

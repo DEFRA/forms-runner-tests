@@ -1,6 +1,5 @@
 import {
   addDays,
-  getNonTriggerDate,
   getTriggerDate,
   isRelativeDateValue,
   toDateParts
@@ -54,6 +53,8 @@ export class IsLessThanCondition {
           return null
         }
 
+        // Relativedate example is less than 15 months in the future -> trigger is less than 15 months in the future
+        // Relativedate example is less than 15 months in the past   -> trigger is less than 15 months in the past
         const threshold = getTriggerDate(this.value)
         return this.value.direction === 'in the future'
           ? toDateParts(addDays(threshold, -1))
@@ -84,7 +85,12 @@ export class IsLessThanCondition {
           return null
         }
 
-        return toDateParts(getNonTriggerDate(this.value))
+        // Relativedate example is less than 15 months in the future -> non-trigger is 15 months in the future
+        // Relativedate example is less than 15 months in the past   -> non-trigger is 16 months in the past
+        const threshold = getTriggerDate(this.value)
+        return this.value.direction === 'in the future'
+          ? toDateParts(addDays(threshold, 1))
+          : toDateParts(addDays(threshold, -1))
       }
 
       default:

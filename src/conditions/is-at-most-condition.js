@@ -1,12 +1,23 @@
+import {
+  addDays,
+  getTriggerDate,
+  isRelativeDateValue,
+  toDateParts
+} from './relative-date-utils.js'
+
+/**
+ * @typedef {import('./relative-date-utils.js').RelativeDateValue} RelativeDateValue
+ */
+
 /**
  * @typedef {object} IsAtMostConditionOptions
  * @property {import('@playwright/test').Page} page Playwright page.
  * @property {string} id Condition id.
  * @property {string} name Condition name.
  * @property {string} operator Operator string.
- * @property {'NumberValue'} type Value type.
+ * @property {'NumberValue' | 'RelativeDate'} type Value type.
  * @property {string} componentId Component id.
- * @property {number} value Condition value.
+ * @property {number | RelativeDateValue} value Condition value.
  */
 
 export class IsAtMostCondition {
@@ -25,17 +36,44 @@ export class IsAtMostCondition {
 
   /**
    * Get a value that triggers this condition (value <= threshold).
-   * @returns {number | null} Trigger value.
+   * @returns {number | [number, number, number] | null} Trigger value.
    */
   get triggerValue() {
-    return this.type === 'NumberValue' ? this.value : null
+    switch (this.type) {
+      case 'NumberValue':
+        return this.value
+      case 'RelativeDate':
+        return isRelativeDateValue(this.value)
+          ? toDateParts(getTriggerDate(this.value))
+          : null
+      default:
+        return null
+    }
   }
 
   /**
    * Get a value that does NOT trigger this condition (value > threshold).
-   * @returns {number | null} Non-trigger value.
+   * @returns {number | [number, number, number] | null} Non-trigger value.
    */
   get nonTriggerValue() {
-    return this.type === 'NumberValue' ? this.value + 1 : null
+    switch (this.type) {
+      case 'NumberValue':
+        return this.value + 1
+      case 'RelativeDate': {
+        if (!isRelativeDateValue(this.value)) {
+          return null
+        }
+
+        // Relative-date operators are reversed for "in the past".
+        // Future: condition is (date <= threshold) -> non-trigger is (date > threshold)
+        // Past:   condition is (date >= threshold) -> non-trigger is (date < threshold)
+        const threshold = getTriggerDate(this.value)
+        return this.value.direction === 'in the future'
+          ? toDateParts(addDays(threshold, 1))
+          : toDateParts(addDays(threshold, -1))
+      }
+      default:
+        return null
+    }
   }
 }
