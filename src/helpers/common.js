@@ -1,3 +1,4 @@
+import {slugify} from '@defra/forms-model'
 // UUID regex pattern
 export const UUID_PATTERN =
   /^(.+)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -11,7 +12,7 @@ export const REPEAT_SUMMARY_PATTERN = /^(.+)\/summary$/
  * @returns {string} URL slug.
  */
 export function createFormSlug(formName) {
-  return formName.toLocaleLowerCase().replace(/[()]/g, '').replace(/\s+/g, '-')
+  return slugify(formName)
 }
 
 /**
