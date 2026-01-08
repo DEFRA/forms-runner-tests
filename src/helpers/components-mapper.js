@@ -7,7 +7,7 @@ import {
   IsLessThanCondition,
   IsAtLeastCondition,
   IsAtMostCondition
-} from '../conditions/conditions.js'
+} from '../conditions'
 
 export const componentsMapper = {
   TextField: Controllers.TextFieldController,

@@ -11,7 +11,7 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findOption(optionText) {
-    return this.page.getByRole('radio', { name: optionText })
+    return this.findFieldset().getByRole('radio', { name: optionText })
   }
 
   /**
@@ -19,7 +19,7 @@ export class RadioFieldController extends BaseGroupFieldController {
    * @returns {import("@playwright/test").Locator}
    */
   findAllOptions() {
-    return this.page.getByRole('radio')
+    return this.findFieldset().getByRole('radio')
   }
 
   /**
@@ -39,11 +39,31 @@ export class RadioFieldController extends BaseGroupFieldController {
   }
 
   /**
+   * Fill behaviour for radios: select an option (Playwright cannot fill radio inputs).
+   * If the provided option text doesn't match any option, falls back to the first option.
+   * @param {string} [optionText]
+   * @returns {Promise<this>}
+   */
+  async fill(optionText) {
+    if (optionText) {
+      const option = this.findOption(optionText)
+      if ((await option.count()) > 0) {
+        await option.first().check()
+        return this
+      }
+    }
+
+    return await this.selectFirstOption()
+  }
+
+  /**
    * Select a radio option by its value
    * @param {string} value - The value of the radio option to select
    */
   async selectByValue(value) {
-    const radio = this.page.locator(`input[type="radio"][value="${value}"]`)
+    const radio = this.findFieldset().locator(
+      `input[type="radio"][value="${value}"]`
+    )
     await radio.check()
     return this
   }
