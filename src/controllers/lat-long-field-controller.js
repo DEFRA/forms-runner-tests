@@ -58,6 +58,5 @@ export class LatLongFieldController extends BaseCompositeFieldController {
 }
 
 /**
- * @typedef {import('@playwright/test').Expect} Expect
- * @typedef {import('@playwright/test').Locator} Locator
+ * @import {Expect, Locator} from '@playwright/test'
  */

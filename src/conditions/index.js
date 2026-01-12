@@ -56,7 +56,7 @@ export {
  * Create a condition instance from a condition definition
  * @param {ConditionDefinition} conditionDef - The condition definition from JSON
  * @param {FormDefinition} formDefinition - The full form definition (for list lookups)
- * @param {import("@playwright/test").Page} page - Playwright page object
+ * @param {Page} page - Playwright page object
  * @returns {object | null} - Condition instance or null if operator not supported
  */
 export function createCondition(conditionDef, formDefinition, page) {
@@ -66,7 +66,7 @@ export function createCondition(conditionDef, formDefinition, page) {
 /**
  * Create all condition instances for a form
  * @param {FormDefinition} formDefinition - The form definition
- * @param {import("@playwright/test").Page} page - Playwright page object
+ * @param {Page} page - Playwright page object
  * @returns {Map<string, object>} - Map of condition ID to condition instance
  */
 export function createConditionsForForm(formDefinition, page) {
@@ -90,3 +90,7 @@ export function getConditionForPage(pageDef, conditionsMap) {
 export function getSupportedOperators() {
   return ConditionMapper.getSupportedOperators()
 }
+
+/**
+ * @import {Page} from '@playwright/test'
+ */

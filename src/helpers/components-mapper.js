@@ -36,7 +36,7 @@ export class ComponentsInitializer {
   /**
    * Initialize a component controller for a component definition.
    * @param {object} componentDefinition Component definition from the form JSON.
-   * @param {import('@playwright/test').Page} page Playwright page instance.
+   * @param {Page} page Playwright page instance.
    * @param {Array} [lists] - Optional array of lists for components that reference lists.
    * @param {Array} [conditions] - Optional condition definitions.
    * @returns {object} Component controller instance.
@@ -107,7 +107,7 @@ export class ConditionMapper {
    * @param {object} conditionDef Condition definition.
    * @param {object} item Condition item definition.
    * @param {object} formDefinition Form definition.
-   * @param {import("@playwright/test").Page} [page] Playwright page instance.
+   * @param {Page} [page] Playwright page instance.
    * @returns {object | null} Condition item instance, or null when unsupported.
    */
   static createConditionItem(conditionDef, item, formDefinition, page) {
@@ -183,7 +183,7 @@ export class ConditionMapper {
    * Note: currently uses the first condition item only (mirrors previous behavior).
    * @param {object} conditionDef Condition definition.
    * @param {object} formDefinition Form definition.
-   * @param {import("@playwright/test").Page} [page] Playwright page instance.
+   * @param {Page} [page] Playwright page instance.
    * @returns {object | null} Condition instance, or null when not mappable.
    */
   static createCondition(conditionDef, formDefinition, page) {
@@ -230,7 +230,7 @@ export class ConditionMapper {
   /**
    * Create all condition instances for a form
    * @param {object} formDefinition Form definition.
-   * @param {import("@playwright/test").Page} [page] Playwright page instance.
+   * @param {Page} [page] Playwright page instance.
    * @returns {Map<string, object>} Conditions map by condition id.
    */
   static createConditionsForForm(formDefinition, page) {
@@ -251,7 +251,7 @@ export class ConditionMapper {
    * This is used to attach relevant conditions to a component at initialization time.
    * @param {string} componentId Component id.
    * @param {Array} conditionsDefinition Condition definitions.
-   * @param {{lists?: Array, formDefinition?: object, page?: import('@playwright/test').Page}} context Mapping context.
+   * @param {{lists?: Array, formDefinition?: object, page?: Page}} context Mapping context.
    * @returns {Array<{conditionId: string, name: string, coordinator?: string, itemId: string, condition: object}>} Condition items for the component.
    */
   static getConditionItemsForComponent(
@@ -317,3 +317,7 @@ export class ConditionMapper {
     return Object.keys(this.CONDITION_MAP)
   }
 }
+
+/**
+ * @import {Page} from '@playwright/test'
+ */

@@ -30,5 +30,5 @@ export class SelectFieldController extends BaseFieldController {
 }
 
 /**
- * @typedef {import('@playwright/test').Locator} Locator
+ * @import {Locator} from '@playwright/test'
  */

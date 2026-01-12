@@ -177,9 +177,7 @@ export class BaseCompositeFieldController extends BaseFieldController {
 }
 
 /**
- * @typedef {import('@playwright/test').Expect} Expect
- * @typedef {import('@playwright/test').Locator} Locator
- * @typedef {import('@playwright/test').Page} Page
- * @typedef {import('./list-controller.js').ListController} ListController
- * @typedef {import('../conditions/index.js').ConditionInstance} ConditionInstance
+ * @import {Expect, Locator, Page} from '@playwright/test'
+ * @import {ListController} from './list-controller.js'
+ * @import {ConditionInstance} from '../conditions/index.js'
  */

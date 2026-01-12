@@ -67,7 +67,5 @@ export class MarkdownController {
 }
 
 /**
- * @typedef {import('@playwright/test').Expect} Expect
- * @typedef {import('@playwright/test').Locator} Locator
- * @typedef {import('@playwright/test').Page} Page
+ * @import {Expect, Locator, Page} from '@playwright/test'
  */

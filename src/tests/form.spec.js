@@ -48,6 +48,12 @@ const componentData = {
   FileUploadField: [] // file will be created on fly
 }
 
+const summaryControllers = [
+  'SummaryPageWithConfirmationEmailController',
+  'SummaryPageController'
+]
+const isSummaryPage = (controller) => summaryControllers.includes(controller)
+
 const normalized = createFormSlug(allComponentsForm.name)
 const formName = allComponentsForm.name
 test.describe(`${formName} fill tests`, () => {
@@ -102,7 +108,7 @@ test.describe(`${formName} fill tests`, () => {
       }
 
       // Handle main form summary page - verify and submit
-      if (pageDef.controller === 'SummaryPageWithConfirmationEmailController') {
+      if (isSummaryPage(pageDef.controller)) {
         const headingText =
           pageDef.title?.length > 0
             ? pageDef.title
@@ -257,7 +263,7 @@ test.describe(`${formName} required fields tests`, () => {
       }
 
       // Handle main form summary page - verify and submit
-      if (pageDef.controller === 'SummaryPageWithConfirmationEmailController') {
+      if (isSummaryPage(pageDef.controller)) {
         const headingText =
           pageDef.title?.length > 0
             ? pageDef.title
@@ -444,7 +450,7 @@ test.describe(`${formName} skip optional fields`, () => {
       }
 
       // Handle main form summary page - verify and submit
-      if (pageDef.controller === 'SummaryPageWithConfirmationEmailController') {
+      if (isSummaryPage(pageDef.controller)) {
         const headingText =
           pageDef.title?.length > 0
             ? pageDef.title
@@ -591,9 +597,7 @@ test.describe(`${formName} conditions tests`, () => {
         }
 
         // Handle main form summary page - verify and submit
-        if (
-          pageDef.controller === 'SummaryPageWithConfirmationEmailController'
-        ) {
+        if (isSummaryPage(pageDef.controller)) {
           const headingText =
             pageDef.title?.length > 0
               ? pageDef.title

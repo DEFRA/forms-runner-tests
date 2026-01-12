@@ -91,5 +91,5 @@ export class YesNoFieldController extends BaseGroupFieldController {
 }
 
 /**
- * @typedef {import('@playwright/test').Locator} Locator
+ * @import {Locator} from '@playwright/test'
  */
