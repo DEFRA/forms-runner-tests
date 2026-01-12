@@ -17,7 +17,7 @@ export class NumberFieldController extends BaseFieldController {
 
   /**
    * Get the current value as a number
-   * @returns {Promise<number>}
+   * @returns {Promise<number>} Parsed numeric value.
    */
   async getNumericValue() {
     const value = await this.getValue()

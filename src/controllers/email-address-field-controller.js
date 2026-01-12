@@ -7,8 +7,8 @@ import { BaseFieldController } from './base-field-controller.js'
 export class EmailAddressFieldController extends BaseFieldController {
   /**
    * Validates email format
-   * @param {string} value
-   * @returns {boolean}
+   * @param {string} value Email address.
+   * @returns {boolean} True when the value looks like an email address.
    */
   static isValidEmail(value) {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

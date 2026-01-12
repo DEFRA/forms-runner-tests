@@ -14,7 +14,7 @@ const MimeTypeMap = {
 
 /**
  * Create a buffer with sample file content
- * @returns {Buffer}
+ * @returns {Buffer} Buffer.
  */
 const createFileBuffer = () => {
   return Buffer.from('Sample file content', 'utf-8')
@@ -42,7 +42,7 @@ const createFile = (fileName) => {
 export class FileUploadFieldController extends BaseFieldController {
   /**
    * Find the file input element by name attribute
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} File input locator.
    */
   find() {
     // File inputs in GOV.UK forms typically use id attribute
@@ -51,14 +51,14 @@ export class FileUploadFieldController extends BaseFieldController {
 
   /**
    * Find the file input by label text
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} File input locator.
    */
   findByLabel() {
     return this.page.getByLabel(this.title)
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * @param {Expect} expect Playwright expect function.
    * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
    */
   async assertions(expect) {
@@ -67,10 +67,10 @@ export class FileUploadFieldController extends BaseFieldController {
     return this
   }
 
-/**
- * 
- * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
- */
+  /**
+   *
+   * @returns {Promise<FileUploadFieldController>} The controller instance for chaining.
+   */
   async uploadFile() {
     const mimeType =
       this.getAcceptedTypes()?.split(',')[0].trim() || 'text/plain'
@@ -148,7 +148,7 @@ export class FileUploadFieldController extends BaseFieldController {
 
   /**
    * Get the accepted file types for this input
-   * @returns {string | undefined}
+   * @returns {string | undefined} Accept attribute string.
    */
   getAcceptedTypes() {
     return this.options?.accept
@@ -157,7 +157,7 @@ export class FileUploadFieldController extends BaseFieldController {
   /**
    * Check if a specific file type is accepted
    * @param {string} mimeType - The MIME type to check (e.g., 'application/pdf')
-   * @returns {boolean}
+   * @returns {boolean} True when accepted.
    */
   isFileTypeAccepted(mimeType) {
     const accepted = this.getAcceptedTypes()
@@ -175,3 +175,7 @@ export class FileUploadFieldController extends BaseFieldController {
     })
   }
 }
+
+/**
+ * @import {Expect, Locator} from '@playwright/test'
+ */

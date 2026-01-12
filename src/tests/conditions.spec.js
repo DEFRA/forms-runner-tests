@@ -12,8 +12,9 @@ const form = JSON.parse(
 const conditions = createConditionsForForm(form)
 const conditionIds = [...conditions.keys()]
 /**
- *
- * @param condition
+ * Return the condition items array for a mapped condition.
+ * @param {object | undefined | null} condition Mapped condition entry.
+ * @returns {Array<object>} Condition item entries.
  */
 function getConditionItems(condition) {
   if (!condition) return []

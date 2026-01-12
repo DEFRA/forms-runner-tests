@@ -7,7 +7,7 @@ import { BaseFieldController } from './base-field-controller.js'
 export class AutocompleteFieldController extends BaseFieldController {
   /**
    * Find the autocomplete input element
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Autocomplete input.
    */
   find() {
     return this.page.locator(`input#${this.name}[role="combobox"]`)
@@ -15,8 +15,8 @@ export class AutocompleteFieldController extends BaseFieldController {
 
   /**
    * Find an option in the autocomplete dropdown by text
-   * @param {string} text
-   * @returns {import("@playwright/test").Locator}
+   * @param {string} text Option label.
+   * @returns {Locator} Option locator.
    */
   findOption(text) {
     return this.page
@@ -27,6 +27,7 @@ export class AutocompleteFieldController extends BaseFieldController {
   /**
    * Fill the autocomplete field and select a matching option
    * @param {string} value - The value to type and select
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(value) {
     const input = this.find()
@@ -53,6 +54,7 @@ export class AutocompleteFieldController extends BaseFieldController {
   /**
    * Select the first available option after typing a partial value
    * @param {string} partialValue - Partial text to type to trigger suggestions
+   * @returns {Promise<this>} The controller instance.
    */
   async selectFirstOption(partialValue = '') {
     const input = this.find()
@@ -74,3 +76,7 @@ export class AutocompleteFieldController extends BaseFieldController {
     return this
   }
 }
+
+/**
+ * @import {Locator} from '@playwright/test'
+ */

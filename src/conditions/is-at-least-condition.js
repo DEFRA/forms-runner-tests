@@ -6,13 +6,13 @@ import {
 } from './relative-date-utils.js'
 /**
  * @typedef {object} IsAtLeastConditionOptions
- * @property {import('@playwright/test').Page} page Playwright page.
+ * @property {Page} page Playwright page.
  * @property {string} id Condition id.
  * @property {string} name Condition name.
  * @property {string} operator Operator string.
  * @property {'NumberValue' | 'RelativeDate'} type Value type.
  * @property {string} componentId Component id.
- * @property {number | import('./relative-date-utils.js').RelativeDateValue} value Condition value.
+ * @property {number | RelativeDateValue} value Condition value.
  */
 
 export class IsAtLeastCondition {
@@ -65,3 +65,8 @@ export class IsAtLeastCondition {
     }
   }
 }
+
+/**
+ * @import {Page} from '@playwright/test'
+ * @import {RelativeDateValue} from './relative-date-utils.js'
+ */

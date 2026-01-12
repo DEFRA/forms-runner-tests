@@ -5,15 +5,11 @@
  * @property {string} value Stored value.
  */
 
-/**
- * @typedef {import('../controllers/list-controller.js').ListController} ListController
- */
-
 import { addDays, toDateParts } from './relative-date-utils.js'
 
 /**
  * @typedef {object} IsConditionOptions
- * @property {import('@playwright/test').Page} [page] Playwright page.
+ * @property {Page} [page] Playwright page.
  * @property {string} id Condition id.
  * @property {string} name Condition name.
  * @property {string} operator Operator string.
@@ -135,3 +131,8 @@ export class IsCondition {
     return []
   }
 }
+
+/**
+ * @import {Page} from '@playwright/test'
+ * @import {ListController} from '../controllers/list-controller.js'
+ */

@@ -1,7 +1,7 @@
 /**
  * @typedef {object} BaseFieldControllerParams
  * @property {string} title - The field title/label
- * @property {import("@playwright/test").Page} page - Playwright page object
+ * @property {Page} page - Playwright page object
  * @property {string} name - The field name attribute
  * @property {string} type - The component type
  * @property {string} [hint] - Optional hint text
@@ -10,7 +10,7 @@
  * @property {string} [id] - The component ID
  * @property {string} [shortDescription] - Short description of the field
  * @property {object} [schema] - Schema configuration
- * @property {import("../controllers/list-controller").ListController} [list] - Associated list ID for select-type fields
+ * @property {ListController} [list] - Associated list ID for select-type fields
  */
 
 /**
@@ -19,7 +19,7 @@
  */
 export class BaseFieldController {
   /**
-   * @param {BaseFieldControllerParams} params
+   * @param {BaseFieldControllerParams} params Controller params.
    */
   constructor({
     title,
@@ -44,14 +44,25 @@ export class BaseFieldController {
     this.schema = schema
     this.list = list
     /**
-     * @type{ import("../conditions/conditions.js" ).IsCondition[] }
+     * @type {ConditionInstance[]}
      */
     this.conditions = []
   }
 
   /**
-   * Check if the field is required
-   * @returns {boolean}
+   * Gets non-trigger value when this has conditions.
+   * @returns {boolean | string | [number, number, number] | null} Non-trigger value.
+   */
+  get nonTriggerValue() {
+    if (this.conditions.length > 0) {
+      return this.conditions[0].nonTriggerValue
+    }
+    return null
+  }
+
+  /**
+   * Check if the field is required.
+   * @returns {boolean} True when required.
    */
   get isRequired() {
     return this.options?.required === true
@@ -60,7 +71,7 @@ export class BaseFieldController {
   /**
    * Find the main field element.
    * Override this in subclasses for custom element location strategies.
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Main field locator.
    */
   find() {
     return this.page.locator(`#${this.name}`)
@@ -69,8 +80,8 @@ export class BaseFieldController {
   /**
    * Run standard assertions on the field.
    * Override in subclasses for custom assertions.
-   * @param {import("@playwright/test").Expect} expect
-   * @returns {Promise<this>}
+   * @param {Expect} expect Playwright expect function.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertions(expect) {
     const element = this.find()
@@ -82,8 +93,8 @@ export class BaseFieldController {
   /**
    * Fill the field with a value.
    * Override in subclasses for custom fill behavior.
-   * @param {string} value
-   * @returns {Promise<this>}
+   * @param {string} value Value to fill.
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(value) {
     await this.find().fill(value)
@@ -91,8 +102,8 @@ export class BaseFieldController {
   }
 
   /**
-   * Clear the field value
-   * @returns {Promise<this>}
+   * Clear the field value.
+   * @returns {Promise<this>} The controller instance.
    */
   async clear() {
     await this.find().clear()
@@ -100,8 +111,8 @@ export class BaseFieldController {
   }
 
   /**
-   * Get the current value of the field
-   * @returns {Promise<string>}
+   * Get the current value of the field.
+   * @returns {Promise<string>} Current value.
    */
   async getValue() {
     return await this.find().inputValue()
@@ -114,16 +125,16 @@ export class BaseFieldController {
  */
 export class BaseGroupFieldController extends BaseFieldController {
   /**
-   * Find the fieldset element containing the group
-   * @returns {import("@playwright/test").Locator}
+   * Find the fieldset element containing the group.
+   * @returns {Locator} Fieldset locator.
    */
   findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
-   * @returns {Promise<this>}
+   * @param {Expect} expect Playwright expect function.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertions(expect) {
     const fieldset = this.findFieldset()
@@ -137,16 +148,16 @@ export class BaseGroupFieldController extends BaseFieldController {
  */
 export class BaseCompositeFieldController extends BaseFieldController {
   /**
-   * Find the fieldset element containing all inputs
-   * @returns {import("@playwright/test").Locator}
+   * Find the fieldset element containing all inputs.
+   * @returns {Locator} Fieldset locator.
    */
   findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
-   * @returns {Promise<this>}
+   * @param {Expect} expect Playwright expect function.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertions(expect) {
     const fieldset = this.findFieldset()
@@ -155,8 +166,8 @@ export class BaseCompositeFieldController extends BaseFieldController {
   }
 
   /**
-   * Composite fields don't have a single find() - override to throw
-   * @returns {never}
+   * Composite fields don't have a single find() - override to throw.
+   * @returns {never} Always throws.
    */
   find() {
     throw new Error(
@@ -164,3 +175,9 @@ export class BaseCompositeFieldController extends BaseFieldController {
     )
   }
 }
+
+/**
+ * @import {Expect, Locator, Page} from '@playwright/test'
+ * @import {ListController} from './list-controller.js'
+ * @import {ConditionInstance} from '../conditions/index.js'
+ */

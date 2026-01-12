@@ -6,12 +6,8 @@ import {
 } from './relative-date-utils.js'
 
 /**
- * @typedef {import('./relative-date-utils.js').RelativeDateValue} RelativeDateValue
- */
-
-/**
  * @typedef {object} IsAtMostConditionOptions
- * @property {import('@playwright/test').Page} page Playwright page.
+ * @property {Page} page Playwright page.
  * @property {string} id Condition id.
  * @property {string} name Condition name.
  * @property {string} operator Operator string.
@@ -77,3 +73,8 @@ export class IsAtMostCondition {
     }
   }
 }
+
+/**
+ * @import {Page} from '@playwright/test'
+ * @import {RelativeDateValue} from './relative-date-utils.js'
+ */
