@@ -17,35 +17,39 @@ export {
 }
 
 /**
+ * @typedef {IsCondition | IsNotCondition | IsMoreThanCondition | IsLessThanCondition | IsAtLeastCondition | IsAtMostCondition} ConditionInstance
+ */
+
+/**
  * @typedef {object} ConditionItemDefinition
- * @property {string} id
- * @property {string} componentId
- * @property {string} operator
- * @property {object} value
- * @property {'ListItemRef' | 'NumberValue'} type
+ * @property {string} id Item id.
+ * @property {string} componentId Component id.
+ * @property {string} operator Operator.
+ * @property {object} value Value definition.
+ * @property {'ListItemRef' | 'NumberValue'} type Value type.
  */
 
 /**
  * @typedef {object} ConditionDefinition
- * @property {string} id
- * @property {string} displayName
- * @property {ConditionItemDefinition[]} items
+ * @property {string} id Condition id.
+ * @property {string} displayName Display name.
+ * @property {ConditionItemDefinition[]} items Condition items.
  */
 
 /**
  * @typedef {object} ListDefinition
- * @property {string} id
- * @property {string} name
- * @property {string} title
- * @property {string} type
- * @property {Array<{id: string, text: string, value: string}>} items
+ * @property {string} id List id.
+ * @property {string} name List name.
+ * @property {string} title List title.
+ * @property {string} type List type.
+ * @property {Array<{id: string, text: string, value: string}>} items List items.
  */
 
 /**
  * @typedef {object} FormDefinition
- * @property {Array<{components: Array<{id: string, list?: string}>}>} pages
- * @property {ConditionDefinition[]} conditions
- * @property {ListDefinition[]} lists
+ * @property {Array<{components: Array<{id: string, list?: string}>}>} pages Form pages.
+ * @property {ConditionDefinition[]} conditions Form conditions.
+ * @property {ListDefinition[]} lists Form lists.
  */
 
 /**
@@ -81,7 +85,7 @@ export function getConditionForPage(pageDef, conditionsMap) {
 
 /**
  * Get list of supported operators
- * @returns {string[]}
+ * @returns {string[]} Supported operators.
  */
 export function getSupportedOperators() {
   return ConditionMapper.getSupportedOperators()

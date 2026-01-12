@@ -1,10 +1,11 @@
 export class MarkdownController {
   /**
-   * Controller for Markdown display components (read-only content)
-   * @param {string} content - The markdown content
-   * @param {import("@playwright/test").Page} page
-   * @param {string} type
-   * @param {string} id
+   * Controller for Markdown display components (read-only content).
+   * @param {object} options Options.
+   * @param {string} options.content The markdown content.
+   * @param {Page} options.page Playwright page.
+   * @param {string} options.type Component type.
+   * @param {string} options.id Component id.
    */
   constructor({ content, page, type, id }) {
     this.content = content
@@ -15,7 +16,7 @@ export class MarkdownController {
 
   /**
    * Markdown components are display-only and not required for form submission
-   * @returns {boolean}
+   * @returns {boolean} Always false.
    */
   get isRequired() {
     return false
@@ -23,7 +24,7 @@ export class MarkdownController {
 
   /**
    * Find the markdown content container
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Content container locator.
    */
   find() {
     return this.page.locator(`[data-component-id="${this.id}"]`)
@@ -31,15 +32,16 @@ export class MarkdownController {
 
   /**
    * Find by text content within the markdown
-   * @param {string} text
-   * @returns {import("@playwright/test").Locator}
+   * @param {string} text Text to find.
+   * @returns {Locator} Matching text locator.
    */
   findByText(text) {
     return this.page.getByText(text)
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * @param {Expect} expect Playwright expect function.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertions(expect) {
     // Check that the markdown content text is visible on the page
@@ -53,8 +55,9 @@ export class MarkdownController {
 
   /**
    * Check if specific text is present in the markdown content
-   * @param {import("@playwright/test").Expect} expect
-   * @param {string} text
+   * @param {Expect} expect Playwright expect function.
+   * @param {string} text Text to assert.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertContainsText(expect, text) {
     const element = this.findByText(text)
@@ -62,3 +65,9 @@ export class MarkdownController {
     return this
   }
 }
+
+/**
+ * @typedef {import('@playwright/test').Expect} Expect
+ * @typedef {import('@playwright/test').Locator} Locator
+ * @typedef {import('@playwright/test').Page} Page
+ */

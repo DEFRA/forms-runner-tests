@@ -6,7 +6,7 @@ import { BaseFieldController } from './base-field-controller.js'
  */
 export class SelectFieldController extends BaseFieldController {
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Select field locator.
    */
   find() {
     return this.page.getByRole('combobox', { name: this.title })
@@ -15,6 +15,7 @@ export class SelectFieldController extends BaseFieldController {
   /**
    * Select an option by label text
    * @param {string} value - The label text of the option to select
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(value) {
     const label = value ?? this.list?.getFirstItem()?.text
@@ -27,3 +28,7 @@ export class SelectFieldController extends BaseFieldController {
     return this
   }
 }
+
+/**
+ * @typedef {import('@playwright/test').Locator} Locator
+ */

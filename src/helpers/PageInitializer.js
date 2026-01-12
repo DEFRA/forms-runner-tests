@@ -57,12 +57,8 @@ export async function fillInitializedComponents(
       continue
     }
     if (component.type === 'FileUploadField') {
-      const filePaths = componentData?.FileUploadField
-      if (filePaths && filePaths.length > 0) {
-        await component.uploadFile(filePaths[0])
-        await component.clickUploadButton()
-      }
-
+      await component.uploadFile()
+      await component.clickUploadButton()
       continue
     }
 
@@ -74,8 +70,6 @@ export async function fillInitializedComponents(
     }
 
     if (component.type === 'YesNoField') {
-      console.log(` - YesNoField fill value: ${componentFillValue}`)
-
       componentFillValue != null
         ? await component.selectOption.apply(
             component,

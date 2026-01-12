@@ -5,10 +5,6 @@
  * @property {string} value Stored value.
  */
 
-/**
- * @typedef {import('../controllers/list-controller.js').ListController} ListController
- */
-
 import { addDays, toDateParts } from './relative-date-utils.js'
 
 /**
@@ -116,3 +112,7 @@ export class IsNotCondition {
     return item ? item.text : null
   }
 }
+
+/**
+ * @typedef {import('../controllers/list-controller.js').ListController} ListController
+ */

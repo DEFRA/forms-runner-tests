@@ -14,7 +14,7 @@ export const RELATIVE_PAST_10_DAYS = {
   direction: 'in the past'
 }
 /**
- * 
+ *
  * @returns {ListController} instance
  */
 export function makeListController() {
@@ -34,7 +34,7 @@ export function makeListController() {
 /**
  * Converts DatePartsField tuple into a Date at local midnight.
  * @param {[number, number, number]} parts [day, month, year]
- * @returns {Date}
+ * @returns {Date} Date
  */
 export function dateFromParts(parts) {
   const [day, month, year] = parts
@@ -43,8 +43,8 @@ export function dateFromParts(parts) {
 
 /**
  * Drops time portion from a Date (local midnight).
- * @param {Date} date
- * @returns {Date}
+ * @param {Date} date Date.
+ * @returns {Date} Date
  */
 export function stripTime(date) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate())

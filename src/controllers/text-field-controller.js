@@ -10,6 +10,7 @@ export class TextFieldController extends BaseFieldController {
    * Fill the text field with a value.
    * If a regex schema is defined, generates a matching value.
    * @param {string} value - The text to enter (may be overridden by regex)
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(value) {
     if (this.schema?.regex) {

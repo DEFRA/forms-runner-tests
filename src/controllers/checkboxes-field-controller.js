@@ -8,7 +8,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Find a specific checkbox option by its label text
    * @param {string} optionText - The text label of the checkbox option
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Checkbox option locator.
    */
   findOption(optionText) {
     return this.page.getByRole('checkbox', { name: optionText })
@@ -16,7 +16,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
 
   /**
    * Find all checkbox options within the fieldset
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Checkbox options locator.
    */
   findAllOptions() {
     return this.findFieldset().getByRole('checkbox')
@@ -25,6 +25,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Check a checkbox option by its label text
    * @param {string} optionText - The text label of the checkbox option to check
+   * @returns {Promise<this>} The controller instance.
    */
   async checkOption(optionText) {
     const option = this.findOption(optionText)
@@ -35,6 +36,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Uncheck a checkbox option by its label text
    * @param {string} optionText - The text label of the checkbox option to uncheck
+   * @returns {Promise<this>} The controller instance.
    */
   async uncheckOption(optionText) {
     const option = this.findOption(optionText)
@@ -44,6 +46,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
 
   /**
    * Check the first available checkbox option
+   * @returns {Promise<this>} The controller instance.
    */
   async checkFirstOption() {
     const firstOption = this.findAllOptions().first()
@@ -54,6 +57,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Check multiple checkbox options by their label texts
    * @param {string[]} optionTexts - Array of text labels of the checkbox options to check
+   * @returns {Promise<this>} The controller instance.
    */
   async checkOptions(optionTexts) {
     for (const optionText of optionTexts) {
@@ -65,6 +69,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Fill method for compatibility with component filling logic
    * @param {string | string[]} value - Single option text or array of option texts to check
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(value) {
     if (Array.isArray(value)) {
@@ -85,6 +90,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Check a checkbox option by its value attribute
    * @param {string} value - The value of the checkbox option to check
+   * @returns {Promise<this>} The controller instance.
    */
   async checkByValue(value) {
     const checkbox = this.page.locator(
@@ -96,7 +102,7 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
 
   /**
    * Get the values of all checked checkboxes
-   * @returns {Promise<string[]>}
+   * @returns {Promise<string[]>} Checked values.
    */
   async getCheckedValues() {
     const checkedBoxes = this.findFieldset().locator(
@@ -116,10 +122,14 @@ export class CheckboxesFieldController extends BaseGroupFieldController {
   /**
    * Check if a specific option is checked
    * @param {string} optionText - The text label of the checkbox option
-   * @returns {Promise<boolean>}
+   * @returns {Promise<boolean>} True when checked.
    */
   async isOptionChecked(optionText) {
     const option = this.findOption(optionText)
     return await option.isChecked()
   }
 }
+
+/**
+ * @typedef {import('@playwright/test').Locator} Locator
+ */

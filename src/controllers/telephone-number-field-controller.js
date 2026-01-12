@@ -7,8 +7,8 @@ import { BaseFieldController } from './base-field-controller.js'
 export class TelephoneNumberFieldController extends BaseFieldController {
   /**
    * Validates UK phone number format
-   * @param {string} value
-   * @returns {boolean}
+   * @param {string} value Phone number.
+   * @returns {boolean} True when the value looks like a UK phone number.
    */
   static isValidUKPhoneNumber(value) {
     // Basic UK phone number validation

@@ -6,28 +6,29 @@ import { BaseCompositeFieldController } from './base-field-controller.js'
  */
 export class EastingNorthingFieldController extends BaseCompositeFieldController {
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Easting input locator.
    */
   findEastingInput() {
     return this.page.getByRole('textbox', { name: 'Easting' })
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Northing input locator.
    */
   findNorthingInput() {
     return this.page.getByRole('textbox', { name: 'Northing' })
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Fieldset locator.
    */
   findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * @param {Expect} expect Playwright expect function.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertions(expect) {
     const fieldset = this.findFieldset()
@@ -45,8 +46,10 @@ export class EastingNorthingFieldController extends BaseCompositeFieldController
   }
 
   /**
+   * Fill in the Easting and Northing inputs
    * @param {string} easting - Easting value (up to 6 digits, 0-700000)
    * @param {string} northing - Northing value (up to 7 digits, 0-1300000)
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(easting, northing) {
     await this.findEastingInput().fill(easting)
@@ -54,3 +57,8 @@ export class EastingNorthingFieldController extends BaseCompositeFieldController
     return this
   }
 }
+
+/**
+ * @typedef {import('@playwright/test').Expect} Expect
+ * @typedef {import('@playwright/test').Locator} Locator
+ */

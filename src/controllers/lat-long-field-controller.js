@@ -6,28 +6,28 @@ import { BaseCompositeFieldController } from './base-field-controller.js'
  */
 export class LatLongFieldController extends BaseCompositeFieldController {
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Latitude input.
    */
   findLatitudeInput() {
     return this.page.locator(`#${this.name}__latitude`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Longitude input.
    */
   findLongitudeInput() {
     return this.page.locator(`#${this.name}__longitude`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Fieldset group.
    */
   findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * @param {Expect} expect Playwright expect function.
    * @returns {Promise<LatLongFieldController>} The controller instance for chaining.
    */
   async assertions(expect) {
@@ -56,3 +56,8 @@ export class LatLongFieldController extends BaseCompositeFieldController {
     return this
   }
 }
+
+/**
+ * @typedef {import('@playwright/test').Expect} Expect
+ * @typedef {import('@playwright/test').Locator} Locator
+ */

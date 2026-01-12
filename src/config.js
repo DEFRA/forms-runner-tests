@@ -15,8 +15,8 @@ export const configSchema = joi
 
 /**
  *  @typedef {object} config
- *  @property {string} TEST_ENVIRONMENT
- *  @property {number} TIMEOUT
+ *  @property {string} TEST_ENVIRONMENT Test environment name.
+ *  @property {number} TIMEOUT Default timeout in milliseconds.
  */
 /**
  * @type {config}

@@ -7,10 +7,6 @@ import {
 } from './relative-date-utils.js'
 
 /**
- * @typedef {import('./relative-date-utils.js').RelativeDateValue} RelativeDateValue
- */
-
-/**
  * @typedef {object} IsMoreThanConditionOptions
  * @property {import('@playwright/test').Page} page Playwright page.
  * @property {string} id Condition id.
@@ -129,3 +125,7 @@ export class IsMoreThanCondition {
       : null
   }
 }
+
+/**
+ * @typedef {import('./relative-date-utils.js').RelativeDateValue} RelativeDateValue
+ */

@@ -6,21 +6,21 @@ import { BaseCompositeFieldController } from './base-field-controller.js'
  */
 export class DatePartsFieldController extends BaseCompositeFieldController {
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Day input locator.
    */
   findDayInput() {
     return this.page.locator(`#${this.name}__day`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Month input locator.
    */
   findMonthInput() {
     return this.page.locator(`#${this.name}__month`)
   }
 
   /**
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Year input locator.
    */
   findYearInput() {
     return this.page.locator(`#${this.name}__year`)
@@ -28,14 +28,15 @@ export class DatePartsFieldController extends BaseCompositeFieldController {
 
   /**
    * Find the fieldset containing the date parts
-   * @returns {import("@playwright/test").Locator}
+   * @returns {Locator} Fieldset locator.
    */
   findFieldset() {
     return this.page.getByRole('group', { name: this.title })
   }
 
   /**
-   * @param {import("@playwright/test").Expect} expect
+   * @param {Expect} expect Playwright expect function.
+   * @returns {Promise<this>} The controller instance.
    */
   async assertions(expect) {
     const fieldset = this.findFieldset()
@@ -56,9 +57,11 @@ export class DatePartsFieldController extends BaseCompositeFieldController {
   }
 
   /**
-   * @param {string} day
-   * @param {string} month
-   * @param {string} year
+   * Fill the day/month/year inputs.
+   * @param {string} day Day value.
+   * @param {string} month Month value.
+   * @param {string} year Year value.
+   * @returns {Promise<this>} The controller instance.
    */
   async fill(day, month, year) {
     await this.findDayInput().fill(day)
@@ -68,7 +71,9 @@ export class DatePartsFieldController extends BaseCompositeFieldController {
   }
 
   /**
-   * @param {Date} date
+   * Fill the date inputs from a Date object.
+   * @param {Date} date Date to use.
+   * @returns {Promise<this>} The controller instance.
    */
   async fillFromDate(date) {
     const day = date.getDate().toString()
@@ -77,3 +82,8 @@ export class DatePartsFieldController extends BaseCompositeFieldController {
     return this.fill(day, month, year)
   }
 }
+
+/**
+ * @typedef {import('@playwright/test').Expect} Expect
+ * @typedef {import('@playwright/test').Locator} Locator
+ */
