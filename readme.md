@@ -13,7 +13,7 @@ End-to-end (E2E) tests for the DEFRA Forms Runner, using Playwright.
 1. Install Node dependencies:
 
 ```sh
-npm ci
+npm ci --legacy-peer-deps
 ```
 
 2. Install Playwright browsers
