@@ -1,4 +1,4 @@
-import {slugify} from '@defra/forms-model'
+import { slugify } from '@defra/forms-model'
 // UUID regex pattern
 export const UUID_PATTERN =
   /^(.+)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -70,13 +70,27 @@ export function isRepeatPageInstance(path) {
 }
 
 /**
+ * Check if a page contains a payment component.
+ * @param {{ components?: Array<{ type: string }> }} pageDef Page definition.
+ * @returns {boolean} True when the page contains a PaymentField.
+ */
+export function isPaymentPage(pageDef) {
+  return Array.isArray(pageDef?.components)
+    ? pageDef.components.some((component) => component.type === 'PaymentField')
+    : false
+}
+
+/**
  * Extract the form-relative path from a full URL.
  * @param {string} url Full URL.
  * @param {string} formSlug Form slug used in URLs.
+ * @param {boolean} previewMode Whether the form is in preview mode.
  * @returns {string} Form-relative path.
  */
-export function extractPathFromUrl(url, formSlug) {
-  const formPrefix = `/form/${formSlug}`
+export function extractPathFromUrl(url, formSlug, previewMode) {
+  const formPrefix = previewMode
+    ? `/form/preview/draft/${formSlug}`
+    : `/form/${formSlug}`
   const urlObj = new URL(url)
   const pathname = urlObj.pathname
 
@@ -93,8 +107,9 @@ export function extractPathFromUrl(url, formSlug) {
  */
 export function summarySubmitButtonText(summaryPageDef) {
   if (
-    summaryPageDef.components &&
-    summaryPageDef.components.some((component) => component.type === 'Markdown')
+    summaryPageDef?.components?.some(
+      (component) => component.type === 'Markdown'
+    )
   ) {
     return 'Accept and send'
   }

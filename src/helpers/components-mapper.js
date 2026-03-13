@@ -12,6 +12,7 @@ import {
 export const componentsMapper = {
   TextField: Controllers.TextFieldController,
   DatePartsField: Controllers.DatePartsFieldController,
+  MonthYearField: Controllers.MonthYearFieldController,
   UkAddressField: Controllers.UkAddressFieldController,
   EastingNorthingField: Controllers.EastingNorthingFieldController,
   OsGridRefField: Controllers.OsGridRefFieldController,
@@ -28,7 +29,8 @@ export const componentsMapper = {
   SelectField: Controllers.SelectFieldController,
   CheckboxesField: Controllers.CheckboxesFieldController,
   MultilineTextField: Controllers.MultilineTextFieldController,
-  FileUploadField: Controllers.FileUploadFieldController
+  FileUploadField: Controllers.FileUploadFieldController,
+  PaymentField: Controllers.PaymentFieldController
   // Add other component mappings here
 }
 
