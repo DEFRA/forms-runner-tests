@@ -79,14 +79,12 @@ export class PaymentFieldController extends BaseFieldController {
     await expect(this.findHeading()).toBeVisible()
 
     const description = this.findDescription()
-    if (description) {
-      await expect(description).toBeVisible()
-    }
+
+    await expect(description).toBeVisible()
 
     const amount = this.findAmount()
-    if (amount) {
-      await expect(amount).toBeVisible()
-    }
+
+    await expect(amount).toBeVisible()
 
     await expect(this.findButton()).toBeVisible()
     await expect(this.findButton()).toBeEnabled()
