@@ -8,6 +8,7 @@ import {
   createFormSlug,
   extractPathFromUrl,
   findPageByPath,
+  isPaymentPage,
   isRepeatPageInstance,
   isRepeatSummaryPath,
   summarySubmitButtonText
@@ -17,11 +18,14 @@ import {
   fillInitializedComponents
 } from '../helpers/PageInitializer.js'
 const allComponentsForm = JSON.parse(
-  await readFile(new URL('../data/unicorn.json', import.meta.url), 'utf8')
+   await readFile(new URL('../data/payment_form.json', import.meta.url), 'utf8')
+  //await readFile(new URL('../data/submit-rainfall.json', import.meta.url), 'utf8')
+  // await readFile(new URL('../data/unicorn.json', import.meta.url), 'utf8')
 )
 // test data for each component type
 const componentData = {
   DatePartsField: ['01', '01', '2000'],
+  MonthYearField: ['03', '2026'],
   RadiosField: ['Option 1'],
   TextField: ['Sample text'],
   YesNoField: ['Yes'],
@@ -31,6 +35,7 @@ const componentData = {
   EastingNorthingField: ['123456', '654321'],
   LatLongField: ['51.5074', '-0.1278'],
   NationalGridFieldNumberField: ['NG1234 5678'],
+  PaymentField: [], // payment details are filled in the controller
   UkAddressField: [
     {
       addressLine1: '10 Downing Street',
@@ -48,19 +53,50 @@ const componentData = {
   FileUploadField: [] // file will be created on fly
 }
 
-const summaryControllers = [
+const summaryControllers = new Set([
   'SummaryPageWithConfirmationEmailController',
   'SummaryPageController'
-]
-const isSummaryPage = (controller) => summaryControllers.includes(controller)
+])
+const isSummaryPage = (controller) => summaryControllers.has(controller)
+/**
+ * 
+ * @param {Page} page 
+ * @param {object} pageDef 
+ * @returns {Promise<void>}
+ */
+async function clickSummarySubmitButton(page, pageDef) {
+  const buttonNames = [summarySubmitButtonText(pageDef), 'Submit']
+
+  for (const buttonName of buttonNames) {
+    const button = page.getByRole('button', { name: buttonName })
+    if ((await button.count()) > 0) {
+      await button.click({ noWaitAfter: true })
+      return
+    }
+  }
+
+  throw new Error(
+    `No summary submit button found for page ${pageDef.path}. Tried: ${buttonNames.join(', ')}`
+  )
+}
 
 const normalized = createFormSlug(allComponentsForm.name)
 const formName = allComponentsForm.name
+//if the form has a payment field then run in preview mode for testing the payment page, otherwise use the normal form URL
+const previewMode = allComponentsForm.pages.some((page) =>
+  page.components?.some((component) => component.type === 'PaymentField')
+)
+console.log(
+  `Running tests for form: ${formName} (slug: ${normalized}) in ${previewMode ? 'preview' : 'normal'} mode`
+)
+
 test.describe(`${formName} fill tests`, () => {
   test(`${formName} fill tests`, async ({ page, baseURL }) => {
     test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
     const startPage = allComponentsForm.pages[0].path
-    const formUrl = `${baseURL}/form/${normalized}${startPage}`
+    const formUrl = previewMode
+      ? `${baseURL}/form/preview/draft/${normalized}${startPage}`
+      : `${baseURL}/form/${normalized}${startPage}`
 
     // Initialize stack with the first page URL
     const navigationStack = [formUrl]
@@ -80,7 +116,11 @@ test.describe(`${formName} fill tests`, () => {
 
     while (navigationStack.length > 0) {
       const currentUrl = navigationStack.pop()
-      const currentPath = extractPathFromUrl(currentUrl, normalized)
+      const currentPath = extractPathFromUrl(
+        currentUrl,
+        normalized,
+        previewMode
+      )
 
       // Track visited paths (including UUID paths) to prevent loops.
       const basePathForTracking = currentPath
@@ -116,9 +156,7 @@ test.describe(`${formName} fill tests`, () => {
         await expect(
           page.getByRole('heading', { name: headingText })
         ).toBeVisible()
-        await page
-          .getByRole('button', { name: summarySubmitButtonText(pageDef) })
-          .click()
+        await clickSummarySubmitButton(page, pageDef)
         await page.waitForLoadState('networkidle')
         break
       }
@@ -134,7 +172,7 @@ test.describe(`${formName} fill tests`, () => {
           await page.waitForLoadState('networkidle')
 
           const newUrl = page.url()
-          const newPath = extractPathFromUrl(newUrl, normalized)
+          const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
           if (newPath !== currentPath) {
             navigationStack.push(newUrl)
           }
@@ -148,7 +186,7 @@ test.describe(`${formName} fill tests`, () => {
           await page.waitForLoadState('networkidle')
 
           const newUrl = page.url()
-          const newPath = extractPathFromUrl(newUrl, normalized)
+          const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
           if (newPath !== currentPath) {
             navigationStack.push(newUrl)
           }
@@ -173,6 +211,9 @@ test.describe(`${formName} fill tests`, () => {
 
       // Fill each component
       for (const component of initializeComponents) {
+        console.log(
+          `Processing component: ${component.name} of type ${component.type}`
+        )
         if (component.type === 'FileUploadField') {
           // Handle file upload separately - controller creates a file on the fly
           await component.uploadFile()
@@ -180,21 +221,28 @@ test.describe(`${formName} fill tests`, () => {
         } else if (component.type === 'RadiosField') {
           await component.selectFirstOption()
         } else if (component.type === 'YesNoField') {
-          await component.selectOption.apply(
-            component,
-            componentData[component.type]
-          )
+          await component.selectOption(...componentData[component.type])
         } else if (
           'fill' in component &&
           typeof component.fill === 'function'
         ) {
-          await component.fill.apply(component, componentData[component.type])
+          console.log(
+            `Filling component: ${component.name} of type ${component.type}`
+          )
+          await component.fill(...componentData[component.type])
         }
       }
 
       await page.waitForLoadState('networkidle')
       // Submit and navigate to next page
-      await page.getByRole('button', { name: 'Continue' }).click()
+      //for pamentpage it will submit
+      const submitButton = page.getByRole('button', { name: 'Submit' })
+      const continueButton = page.getByRole('button', { name: 'Continue' })
+      if ((await submitButton.count()) > 0) {
+        await submitButton.click({ noWaitAfter: true })
+      } else {
+        await continueButton.click({ noWaitAfter: true })
+      }
       await page.waitForLoadState('networkidle')
       // ther should be no validation errors
       const errorSummary = page.getByRole('alert')
@@ -204,7 +252,7 @@ test.describe(`${formName} fill tests`, () => {
 
       // Get the new URL after navigation and push to stack
       const newUrl = page.url()
-      const newPath = extractPathFromUrl(newUrl, normalized)
+      const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
 
       if (newPath !== currentPath) {
         navigationStack.push(newUrl)
@@ -217,7 +265,9 @@ test.describe(`${formName} required fields tests`, () => {
   test('Required fields error tests', async ({ page, baseURL }) => {
     test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
     const startPage = allComponentsForm.pages[0].path
-    const formUrl = `${baseURL}/form/${normalized}${startPage}`
+    const formUrl = previewMode
+      ? `${baseURL}/form/preview/draft/${normalized}${startPage}`
+      : `${baseURL}/form/${normalized}${startPage}`
     // Initialize stack with the first page URL
     const navigationStack = [formUrl]
     const visitedPaths = new Set()
@@ -236,7 +286,11 @@ test.describe(`${formName} required fields tests`, () => {
 
     while (navigationStack.length > 0) {
       const currentUrl = navigationStack.pop()
-      const currentPath = extractPathFromUrl(currentUrl, normalized)
+      const currentPath = extractPathFromUrl(
+        currentUrl,
+        normalized,
+        previewMode
+      )
 
       // Track visited paths (including UUID paths) to prevent loops.
       const basePathForTracking = currentPath
@@ -271,11 +325,44 @@ test.describe(`${formName} required fields tests`, () => {
         await expect(
           page.getByRole('heading', { name: headingText })
         ).toBeVisible()
-        await page
-          .getByRole('button', { name: summarySubmitButtonText(pageDef) })
-          .click()
+        await clickSummarySubmitButton(page, pageDef)
         await page.waitForLoadState('networkidle')
         break
+      }
+
+      if (isPaymentPage(pageDef)) {
+        const initializedComponents = await initializeComponentsForPage(
+          pageDef,
+          page,
+          {
+            lists: allComponentsForm.lists,
+            conditions: allComponentsForm.conditions
+          }
+        )
+
+        for (const component of initializedComponents) {
+          if (
+            'assertions' in component &&
+            typeof component.assertions === 'function'
+          ) {
+            await component.assertions(expect)
+          }
+        }
+
+        await fillInitializedComponents(initializedComponents, componentData)
+
+        test.info().annotations.push({
+          type: 'info',
+          description: `Processed payment page: ${pageDef.title || pageDef.path}`
+        })
+
+        const newUrl = page.url()
+        const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
+
+        if (newPath !== currentPath) {
+          navigationStack.push(newUrl)
+        }
+        continue
       }
 
       // provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
@@ -289,7 +376,7 @@ test.describe(`${formName} required fields tests`, () => {
           await page.waitForLoadState('networkidle')
 
           const newUrl = page.url()
-          const newPath = extractPathFromUrl(newUrl, normalized)
+          const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
           if (newPath !== currentPath) {
             navigationStack.push(newUrl)
           }
@@ -304,7 +391,7 @@ test.describe(`${formName} required fields tests`, () => {
         await page.waitForLoadState('networkidle')
 
         const newUrl = page.url()
-        const newPath = extractPathFromUrl(newUrl, normalized)
+        const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
         if (newPath !== currentPath) {
           navigationStack.push(newUrl)
         }
@@ -326,7 +413,11 @@ test.describe(`${formName} required fields tests`, () => {
       )
 
       if (hasRequiredComponents) {
-        const pathBeforeValidation = extractPathFromUrl(page.url(), normalized)
+        const pathBeforeValidation = extractPathFromUrl(
+          page.url(),
+          normalized,
+          previewMode
+        )
 
         const errorText = page
           .locator('.govuk-error-summary')
@@ -340,7 +431,7 @@ test.describe(`${formName} required fields tests`, () => {
         const navigationPromise = page
           .waitForURL(
             (url) =>
-              extractPathFromUrl(url.toString(), normalized) !==
+              extractPathFromUrl(url.toString(), normalized, previewMode) !==
               pathBeforeValidation,
             { timeout: 5000 }
           )
@@ -360,7 +451,7 @@ test.describe(`${formName} required fields tests`, () => {
           await page.goBack()
           await page.waitForURL(
             (url) =>
-              extractPathFromUrl(url.toString(), normalized) ===
+              extractPathFromUrl(url.toString(), normalized, previewMode) ===
               pathBeforeValidation,
             { timeout: 10000 }
           )
@@ -391,7 +482,7 @@ test.describe(`${formName} required fields tests`, () => {
 
       // Get the new URL after navigation and push to stack
       const newUrl = page.url()
-      const newPath = extractPathFromUrl(newUrl, normalized)
+      const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
 
       if (newPath !== currentPath) {
         navigationStack.push(newUrl)
@@ -404,7 +495,9 @@ test.describe(`${formName} skip optional fields`, () => {
   test('Skipping optional fields', async ({ page, baseURL }) => {
     test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
     const startPage = allComponentsForm.pages[0].path
-    const formUrl = `${baseURL}/form/${normalized}${startPage}`
+    const formUrl = previewMode
+      ? `${baseURL}/form/preview/draft/${normalized}${startPage}`
+      : `${baseURL}/form/${normalized}${startPage}`
     // Initialize stack with the first page URL
     const navigationStack = [formUrl]
     const visitedPaths = new Set()
@@ -423,7 +516,11 @@ test.describe(`${formName} skip optional fields`, () => {
 
     while (navigationStack.length > 0) {
       const currentUrl = navigationStack.pop()
-      const currentPath = extractPathFromUrl(currentUrl, normalized)
+      const currentPath = extractPathFromUrl(
+        currentUrl,
+        normalized,
+        previewMode
+      )
 
       // Track visited paths (including UUID paths) to prevent loops.
       const basePathForTracking = currentPath
@@ -458,11 +555,49 @@ test.describe(`${formName} skip optional fields`, () => {
         await expect(
           page.getByRole('heading', { name: headingText })
         ).toBeVisible()
-        await page
-          .getByRole('button', { name: summarySubmitButtonText(pageDef) })
-          .click()
+        await clickSummarySubmitButton(page, pageDef)
         await page.waitForLoadState('networkidle')
         break
+      }
+
+      if (isPaymentPage(pageDef)) {
+        const initializedComponents = await initializeComponentsForPage(
+          pageDef,
+          page,
+          {
+            lists: allComponentsForm.lists,
+            conditions: allComponentsForm.conditions
+          }
+        )
+
+        for (const component of initializedComponents) {
+          if (
+            'assertions' in component &&
+            typeof component.assertions === 'function'
+          ) {
+            await component.assertions(expect)
+          }
+        }
+
+        await fillInitializedComponents(
+          initializedComponents,
+          componentData,
+          undefined,
+          false
+        )
+
+        test.info().annotations.push({
+          type: 'info',
+          description: `Processed payment page: ${pageDef.title || pageDef.path}`
+        })
+
+        const newUrl = page.url()
+        const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
+
+        if (newPath !== currentPath) {
+          navigationStack.push(newUrl)
+        }
+        continue
       }
 
       // provide-details-about-your-wildlife-related-or-animal-welfare-offence/summary
@@ -476,7 +611,7 @@ test.describe(`${formName} skip optional fields`, () => {
           await page.waitForLoadState('networkidle')
 
           const newUrl = page.url()
-          const newPath = extractPathFromUrl(newUrl, normalized)
+          const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
           if (newPath !== currentPath) {
             navigationStack.push(newUrl)
           }
@@ -491,7 +626,7 @@ test.describe(`${formName} skip optional fields`, () => {
         await page.waitForLoadState('networkidle')
 
         const newUrl = page.url()
-        const newPath = extractPathFromUrl(newUrl, normalized)
+        const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
         if (newPath !== currentPath) {
           navigationStack.push(newUrl)
         }
@@ -530,7 +665,7 @@ test.describe(`${formName} skip optional fields`, () => {
 
       // Get the new URL after navigation and push to stack
       const newUrl = page.url()
-      const newPath = extractPathFromUrl(newUrl, normalized)
+      const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
 
       if (newPath !== currentPath) {
         navigationStack.push(newUrl)
@@ -551,7 +686,9 @@ test.describe(`${formName} conditions tests`, () => {
     }) => {
       test.setTimeout(config.TIMEOUT) // preferable to be 2 minutes for larger forms
       const startPage = allComponentsForm.pages[0].path
-      const formUrl = `${baseURL}/form/${normalized}${startPage}`
+      const formUrl = previewMode
+        ? `${baseURL}/form/preview/draft/${normalized}${startPage}`
+        : `${baseURL}/form/${normalized}${startPage}`
       // Initialize stack with the first page URL
       const navigationStack = [formUrl]
       const visitedPaths = new Set()
@@ -570,7 +707,11 @@ test.describe(`${formName} conditions tests`, () => {
 
       while (navigationStack.length > 0) {
         const currentUrl = navigationStack.pop()
-        const currentPath = extractPathFromUrl(currentUrl, normalized)
+        const currentPath = extractPathFromUrl(
+          currentUrl,
+          normalized,
+          previewMode
+        )
 
         // Track visited paths (including UUID paths) to prevent loops.
         const basePathForTracking = currentPath
@@ -598,17 +739,47 @@ test.describe(`${formName} conditions tests`, () => {
 
         // Handle main form summary page - verify and submit
         if (isSummaryPage(pageDef.controller)) {
-          const headingText =
-            pageDef.title?.length > 0
-              ? pageDef.title
-              : 'Check your answers before sending your form'
+          const headingText = pageDef.title?.length
+            ? pageDef.title
+            : 'Check your answers before sending your form'
           await expect(
             page.getByRole('heading', { name: headingText })
           ).toBeVisible()
-          await page
-            .getByRole('button', { name: summarySubmitButtonText(pageDef) })
-            .click()
+          await clickSummarySubmitButton(page, pageDef)
           await page.waitForLoadState('networkidle')
+          break
+        }
+
+        if (isPaymentPage(pageDef)) {
+          const initializedComponents = await initializeComponentsForPage(
+            pageDef,
+            page,
+            {
+              lists: allComponentsForm.lists,
+              conditions: allComponentsForm.conditions
+            }
+          )
+
+          for (const component of initializedComponents) {
+            if (
+              'assertions' in component &&
+              typeof component.assertions === 'function'
+            ) {
+              await component.assertions(expect)
+            }
+          }
+
+          await fillInitializedComponents(
+            initializedComponents,
+            componentData,
+            conditionId,
+            false
+          )
+
+          test.info().annotations.push({
+            type: 'info',
+            description: `Processed payment page: ${pageDef.title || pageDef.path}`
+          })
           break
         }
 
@@ -623,7 +794,7 @@ test.describe(`${formName} conditions tests`, () => {
             await page.waitForLoadState('networkidle')
 
             const newUrl = page.url()
-            const newPath = extractPathFromUrl(newUrl, normalized)
+            const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
             if (newPath !== currentPath) {
               navigationStack.push(newUrl)
             }
@@ -638,7 +809,7 @@ test.describe(`${formName} conditions tests`, () => {
           await page.waitForLoadState('networkidle')
 
           const newUrl = page.url()
-          const newPath = extractPathFromUrl(newUrl, normalized)
+          const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
           if (newPath !== currentPath) {
             navigationStack.push(newUrl)
           }
@@ -679,7 +850,7 @@ test.describe(`${formName} conditions tests`, () => {
 
         // Get the new URL after navigation and push to stack
         const newUrl = page.url()
-        const newPath = extractPathFromUrl(newUrl, normalized)
+        const newPath = extractPathFromUrl(newUrl, normalized, previewMode)
 
         if (newPath !== currentPath) {
           navigationStack.push(newUrl)

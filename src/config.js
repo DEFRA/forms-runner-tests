@@ -9,7 +9,16 @@ export const configSchema = joi
       .string()
       .allow('local', 'test', 'prod')
       .default('local'),
-    TIMEOUT: joi.number().default(30000)
+    TIMEOUT: joi.number().default(30000),
+    GOVPAY_TEST_CARD_NUMBER: joi.string().required(),
+    GOVPAY_TEST_CARD_EXPIRY_MONTH: joi.string().required(),
+    GOVPAY_TEST_CARD_EXPIRY_YEAR: joi.string().required(),
+    GOVPAY_TEST_CARD_NAME: joi.string().required(),
+    GOVPAY_TEST_CARD_CVC: joi.string().required(),
+    GOVPAY_TEST_BILLING_ADDRESS_LINE_1: joi.string().required(),
+    GOVPAY_TEST_BILLING_CITY: joi.string().required(),
+    GOVPAY_TEST_BILLING_POSTCODE: joi.string().required(),
+    GOVPAY_TEST_EMAIL: joi.string().email().required()
   })
   .prefs({ convert: true, abortEarly: false })
 
@@ -17,6 +26,15 @@ export const configSchema = joi
  *  @typedef {object} config
  *  @property {string} TEST_ENVIRONMENT Test environment name.
  *  @property {number} TIMEOUT Default timeout in milliseconds.
+ *  @property {string} GOVPAY_TEST_CARD_NUMBER GOV.UK Pay test card number.
+ *  @property {string} GOVPAY_TEST_CARD_EXPIRY_MONTH GOV.UK Pay test expiry month.
+ *  @property {string} GOVPAY_TEST_CARD_EXPIRY_YEAR GOV.UK Pay test expiry year.
+ *  @property {string} GOVPAY_TEST_CARD_NAME GOV.UK Pay test cardholder name.
+ *  @property {string} GOVPAY_TEST_CARD_CVC GOV.UK Pay test card security code.
+ *  @property {string} GOVPAY_TEST_BILLING_ADDRESS_LINE_1 GOV.UK Pay billing address line 1.
+ *  @property {string} GOVPAY_TEST_BILLING_CITY GOV.UK Pay billing town or city.
+ *  @property {string} GOVPAY_TEST_BILLING_POSTCODE GOV.UK Pay billing postcode.
+ *  @property {string} GOVPAY_TEST_EMAIL GOV.UK Pay confirmation email.
  */
 /**
  * @type {config}
@@ -24,7 +42,17 @@ export const configSchema = joi
 export const config = joi.attempt(
   {
     TEST_ENVIRONMENT: process.env.TEST_ENVIRONMENT,
-    TIMEOUT: process.env.TIMEOUT
+    TIMEOUT: process.env.TIMEOUT,
+    GOVPAY_TEST_CARD_NUMBER: process.env.GOVPAY_TEST_CARD_NUMBER,
+    GOVPAY_TEST_CARD_EXPIRY_MONTH: process.env.GOVPAY_TEST_CARD_EXPIRY_MONTH,
+    GOVPAY_TEST_CARD_EXPIRY_YEAR: process.env.GOVPAY_TEST_CARD_EXPIRY_YEAR,
+    GOVPAY_TEST_CARD_NAME: process.env.GOVPAY_TEST_CARD_NAME,
+    GOVPAY_TEST_CARD_CVC: process.env.GOVPAY_TEST_CARD_CVC,
+    GOVPAY_TEST_BILLING_ADDRESS_LINE_1:
+      process.env.GOVPAY_TEST_BILLING_ADDRESS_LINE_1,
+    GOVPAY_TEST_BILLING_CITY: process.env.GOVPAY_TEST_BILLING_CITY,
+    GOVPAY_TEST_BILLING_POSTCODE: process.env.GOVPAY_TEST_BILLING_POSTCODE,
+    GOVPAY_TEST_EMAIL: process.env.GOVPAY_TEST_EMAIL
   },
   configSchema
 )

@@ -3,11 +3,11 @@ import { ComponentsInitializer } from './components-mapper'
 /**
  * Initialize component helpers for a page definition.
  * @param {object} pageDef Page definition from the form JSON.
- * @param {import('@playwright/test').Page} page Playwright page instance.
+ * @param {Page} page Playwright page instance.
  * @param {object} options Optional mapper context.
  * @param {object} [options.lists] Lists from the form definition.
  * @param {object} [options.conditions] Conditions from the form definition.
- * @returns {Promise<Array<import('../controllers/base-field-controller.js').BaseFieldController>>} Initialized controllers.
+ * @returns {Promise<Array<BaseFieldController>>} Initialized controllers.
  */
 export async function initializeComponentsForPage(pageDef, page, options = {}) {
   const { lists, conditions } = options
@@ -30,7 +30,7 @@ export async function initializeComponentsForPage(pageDef, page, options = {}) {
 /**
  * Fill initialized components with provided test data.
  * Special-cases some component types with bespoke helper methods.
- * @param {Array<import('../controllers/base-field-controller.js').BaseFieldController>} initializedComponents Controllers to fill.
+ * @param {Array<BaseFieldController>} initializedComponents Controllers to fill.
  * @param {Record<string, unknown>} componentData Test data keyed by component type.
  * @param {string} [conditionId] Optional condition ID for logging.
  * @param {boolean} [onlyFillRequired] Whether to fill only required components.
@@ -82,7 +82,6 @@ export async function fillInitializedComponents(
 
       continue
     }
-
     if ('fill' in component && typeof component.fill === 'function') {
       await component.fill.apply(
         component,
@@ -93,3 +92,8 @@ export async function fillInitializedComponents(
     }
   }
 }
+
+/**
+ * @import {Page} from '@playwright/test'
+ * @import {BaseFieldController} from '../controllers/base-field-controller.js'
+ */
