@@ -26,9 +26,9 @@
     "neostandard": "^0.12.2"
   },
   "dependencies": {
-    "@defra/forms-model": "^3.0.600",
+    "@defra/forms-model": "^3.0.637",
     "dotenv": "^17.2.3",
-    "joi": "^18.0.2",
+    "joi": "^17.0.0",
     "prettier": "^3.7.4",
     "randexp": "^0.5.3"
   }

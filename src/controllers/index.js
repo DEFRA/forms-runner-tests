@@ -8,6 +8,7 @@ export {
 // Controller exports
 export { TextFieldController } from './text-field-controller.js'
 export { DatePartsFieldController } from './date-parts-field-controller.js'
+export { MonthYearFieldController } from './month-year-field-controller.js'
 export { UkAddressFieldController } from './uk-address-field-controller.js'
 export { EastingNorthingFieldController } from './easting-northing-field-controller.js'
 export { OsGridRefFieldController } from './os-grid-ref-field-controller.js'
@@ -26,3 +27,4 @@ export { SelectFieldController } from './select-field-controller.js'
 export { CheckboxesFieldController } from './checkboxes-field-controller.js'
 export { MultilineTextFieldController } from './multiline-text-field-controller.js'
 export { FileUploadFieldController } from './file-upload-field-controller.js'
+export { PaymentFieldController } from './payment-field-controller.js'

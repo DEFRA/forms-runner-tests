@@ -12,6 +12,7 @@ import {
 export const componentsMapper = {
   TextField: Controllers.TextFieldController,
   DatePartsField: Controllers.DatePartsFieldController,
+  MonthYearField: Controllers.MonthYearFieldController,
   UkAddressField: Controllers.UkAddressFieldController,
   EastingNorthingField: Controllers.EastingNorthingFieldController,
   OsGridRefField: Controllers.OsGridRefFieldController,
@@ -28,7 +29,8 @@ export const componentsMapper = {
   SelectField: Controllers.SelectFieldController,
   CheckboxesField: Controllers.CheckboxesFieldController,
   MultilineTextField: Controllers.MultilineTextFieldController,
-  FileUploadField: Controllers.FileUploadFieldController
+  FileUploadField: Controllers.FileUploadFieldController,
+  PaymentField: Controllers.PaymentFieldController
   // Add other component mappings here
 }
 
@@ -163,7 +165,7 @@ export class ConditionMapper {
     for (const page of formDefinition.pages ?? []) {
       if (!page.components || page.components.length === 0) continue
       const component = page.components.find((c) => c.id === componentId)
-      if (component && component.list) {
+      if (component?.list) {
         const list = (formDefinition.lists ?? []).find(
           (l) => l.id === component.list
         )

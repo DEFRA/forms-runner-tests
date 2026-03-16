@@ -1,0 +1,96 @@
+{
+  "name": "Payment Form",
+  "engine": "V2",
+  "schema": 2,
+  "startPage": "/summary",
+  "pages": [
+    {
+      "title": "Enter your personal details",
+      "path": "/enter-your-personal-details",
+      "components": [
+        {
+          "type": "TextField",
+          "title": "Enter your firstname",
+          "name": "DvIYGy",
+          "shortDescription": "your first name",
+          "hint": "enter your first name",
+          "options": {
+            "required": true,
+            "classes": ""
+          },
+          "schema": {},
+          "id": "b7507bbc-c26f-49a5-b99a-a2cb01da24d5"
+        },
+        {
+          "type": "TextField",
+          "title": "Enter your last name",
+          "name": "WUBNuW",
+          "shortDescription": "your last name",
+          "hint": "enter your last name",
+          "options": {
+            "required": true,
+            "classes": ""
+          },
+          "schema": {},
+          "id": "54e2f632-54fa-484c-a84d-fce0b42fa5e3"
+        }
+      ],
+      "next": [],
+      "id": "4d1575a6-04b6-4de8-87b0-0a083270f53f"
+    },
+    {
+      "title": "",
+      "path": "/when-you-want-your-subscription-to-start-from",
+      "components": [
+        {
+          "type": "MonthYearField",
+          "title": "When you want your subscription to start from?",
+          "name": "OsIXVr",
+          "shortDescription": "Subscription start",
+          "hint": "All our subscription start from 1st day of month onwards",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "fb62f69c-0813-4d0e-a9db-f9a350f0d63f"
+        }
+      ],
+      "next": [],
+      "id": "5dd0e961-f17c-4694-9316-08b889b73695"
+    },
+    {
+      "title": "",
+      "path": "/payment-required",
+      "components": [
+        {
+          "type": "PaymentField",
+          "title": "Payment required",
+          "name": "aMEemS",
+          "options": {
+            "required": true,
+            "amount": 10,
+            "description": "Your are required to pay GBP10 to use our services"
+          },
+          "schema": {},
+          "id": "e66aae67-edab-4cec-8fee-e6e906be9d6f"
+        }
+      ],
+      "next": [],
+      "id": "2f754d35-eee2-4755-94c4-a1c0d9488399"
+    },
+    {
+      "id": "449a45f6-4541-4a46-91bd-8b8931b07b50",
+      "title": "",
+      "path": "/summary",
+      "controller": "SummaryPageWithConfirmationEmailController",
+      "next": []
+    }
+  ],
+  "conditions": [],
+  "sections": [],
+  "lists": [],
+  "options": {
+    "showReferenceNumber": true,
+    "disableUserFeedback": false
+  }
+}
