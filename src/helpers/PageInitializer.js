@@ -63,21 +63,21 @@ export async function fillInitializedComponents(
     }
 
     if (component.type === 'RadiosField') {
-      componentFillValue != null
-        ? await component.fill(componentFillValue)
-        : await component.selectFirstOption()
+      componentFillValue == null
+        ? await component.selectFirstOption()
+        : await component.fill(componentFillValue)
       continue
     }
 
     if (component.type === 'YesNoField') {
-      componentFillValue != null
+      componentFillValue == null
         ? await component.selectOption.apply(
             component,
-            componentFillValue === true ? ['Yes'] : ['No']
+            componentData[component.type]
           )
         : await component.selectOption.apply(
             component,
-            componentData[component.type]
+            componentFillValue === true ? ['Yes'] : ['No']
           )
 
       continue
@@ -85,9 +85,9 @@ export async function fillInitializedComponents(
     if ('fill' in component && typeof component.fill === 'function') {
       await component.fill.apply(
         component,
-        componentFillValue != null
-          ? [componentFillValue]
-          : componentData[component.type]
+        componentFillValue == null
+          ? componentData[component.type]
+          : [componentFillValue]
       )
     }
   }

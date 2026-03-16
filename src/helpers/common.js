@@ -70,17 +70,6 @@ export function isRepeatPageInstance(path) {
 }
 
 /**
- * Check if a page contains a payment component.
- * @param {{ components?: Array<{ type: string }> }} pageDef Page definition.
- * @returns {boolean} True when the page contains a PaymentField.
- */
-export function isPaymentPage(pageDef) {
-  return Array.isArray(pageDef?.components)
-    ? pageDef.components.some((component) => component.type === 'PaymentField')
-    : false
-}
-
-/**
  * Extract the form-relative path from a full URL.
  * @param {string} url Full URL.
  * @param {string} formSlug Form slug used in URLs.

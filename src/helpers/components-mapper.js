@@ -165,7 +165,7 @@ export class ConditionMapper {
     for (const page of formDefinition.pages ?? []) {
       if (!page.components || page.components.length === 0) continue
       const component = page.components.find((c) => c.id === componentId)
-      if (component && component.list) {
+      if (component?.list) {
         const list = (formDefinition.lists ?? []).find(
           (l) => l.id === component.list
         )

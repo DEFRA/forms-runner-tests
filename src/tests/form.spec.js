@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { config } from '../config.js'
+import { isPaymentPage } from '@defra/forms-model'
 
 import { test, expect } from '@playwright/test'
 
@@ -8,7 +9,6 @@ import {
   createFormSlug,
   extractPathFromUrl,
   findPageByPath,
-  isPaymentPage,
   isRepeatPageInstance,
   isRepeatSummaryPath,
   summarySubmitButtonText
@@ -18,7 +18,7 @@ import {
   fillInitializedComponents
 } from '../helpers/PageInitializer.js'
 const allComponentsForm = JSON.parse(
-   await readFile(new URL('../data/payment_form.json', import.meta.url), 'utf8')
+  await readFile(new URL('../data/payment_form.json', import.meta.url), 'utf8')
   //await readFile(new URL('../data/submit-rainfall.json', import.meta.url), 'utf8')
   // await readFile(new URL('../data/unicorn.json', import.meta.url), 'utf8')
 )
@@ -59,9 +59,9 @@ const summaryControllers = new Set([
 ])
 const isSummaryPage = (controller) => summaryControllers.has(controller)
 /**
- * 
- * @param {Page} page 
- * @param {object} pageDef 
+ *
+ * @param {Page} page
+ * @param {object} pageDef
  * @returns {Promise<void>}
  */
 async function clickSummarySubmitButton(page, pageDef) {
