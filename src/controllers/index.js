@@ -14,6 +14,7 @@ export { EastingNorthingFieldController } from './easting-northing-field-control
 export { OsGridRefFieldController } from './os-grid-ref-field-controller.js'
 export { NationalGridFieldNumberController } from './national-grid-field-number-controller.js'
 export { LatLongFieldController } from './lat-long-field-controller.js'
+export { GeospatialFieldController } from './geospatial-field-controller.js'
 export { TelephoneNumberFieldController } from './telephone-number-field-controller.js'
 export { EmailAddressFieldController } from './email-address-field-controller.js'
 export { DeclarationFieldController } from './declaration-field-controller.js'

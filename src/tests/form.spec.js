@@ -18,7 +18,7 @@ import {
   fillInitializedComponents
 } from '../helpers/PageInitializer.js'
 const allComponentsForm = JSON.parse(
-  await readFile(new URL('../data/payment_form.json', import.meta.url), 'utf8')
+  await readFile(new URL('../data/map.json', import.meta.url), 'utf8')
   //await readFile(new URL('../data/submit-rainfall.json', import.meta.url), 'utf8')
   // await readFile(new URL('../data/unicorn.json', import.meta.url), 'utf8')
 )
@@ -34,6 +34,7 @@ const componentData = {
   OsGridRefField: ['SU123456'],
   EastingNorthingField: ['123456', '654321'],
   LatLongField: ['51.5074', '-0.1278'],
+  GeospatialField: [],
   NationalGridFieldNumberField: ['NG1234 5678'],
   PaymentField: [], // payment details are filled in the controller
   UkAddressField: [

@@ -18,6 +18,7 @@ export const componentsMapper = {
   OsGridRefField: Controllers.OsGridRefFieldController,
   NationalGridFieldNumberField: Controllers.NationalGridFieldNumberController,
   LatLongField: Controllers.LatLongFieldController,
+  GeospatialField: Controllers.GeospatialFieldController,
   TelephoneNumberField: Controllers.TelephoneNumberFieldController,
   EmailAddressField: Controllers.EmailAddressFieldController,
   DeclarationField: Controllers.DeclarationFieldController,
