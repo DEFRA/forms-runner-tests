@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+const configuredIdsSchema = joi.string().allow('').optional().default('')
+
 export const configSchema = joi
   .object({
     TEST_ENVIRONMENT: joi
@@ -10,6 +12,10 @@ export const configSchema = joi
       .allow('local', 'test', 'prod')
       .default('local'),
     TIMEOUT: joi.number().default(30000),
+    FORMS_MANAGER_URL: joi.string().uri().allow('').optional().default(''),
+    LIVE_FORM_DEFINITION_IDS: configuredIdsSchema,
+    DRAFT_FORM_DEFINITION_IDS: configuredIdsSchema,
+    TEST_FORM_DEFINITION_IDS: configuredIdsSchema,
     GOVPAY_TEST_CARD_NUMBER: joi.string().required(),
     GOVPAY_TEST_CARD_EXPIRY_MONTH: joi.string().required(),
     GOVPAY_TEST_CARD_EXPIRY_YEAR: joi.string().required(),
@@ -26,6 +32,10 @@ export const configSchema = joi
  *  @typedef {object} config
  *  @property {string} TEST_ENVIRONMENT Test environment name.
  *  @property {number} TIMEOUT Default timeout in milliseconds.
+ *  @property {string} FORMS_MANAGER_URL Forms Manager base URL for loading form definitions.
+ *  @property {string} LIVE_FORM_DEFINITION_IDS Comma-separated live form definition IDs to test.
+ *  @property {string} DRAFT_FORM_DEFINITION_IDS Comma-separated draft form definition IDs to test.
+ *  @property {string} TEST_FORM_DEFINITION_IDS Comma-separated live form definition IDs to fully submit.
  *  @property {string} GOVPAY_TEST_CARD_NUMBER GOV.UK Pay test card number.
  *  @property {string} GOVPAY_TEST_CARD_EXPIRY_MONTH GOV.UK Pay test expiry month.
  *  @property {string} GOVPAY_TEST_CARD_EXPIRY_YEAR GOV.UK Pay test expiry year.
@@ -43,6 +53,10 @@ export const config = joi.attempt(
   {
     TEST_ENVIRONMENT: process.env.TEST_ENVIRONMENT,
     TIMEOUT: process.env.TIMEOUT,
+    FORMS_MANAGER_URL: process.env.FORMS_MANAGER_URL,
+    LIVE_FORM_DEFINITION_IDS: process.env.LIVE_FORM_DEFINITION_IDS,
+    DRAFT_FORM_DEFINITION_IDS: process.env.DRAFT_FORM_DEFINITION_IDS,
+    TEST_FORM_DEFINITION_IDS: process.env.TEST_FORM_DEFINITION_IDS,
     GOVPAY_TEST_CARD_NUMBER: process.env.GOVPAY_TEST_CARD_NUMBER,
     GOVPAY_TEST_CARD_EXPIRY_MONTH: process.env.GOVPAY_TEST_CARD_EXPIRY_MONTH,
     GOVPAY_TEST_CARD_EXPIRY_YEAR: process.env.GOVPAY_TEST_CARD_EXPIRY_YEAR,
